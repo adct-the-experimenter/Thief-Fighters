@@ -65,6 +65,8 @@ void RenderSystem::Update()
 			if(renderObjectBool)
 			{
 				//DrawModelEx( render_comp.model, transform.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
+				
+				DrawTextureV(render_comp.texture, transform.position, RAYWHITE); 
 			}
 		}
 		

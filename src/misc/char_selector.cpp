@@ -185,7 +185,14 @@ void CharacterSelector::logic()
 						);
 						
 
-				
+				//add colision box
+				gCoordinator.AddComponent(
+							*player_entities_vec.at(i),
+							CollisionBox{
+								.width = (std::uint32_t){30},
+								.height = (std::uint32_t){80}
+							}
+						);
 			}
 			
 		}

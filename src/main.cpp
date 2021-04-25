@@ -219,10 +219,6 @@ void logic()
 				
 			}
 			
-			//if(gControllerInput.gamepads_vec[0].button == SDL_CONTROLLER_BUTTON_A)
-			//{
-			//	moveNextState = true;
-			//}
 			
 			//if need to move to next state
 			if(moveNextState)
@@ -281,6 +277,7 @@ void logic()
 					m_game_state = GameState::FIGHT_GAME;
 				}
 				
+				gStageManager.PlacePlayersInStage(gNumPlayers);
 			}
 			
 			break;

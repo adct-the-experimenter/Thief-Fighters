@@ -6,7 +6,7 @@
 
 extern Coordinator gCoordinator;
 
-float speed_factor = 10.0f;
+float speed_factor = 30.0f;
 
 void InputReactorSystem::Update(ControllerInput& input)
 {

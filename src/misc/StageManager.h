@@ -14,6 +14,8 @@ public:
 	bool LoadLevel(std::uint16_t level);
 	void FreeCurrentLoadedLevel();
 	
+	void PlacePlayersInStage(std::int8_t num_players);
+	
 private:
 	
 	
