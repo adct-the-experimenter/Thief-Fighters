@@ -1,4 +1,4 @@
-# Dance Fighters
+# Thief Fighters
 
 This game is a work in progress. 
 
