@@ -8,7 +8,7 @@
 #include "systems/CameraSystem.h"
 #include "systems/RenderSystem.h"
 #include "systems/AnimationSystem.h"
-
+#include "systems/SpecialPowerMechanicSystem.h"
 #include "core/ControllerInputHandler.h"
 #include "core/ControllerInput.h"
 
@@ -24,6 +24,7 @@
 #include "misc/char_selector.h" //for CharacterSelector class
 #include "misc/stage_selector.h" //for StageSelector class
 #include "misc/num_player_setter.h" //for NumPlayerSetter class
+
 
 #include <string>
 #include <chrono>
@@ -60,6 +61,7 @@ std::shared_ptr <InputReactorSystem> input_ReactSystem;
 
 std::shared_ptr <PhysicsSystem> physicsSystem;
 
+std::shared_ptr <SpecialPowerMechanicSystem> specialPowerMechanicSystem;
 
 //function to init raylib system
 void InitRaylibSystem();
@@ -397,6 +399,7 @@ void InitMainECS()
 	Signature sig_input_react;
 	sig_input_react.set(gCoordinator.GetComponentType<InputReact>());
 	sig_input_react.set(gCoordinator.GetComponentType<RigidBody2D>());
+	sig_input_react.set(gCoordinator.GetComponentType<Player>());
 	gCoordinator.SetSystemSignature<InputReactorSystem>(sig_input_react);
 	
 	//make physics system that only reacts to entitities 
@@ -437,6 +440,15 @@ void InitMainECS()
 	animation_sig.set(gCoordinator.GetComponentType<RenderModelComponent>());
 	gCoordinator.SetSystemSignature<AnimationSystem>(animation_sig);
 	
+	//make special power mechanic system
+	
+	specialPowerMechanicSystem = gCoordinator.RegisterSystem<SpecialPowerMechanicSystem>();
+	specialPowerMechanicSystem->Init();
+	
+	Signature special_power_mechanic_sig;
+	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Player>());
+	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Transform2D>());
+	gCoordinator.SetSystemSignature<SpecialPowerMechanicSystem>(special_power_mechanic_sig);
 }
 
 void InitRaylibSystem()

@@ -63,10 +63,35 @@ struct RenderModelComponent
     Texture2D texture;
 };
 
+
 struct Player
 {
 	std::uint8_t player_num;
 	std::uint8_t player_health;
+	
+	//parameters related to power
+	
+	//indicate if player pressed power button
+	bool powerButtonPressed;
+	
+	//bitset to indicate which power a player has
+	std::bitset <8> collected_powers;
+	
+	//bitset to indicate which power a player has activated
+	std::bitset <8> powers_activated;
+	
+	//cooldown timers for each power
+	std::array <float,8> cooldown_timer_val_array;
+	
+	//current power set to be used
+	std::uint8_t current_power; //0-7
+	
+	//power requested by player input
+	std::int8_t requested_power; //-1,0-7
+	
+	//indicate which player last hit this player
+	std::uint8_t last_hit_by_player_num;
+	
 };
 
 enum class InputReactorType : std::uint8_t { NONE=0, PLAYER, CAR};

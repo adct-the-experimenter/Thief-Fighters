@@ -16,6 +16,7 @@ void InputReactorSystem::Update(ControllerInput& input)
 	{
 		auto& inputReactor = gCoordinator.GetComponent<InputReact>(entity);
 		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
+		auto& player = gCoordinator.GetComponent<Player>(entity);
 		
 		switch(inputReactor.actor_type)
 		{
@@ -53,11 +54,12 @@ void InputReactorSystem::Update(ControllerInput& input)
 							rigidBody.velocity.y = -speed_factor;
 						}
 						
-						//if attack button pressed
+						//if special power button pressed
 						if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
 						{
-							
+							player.powerButtonPressed = true;
 						}
+						
 						
 					}
 					
