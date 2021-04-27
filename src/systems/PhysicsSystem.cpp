@@ -134,6 +134,9 @@ void PhysicsSystem::Update(float& dt)
 			{
 				//account for acceleration due to gravity to rigid body velocity
 				//rigidBody.velocity.x += gravity.force.x * dt;
+				
+				float jumpVel = rigidBody.velocity.y;
+				
 				rigidBody.velocity.y += gravity.force.y * dt;
 				
 				CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
@@ -143,7 +146,7 @@ void PhysicsSystem::Update(float& dt)
 				
 				//move transform component by velocity of rigid body multiplied by time
 				transform.position.x += rigidBody.velocity.x * dt;
-				transform.position.y += rigidBody.velocity.y * dt;
+				transform.position.y += (rigidBody.velocity.y + jumpVel) * dt;
 				
 				break;
 			}

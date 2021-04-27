@@ -39,6 +39,10 @@ public:
 		int16_t left_x_axis;
 		int16_t left_y_axis;
 		
+		//right joystick
+		int16_t right_x_axis;
+		int16_t right_y_axis;
+		
 		//joystick direction, gets reset for non-continous movement
 		int16_t left_x_dir_axis;
 		int16_t left_y_dir_axis;

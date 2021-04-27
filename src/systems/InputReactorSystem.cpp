@@ -46,19 +46,17 @@ void InputReactorSystem::Update(ControllerInput& input)
 							rigidBody.velocity.x = 0.0f;
 						}
 						
-						if( input.gamepads_vec[i].left_y_dir_axis == -1
-							|| input.gamepads_vec[i].left_y_axis < -joystick_border)
+						//if jump button pressed
+						if( input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_B ||
+							input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
 						{
-							//rigidBody.velocity.y = -speed_factor;
+							rigidBody.velocity.y = -speed_factor;
 						}
-						else if( input.gamepads_vec[i].left_y_dir_axis  == 1
-							|| input.gamepads_vec[i].left_y_axis > joystick_border)
+						
+						//if attack button pressed
+						if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
 						{
-							//rigidBody.velocity.y = speed_factor;
-						}
-						else
-						{
-							//rigidBody.velocity.y = 0.0f;
+							
 						}
 						
 					}
