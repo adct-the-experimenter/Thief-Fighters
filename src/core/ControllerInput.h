@@ -36,12 +36,12 @@ public:
 												
 	struct GamepadInfo {
 		//left joystick 
-		int16_t x_axis;
-		int16_t y_axis;
+		int16_t left_x_axis;
+		int16_t left_y_axis;
 		
 		//joystick direction, gets reset for non-continous movement
-		int16_t x_dir_axis;
-		int16_t y_dir_axis;
+		int16_t left_x_dir_axis;
+		int16_t left_y_dir_axis;
 		
 		//includes buttons and dpad
 		SDL_GameControllerButton button;

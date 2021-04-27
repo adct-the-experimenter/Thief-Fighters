@@ -130,13 +130,13 @@ void ControllerInputHandler::SetGamepadInfo(ControllerInput& input_info)
 				if(input_info.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_DPAD_LEFT
 							  || input_info.gamepads_vec[i].button == 13)
 				{
-					input_info.gamepads_vec[i].x_dir_axis = -1;
+					input_info.gamepads_vec[i].left_x_dir_axis = -1;
 					
 				}
 				else if( input_info.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT
 				  || input_info.gamepads_vec[i].button == 14 )
 				{
-					input_info.gamepads_vec[i].x_dir_axis = 1;
+					input_info.gamepads_vec[i].left_x_dir_axis = 1;
 					
 				}
 				
@@ -145,12 +145,12 @@ void ControllerInputHandler::SetGamepadInfo(ControllerInput& input_info)
 				  || input_info.gamepads_vec[i].button == 11)
 				{
 					
-					input_info.gamepads_vec[i].y_dir_axis = -1;
+					input_info.gamepads_vec[i].left_y_dir_axis = -1;
 				}
 				else if( input_info.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_DPAD_DOWN
 				  || input_info.gamepads_vec[i].button == 12)
 				{
-					input_info.gamepads_vec[i].y_dir_axis = 1;
+					input_info.gamepads_vec[i].left_y_dir_axis = 1;
 				}
 				
 			}
@@ -180,13 +180,13 @@ void ControllerInputHandler::SetGamepadInfo(ControllerInput& input_info)
 				if(input_info.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_DPAD_LEFT
 							  || input_info.gamepads_vec[i].button == 13)
 				{
-					input_info.gamepads_vec[i].x_dir_axis = 0;
+					input_info.gamepads_vec[i].left_x_dir_axis = 0;
 					
 				}
 				else if( input_info.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT
 				  || input_info.gamepads_vec[i].button == 14 )
 				{
-					input_info.gamepads_vec[i].x_dir_axis = 0;
+					input_info.gamepads_vec[i].left_x_dir_axis = 0;
 				}
 				
 				
@@ -194,14 +194,55 @@ void ControllerInputHandler::SetGamepadInfo(ControllerInput& input_info)
 				  || input_info.gamepads_vec[i].button == 11)
 				{
 					
-					input_info.gamepads_vec[i].y_dir_axis = 0;
+					input_info.gamepads_vec[i].left_y_dir_axis = 0;
 				}
 				else if( input_info.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_DPAD_DOWN
 				  || input_info.gamepads_vec[i].button == 12)
 				{
-					input_info.gamepads_vec[i].y_dir_axis = 0;
+					input_info.gamepads_vec[i].left_y_dir_axis = 0;
 				}
 				
+			}
+		}
+		
+		if(sdl_event.type == SDL_CONTROLLERAXISMOTION)
+		{
+			
+			//gamepad 1
+			if(sdl_event.jaxis.which == 0)
+			{
+				if(sdl_event.jaxis.axis == SDL_CONTROLLER_AXIS_LEFTX)
+				{
+					input_info.gamepads_vec[0].left_x_axis = sdl_event.jaxis.value;
+				}
+				else if(sdl_event.jaxis.axis == SDL_CONTROLLER_AXIS_LEFTY)
+				{
+					input_info.gamepads_vec[0].left_y_axis = sdl_event.jaxis.value;
+				}
+			}
+			//gamepad 2
+			else if(sdl_event.jaxis.which == 1)
+			{
+				if(sdl_event.jaxis.axis == SDL_CONTROLLER_AXIS_LEFTX)
+				{
+					input_info.gamepads_vec[1].left_x_axis = sdl_event.jaxis.value;
+				}
+				else if(sdl_event.jaxis.axis == SDL_CONTROLLER_AXIS_LEFTY)
+				{
+					input_info.gamepads_vec[1].left_y_axis = sdl_event.jaxis.value;
+				}
+			}
+			//gamepad 3
+			else if(sdl_event.jaxis.which == 2)
+			{
+				if(sdl_event.jaxis.axis == SDL_CONTROLLER_AXIS_LEFTX)
+				{
+					input_info.gamepads_vec[2].left_x_axis = sdl_event.jaxis.value;
+				}
+				else if(sdl_event.jaxis.axis == SDL_CONTROLLER_AXIS_LEFTY)
+				{
+					input_info.gamepads_vec[2].left_y_axis = sdl_event.jaxis.value;
+				}
 			}
 		}
 		

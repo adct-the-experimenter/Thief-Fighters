@@ -6,7 +6,9 @@
 
 extern Coordinator gCoordinator;
 
-float speed_factor = 30.0f;
+float speed_factor = 40.0f;
+
+static const int16_t joystick_border = 32600;
 
 void InputReactorSystem::Update(ControllerInput& input)
 {
@@ -29,11 +31,13 @@ void InputReactorSystem::Update(ControllerInput& input)
 					if(inputReactor.player_num == i + 1)
 					{
 						
-						if(input.gamepads_vec[i].x_dir_axis == -1)
+						if(input.gamepads_vec[i].left_x_dir_axis == -1 
+							|| input.gamepads_vec[i].left_x_axis < -joystick_border )
 						{
 							rigidBody.velocity.x = -speed_factor;
 						}
-						else if( input.gamepads_vec[i].x_dir_axis == 1 )
+						else if( input.gamepads_vec[i].left_x_dir_axis == 1 
+								|| input.gamepads_vec[i].left_x_axis > joystick_border )
 						{
 							rigidBody.velocity.x = speed_factor;
 						}
@@ -42,17 +46,19 @@ void InputReactorSystem::Update(ControllerInput& input)
 							rigidBody.velocity.x = 0.0f;
 						}
 						
-						if( input.gamepads_vec[i].y_dir_axis == -1)
+						if( input.gamepads_vec[i].left_y_dir_axis == -1
+							|| input.gamepads_vec[i].left_y_axis < -joystick_border)
 						{
-							rigidBody.velocity.y = -speed_factor;
+							//rigidBody.velocity.y = -speed_factor;
 						}
-						else if( input.gamepads_vec[i].y_dir_axis  == 1)
+						else if( input.gamepads_vec[i].left_y_dir_axis  == 1
+							|| input.gamepads_vec[i].left_y_axis > joystick_border)
 						{
-							rigidBody.velocity.y = speed_factor;
+							//rigidBody.velocity.y = speed_factor;
 						}
 						else
 						{
-							rigidBody.velocity.y = 0.0f;
+							//rigidBody.velocity.y = 0.0f;
 						}
 						
 					}

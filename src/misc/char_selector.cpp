@@ -57,23 +57,23 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 	for(size_t i = 0; i < input.gamepads_vec.size();i++)
 	{
 		//if joystick moved up, go up a slot
-		if(input.gamepads_vec[i].y_dir_axis < -joystick_border)
+		if(input.gamepads_vec[i].left_y_dir_axis < -joystick_border)
 		{
 			
 		}
 		//else if joystick moved down, go down a slot
-		else if(input.gamepads_vec[i].y_dir_axis > joystick_border)
+		else if(input.gamepads_vec[i].left_y_dir_axis > joystick_border)
 		{
 			
 		}
 			
 		//if joystick moved left, go left on color choice
-		if(input.gamepads_vec[i].x_dir_axis < -joystick_border)
+		if(input.gamepads_vec[i].left_x_dir_axis < -joystick_border)
 		{
 			
 		}
 		//if joystick moved right, go right on color choice
-		else if(input.gamepads_vec[i].x_dir_axis > joystick_border)
+		else if(input.gamepads_vec[i].left_x_dir_axis > joystick_border)
 		{
 			
 		}
@@ -167,7 +167,7 @@ void CharacterSelector::logic()
 						);
 						
 				//add gravity component for later use
-				Vector2 grav = {0.0f,0.0f};
+				Vector2 grav = {0.0f,20.0f};
 				gCoordinator.AddComponent(
 							*player_entities_vec.at(i),
 							Gravity2D{
@@ -176,7 +176,7 @@ void CharacterSelector::logic()
 						);
 						
 				//add physics type
-				PhysicsType pType = PhysicsType::FIGHTING_GAME;
+				PhysicsType pType = PhysicsType::PLATFORMER;
 				gCoordinator.AddComponent(
 							*player_entities_vec.at(i),
 							PhysicsTypeComponent{

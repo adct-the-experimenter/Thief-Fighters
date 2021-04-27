@@ -47,7 +47,8 @@ void NumPlayerSetter::handle_input(ControllerInput& controller_input, KeyboardIn
 	//NumPlayerSetter::handle_keyboard_input(key_input);
 }
 
-const int16_t joystick_border = 32600;
+static const int16_t joystick_border = 32600;
+static bool moveBool = false;
 
 void NumPlayerSetter::handle_controller_input(ControllerInput& input)
 {
@@ -58,16 +59,23 @@ void NumPlayerSetter::handle_controller_input(ControllerInput& input)
 	size_t i = 0;
 	
 	//if joystick moved up, go up a slot
-	if(input.gamepads_vec[i].y_dir_axis < -joystick_border)
+	if(input.gamepads_vec[i].left_y_dir_axis == -1)
 	{
-		if(m_current_slot > 0){m_current_slot--;}
+		if(m_current_slot > 0 && moveBool){m_current_slot--;}
+		moveBool = false;
 	}
 	//else if joystick moved down, go down a slot
-	else if(input.gamepads_vec[i].y_dir_axis > joystick_border)
+	else if(input.gamepads_vec[i].left_y_dir_axis == 1)
 	{
-		if(m_current_slot < 3){m_current_slot++;}
+		if(m_current_slot < 3 && moveBool){m_current_slot++;}
+		moveBool = false;
 	}
-		
+	
+	if(input.gamepads_vec[i].left_y_dir_axis == 0 )
+	{
+		moveBool = true;
+	}
+	
 	
 	//if a button pressed, turn confirm bool on
 	if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_A)

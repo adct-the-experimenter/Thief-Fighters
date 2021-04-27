@@ -29,7 +29,6 @@ void AnimationSystem::Update(float& dt)
 		//update animation
 		//anim_comp.info.animFrameCounter++;
 		
-		//UpdateModelAnimation(render_comp.model, anim_comp.info.anims[0], anim_comp.info.animFrameCounter);
 		
 		if (anim_comp.info.animFrameCounter >= anim_comp.info.anims[0].frameCount) 
 		{

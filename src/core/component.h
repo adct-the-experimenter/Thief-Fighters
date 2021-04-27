@@ -66,6 +66,7 @@ struct RenderModelComponent
 struct Player
 {
 	std::uint8_t player_num;
+	std::uint8_t player_health;
 };
 
 enum class InputReactorType : std::uint8_t { NONE=0, PLAYER, CAR};

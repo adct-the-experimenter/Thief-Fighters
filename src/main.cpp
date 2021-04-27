@@ -187,9 +187,7 @@ void handle_events()
 		}
 		case GameState::FIGHT_GAME:
 		{
-			
 			input_ReactSystem->Update(gControllerInput);
-				
 			break;
 		}
 	}
@@ -413,7 +411,7 @@ void InitMainECS()
 	phys_sys_signature.set(gCoordinator.GetComponentType<RigidBody2D>());
 	phys_sys_signature.set(gCoordinator.GetComponentType<Transform2D>());
 	phys_sys_signature.set(gCoordinator.GetComponentType<PhysicsTypeComponent>());
-	//phys_sys_signature.set(gCoordinator.GetComponentType<CollisionBox>());
+	phys_sys_signature.set(gCoordinator.GetComponentType<CollisionBox>());
 	gCoordinator.SetSystemSignature<PhysicsSystem>(phys_sys_signature);
 	
 	//make camera system that only reacts to entities
