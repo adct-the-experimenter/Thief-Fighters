@@ -27,14 +27,75 @@ void AnimationSystem::Update(float& dt)
 		auto& render_comp = gCoordinator.GetComponent<RenderModelComponent>(entity);
 		
 		//update animation
-		//anim_comp.info.animFrameCounter++;
 		
+		//increment frame count
+		m_time_counter += dt;
 		
-		if (anim_comp.info.animFrameCounter >= anim_comp.info.anims[0].frameCount) 
+		if(m_time_counter >= 0.25f)
 		{
-			anim_comp.info.animFrameCounter = 0;
+			anim_comp.frame_count++;
+			m_time_counter = 0;
 		}
 		
+		switch( anim_comp.anim_actor_type)
+		{
+			case AnimatedActorType::PLAYER:
+			{
+
+				
+				
+				float xdiff = anim_comp.last_position.x - transform.position.x;
+				bool south = false; bool north = false;
+				bool east = false; bool west = false;
+				bool no_move = false;
+				
+				if(xdiff > 0){west = true;}
+				else if(xdiff < 0){east = true;}
+				
+				float ydiff = anim_comp.last_position.y - transform.position.y;
+				if(ydiff > 0){north = true;}
+				else if(ydiff < 0){south = true;}
+				
+				if(xdiff == 0 && ydiff == 0){no_move = true;}
+				
+				anim_comp.last_position.y = transform.position.y;
+				anim_comp.last_position.x = transform.position.x;
+				
+				if(west)
+				{
+					anim_comp.horiz_frame_offset = 3;
+				}
+				else if(east)
+				{
+					anim_comp.horiz_frame_offset = 0;
+				}
+				
+				//horizontal frame offset refers to horizontal distance between a frame and 
+				//the first frame in sprite sheet.
+				if(south)
+				{
+					anim_comp.horiz_frame_offset = 7;
+					anim_comp.frame_count = 0;
+				}
+				else if(north)
+				{
+					anim_comp.horiz_frame_offset = 6;
+					anim_comp.frame_count = 0;
+				}
+				
+				//limited to only 3 frames of animation
+				if(anim_comp.frame_count == 3 || no_move ){anim_comp.frame_count = 0;}
+				
+				//set render frame based on animation info
+			
+				//change x position of frame selector
+				render_comp.frame_rect.x = (anim_comp.frame_count + anim_comp.horiz_frame_offset)*anim_comp.frame_size;
+				break;
+			}
+			
+			
+		}
+				
 	}
 }
 

@@ -41,26 +41,29 @@ struct CollisionBox
 	std::uint32_t height;
 };
 
-
-
-
-struct AnimationInfo
-{
-	int animsCount = 0;
-    ModelAnimation *anims = nullptr;
-    int animFrameCounter = 0;
-	
-};
+enum class AnimatedActorType : std::int8_t {NONE=0,PLAYER,ENEMY};
 
 struct Animation
 {
-	AnimationInfo info;
+	AnimatedActorType anim_actor_type; 
+	
+	//position of frame and frame direction
+	
+	std::uint16_t horiz_frame_offset = 0;
+	std::uint16_t frame_size = 30;
+	std::uint8_t frame_count = 0;
+	
+	//for movement based animation
+	Vector2 last_position;
 };
 
 
 struct RenderModelComponent
 {
-    Texture2D texture;
+	Vector2 position;
+	Texture2D* texture_ptr;
+	Rectangle frame_rect;
+	Color tint;
 };
 
 

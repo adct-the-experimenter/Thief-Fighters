@@ -119,7 +119,8 @@ void CharacterSelector::logic()
 				gCoordinator.AddComponent(
 								*player_entities_vec[i],
 								RenderModelComponent {
-									.texture = base_fighter_texture
+									.texture_ptr = &base_fighter_texture,
+									.frame_rect = (Rectangle){0,0,30,80}
 								}
 							);
 				
@@ -192,6 +193,16 @@ void CharacterSelector::logic()
 								.width = (std::uint32_t){30},
 								.height = (std::uint32_t){80}
 							}
+						);
+				
+				//add animation component
+				
+				AnimatedActorType type = AnimatedActorType::PLAYER;
+				Animation anim_component = {};
+				anim_component.anim_actor_type = type;
+				gCoordinator.AddComponent(
+							*player_entities_vec.at(i),
+							anim_component
 						);
 			}
 			

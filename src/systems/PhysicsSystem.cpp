@@ -99,7 +99,7 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 			)
 		{
 			//if player is on top of object
-			if(obj_y + obj_width - 1 <= main_stage.collision_rect_array[i].rect.y)
+			if(obj_y + obj_height - 1 <= main_stage.collision_rect_array[i].rect.y)
 			{
 				obj_vy = 0;
 			}
