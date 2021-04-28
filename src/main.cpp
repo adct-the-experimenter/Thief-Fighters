@@ -278,6 +278,7 @@ void logic()
 				}
 				
 				gStageManager.PlacePlayersInStage(gNumPlayers);
+				attackPowerMechanicSystem->Init(gNumPlayers);
 			}
 			
 			break;
@@ -444,7 +445,6 @@ void InitMainECS()
 	//make special power mechanic system
 	
 	attackPowerMechanicSystem = gCoordinator.RegisterSystem<AttackPowerMechanicSystem>();
-	attackPowerMechanicSystem->Init();
 	
 	Signature special_power_mechanic_sig;
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Player>());

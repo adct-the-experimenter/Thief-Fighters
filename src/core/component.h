@@ -77,6 +77,13 @@ struct RenderModelComponent
 	Color tint;
 };
 
+struct AttackBox
+{
+	bool active = false;
+	std::uint8_t player_num;
+	Rectangle collisionBox;
+	
+};
 
 struct Player
 {
@@ -109,6 +116,8 @@ struct Player
 	//indicate which player last hit this player
 	std::uint8_t last_hit_by_player_num;
 	
+	//attack collision box
+	AttackBox attack_box;
 };
 
 enum class InputReactorType : std::uint8_t { NONE=0, PLAYER, CAR};

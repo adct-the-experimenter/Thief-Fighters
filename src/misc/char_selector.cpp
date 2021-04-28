@@ -129,7 +129,8 @@ void CharacterSelector::logic()
 				gCoordinator.AddComponent(
 								*player_entities_vec[i],
 								Player {
-									.player_num = i + 1
+									.player_num = i + 1,
+									.player_health = 30
 								}
 							);
 														
