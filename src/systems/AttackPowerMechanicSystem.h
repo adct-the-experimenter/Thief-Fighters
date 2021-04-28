@@ -12,20 +12,33 @@ struct PowerTransferTransaction
 	std::bitset <8> powerTransfered = 0;
 };
 
+struct AttackEvent
+{
+	bool attack = false;
+	std::uint8_t player_num_victim = 0;
+	std::uint8_t player_num_attacker = 0;
+	
+};
+
 class AttackPowerMechanicSystem : public System
 {
 public:
 	void Init(std::uint8_t num_players);
 
 	void Update(float& dt);
-
+	
+	
 private:
 	std::queue <PowerTransferTransaction> power_transfer_transaction_queue;
 	
+	//pointers for use with collision detection and health management
 	std::array <AttackBox*,8> player_attack_boxes_ptrs;
-	size_t current_attack_box_index;
-	
 	std::array <std::uint8_t*,8> player_health_ptrs;
+	std::array <Vector2*,8> player_position_ptrs;
+	std::array <std::uint8_t*,8> player_last_hit_by_ptrs;
+	
+	//
+	AttackEvent CheckCollisionBetween2Players(int& player_a_num, int& player_b_num);
 	
 	void CollisionDetectionBetweenPlayers();
 	

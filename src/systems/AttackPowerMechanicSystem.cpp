@@ -11,32 +11,26 @@ extern Coordinator gCoordinator;
 
 void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 {
-	player_attack_boxes_ptrs[0] = nullptr;
-	player_attack_boxes_ptrs[1] = nullptr;
-	player_attack_boxes_ptrs[2] = nullptr;
-	player_attack_boxes_ptrs[3] = nullptr;
-	player_attack_boxes_ptrs[4] = nullptr;
-	player_attack_boxes_ptrs[5] = nullptr;
-	player_attack_boxes_ptrs[6] = nullptr;
-	player_attack_boxes_ptrs[7] = nullptr;
-	current_attack_box_index = 0;
-	
-	player_health_ptrs[0] = nullptr;
-	player_health_ptrs[1] = nullptr;
-	player_health_ptrs[2] = nullptr;
-	player_health_ptrs[3] = nullptr;
-	player_health_ptrs[4] = nullptr;
-	player_health_ptrs[5] = nullptr;
-	player_health_ptrs[6] = nullptr;
-	player_health_ptrs[7] = nullptr;
-	
+	for(size_t i = 0; i < 8; i++)
+	{
+		player_attack_boxes_ptrs[i] = nullptr;
+		player_health_ptrs[i] = nullptr;
+		player_position_ptrs[i] = nullptr;
+		player_last_hit_by_ptrs[i] = nullptr;
+	}
+		
 	for (auto const& entity : mEntities)
 	{
 		auto& player = gCoordinator.GetComponent<Player>(entity);
+		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
 		
 		player_health_ptrs[player.player_num - 1] = &player.player_health;
 		
 		player_attack_boxes_ptrs[player.player_num - 1] = &player.attack_box;
+		
+		player_position_ptrs[player.player_num - 1] = &transform.position;
+		
+		player_last_hit_by_ptrs[player.player_num - 1] = &player.last_hit_by_player_num;
 	}
 	
 	m_num_players = num_players;
@@ -177,8 +171,8 @@ void AttackPowerMechanicSystem::Update(float& dt)
 	
 }
 
-static bool CollisionWithPlatformDetected(Rectangle& platform,
-						   float& obj_x, float& obj_y, std::uint32_t obj_width, std::uint32_t& obj_height)
+static bool PlayerCollisionWithRectangleDetected(Rectangle& rect,
+						   float& obj_x, float& obj_y, std::uint32_t& obj_width, std::uint32_t& obj_height)
 {
 	//assuming object has width and height of 30 and it is centered
 	
@@ -187,10 +181,10 @@ static bool CollisionWithPlatformDetected(Rectangle& platform,
 	float objTopY = obj_y;
 	float objBottomY = obj_y + obj_height;
 	
-	std::uint32_t rectLeftX = platform.x;
-	std::uint32_t rectRightX = platform.x + platform.width;
-	std::uint32_t rectTopY = platform.y;
-	std::uint32_t rectBottomY = platform.y + platform.height;
+	std::uint32_t rectLeftX = rect.x;
+	std::uint32_t rectRightX = rect.x + rect.width;
+	std::uint32_t rectTopY = rect.y;
+	std::uint32_t rectBottomY = rect.y + rect.height;
 	
 	//for collision to be true, all conditions must be true. AABB square collsion detection, all
 	//The left edge x-position of [A] must be less than the right edge x-position of [B].
@@ -221,22 +215,75 @@ static bool CollisionWithPlatformDetected(Rectangle& platform,
 	return true;
 }
 
+AttackEvent AttackPowerMechanicSystem::CheckCollisionBetween2Players(int& player_a_num, int& player_b_num)
+{
+	AttackEvent attack_event;
+	attack_event.attack = false;
+	attack_event.player_num_victim = 0;
+	attack_event.player_num_attacker = 0;
+	
+	AttackBox* playerA_attackbox_ptr = player_attack_boxes_ptrs[player_a_num - 1];
+	AttackBox* playerB_attackbox_ptr = player_attack_boxes_ptrs[player_b_num - 1];
+	
+	Vector2* playerA_position_ptr = player_position_ptrs[player_a_num - 1];
+	Vector2* playerB_position_ptr = player_position_ptrs[player_b_num - 1];
+	
+	//player width and height
+	std::uint32_t width = 30;
+	std::uint32_t height = 80;
+
+	//if this player A attack box is active, player B attack box inactive
+	if( playerA_attackbox_ptr->active && !playerB_attackbox_ptr->active)
+	{
+		if(PlayerCollisionWithRectangleDetected(playerA_attackbox_ptr->collisionBox,
+												playerB_position_ptr->x, playerB_position_ptr->y, width,height)
+		   )
+		{
+			attack_event.attack = true;
+			attack_event.player_num_victim = player_b_num;
+			attack_event.player_num_attacker = player_a_num;
+		}
+	}
+	//if player B attack box is active, player A attack box inactive
+	else if(playerB_attackbox_ptr->active && !playerA_attackbox_ptr->active)
+	{
+		if(PlayerCollisionWithRectangleDetected(playerB_attackbox_ptr->collisionBox,
+												playerA_position_ptr->x, playerA_position_ptr->y, width,height)
+		   )
+		{
+			attack_event.attack = true;
+			attack_event.player_num_victim = player_a_num;
+			attack_event.player_num_attacker = player_b_num;
+		}
+	}
+	
+	return attack_event;
+}
+
 void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 {
+	int player_a_num = 0;
+	int player_b_num = 0;
+	
+	
 	
 	//if there is more than 1 player
 	//check player 1 and player 2 interaction
 	if( m_num_players > 1)
 	{
-		//if player 1 attack box is active, player 2 attack box inactive
-		if(player_attack_boxes_ptrs[0]->active && !player_attack_boxes_ptrs[1]->active)
+		AttackEvent attack_event;
+		player_a_num = 1;
+		player_b_num = 2;
+		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+		
+		//if attack happened
+		if(attack_event.attack)
 		{
-			//check collision between player 1 attack box and player 2
-		}
-		//if player 2 attack box is active, player 1 attack box inactive
-		else if(player_attack_boxes_ptrs[1]->active && !player_attack_boxes_ptrs[0]->active)
-		{
-			//check collision between player 2 attack box and player 1
+			//decrease health of victim player
+			*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
+			//set last hit by player variable for victim player
+			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
+			
 		}
 	}
 	
@@ -244,26 +291,37 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 	//check player 1 and player 3, player 2 and player 3 interactions
 	if( m_num_players > 2)
 	{
-		//if player 1 attack box is active, player 3 attack box inactive
-		if(player_attack_boxes_ptrs[0]->active && !player_attack_boxes_ptrs[2]->active)
+		AttackEvent attack_event;
+		
+		//check player 1 and 3 interaction
+		
+		player_a_num = 1;
+		player_b_num = 3;
+		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+		
+		//if attack happened
+		if(attack_event.attack)
 		{
-			//check collision between player 1 attack box and player 3
-		}
-		//if player 3 attack box is active, player 1 attack box inactive
-		else if(player_attack_boxes_ptrs[2]->active && !player_attack_boxes_ptrs[0]->active)
-		{
-			//check collision between player 3 attack box and player 1
+			//decrease health of victim player
+			*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
+			//set last hit by player variable for victim player
+			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
+			
 		}
 		
-		//if player 2 attack box is active, player 3 attack box inactive
-		if(player_attack_boxes_ptrs[1]->active && !player_attack_boxes_ptrs[2]->active)
+		//check player 2 and player 3 interaction
+		
+		player_a_num = 2;
+		player_b_num = 3;
+		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+		
+		//if attack happened
+		if(attack_event.attack)
 		{
-			//check collision between player 2 attack box and player 3
-		}
-		//if player 3 attack box is active, player 2 attack box inactive
-		else if(player_attack_boxes_ptrs[2]->active && !player_attack_boxes_ptrs[1]->active)
-		{
-			//check collision between player 3 attack box and player 2
+			//decrease health of victim player
+			*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
+			//set last hit by player variable for victim player
+			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
 			
 		}
 		
@@ -273,38 +331,50 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 	//check player 1 and player 4, player 2 and player 4, player 3 and player 4 interactions
 	if( m_num_players > 3)
 	{
-		//if player 1 attack box is active, player 4 attack box inactive
-		if(player_attack_boxes_ptrs[0]->active && !player_attack_boxes_ptrs[3]->active)
-		{
-			//check collision between player 1 attack box and player 4
-		}
-		//if player 4 attack box is active, player 1 attack box inactive
-		else if(player_attack_boxes_ptrs[3]->active && !player_attack_boxes_ptrs[0]->active)
-		{
-			//check collision between player 3 attack box and player 1
-		}
+		AttackEvent attack_event;
 		
-		//if player 2 attack box is active, player 4 attack box inactive
-		if(player_attack_boxes_ptrs[1]->active && !player_attack_boxes_ptrs[3]->active)
+		//check player 1 and player 4 interaction
+		player_a_num = 1;
+		player_b_num = 4;
+		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+		
+		//if attack happened
+		if(attack_event.attack)
 		{
-			//check collision between player 2 attack box and player 4
-		}
-		//if player 4 attack box is active, player 2 attack box inactive
-		else if(player_attack_boxes_ptrs[3]->active && !player_attack_boxes_ptrs[1]->active)
-		{
-			//check collision between player 4 attack box and player 2
+			//decrease health of victim player
+			*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
+			//set last hit by player variable for victim player
+			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
 			
 		}
 		
-		//if player 3 attack box is active, player 4 attack box inactive
-		if(player_attack_boxes_ptrs[2]->active && !player_attack_boxes_ptrs[3]->active)
+		//check player 2 and player 4 interaction
+		player_a_num = 2;
+		player_b_num = 4;
+		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+		
+		//if attack happened
+		if(attack_event.attack)
 		{
-			//check collision between player 3 attack box and player 4
+			//decrease health of victim player
+			*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
+			//set last hit by player variable for victim player
+			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
+			
 		}
-		//if player 4 attack box is active, player 3 attack box inactive
-		else if(player_attack_boxes_ptrs[3]->active && !player_attack_boxes_ptrs[2]->active)
+		
+		//check player 3 and player 4 interaction
+		player_a_num = 3;
+		player_b_num = 4;
+		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+		
+		//if attack happened
+		if(attack_event.attack)
 		{
-			//check collision between player 4 attack box and player 3
+			//decrease health of victim player
+			*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
+			//set last hit by player variable for victim player
+			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
 			
 		}
 		
