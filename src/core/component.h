@@ -49,12 +49,23 @@ struct Animation
 	
 	//position of frame and frame direction
 	
+	//for general movement
 	std::uint16_t horiz_frame_offset = 0;
-	std::uint16_t frame_size = 30;
+	
+	//for specific movement i.e. walk(0), normal attack(1), special attack(2-9)
+	std::uint16_t vert_frame_offset = 0;
+	
+	
+	std::uint16_t frame_width = 30;
+	std::uint16_t frame_height = 80;
 	std::uint8_t frame_count = 0;
 	
 	//for movement based animation
 	Vector2 last_position;
+	
+	//attack mode, indicates which attack mode a character is in
+	//for player, -1 = none, 0 = normal attack, 1-9 = special attack
+	std::int8_t attackMode = -1;
 };
 
 
@@ -76,6 +87,9 @@ struct Player
 	
 	//indicate if player pressed power button
 	bool powerButtonPressed;
+	
+	//indicate if player pressed regular attack button
+	bool regularAttackButtonPressed;
 	
 	//bitset to indicate which power a player has
 	std::bitset <8> collected_powers;

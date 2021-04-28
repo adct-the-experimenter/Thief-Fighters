@@ -60,7 +60,10 @@ void InputReactorSystem::Update(ControllerInput& input)
 							player.powerButtonPressed = true;
 						}
 						
-						
+						if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_A)
+						{
+							player.regularAttackButtonPressed = true;
+						}
 					}
 					
 				}

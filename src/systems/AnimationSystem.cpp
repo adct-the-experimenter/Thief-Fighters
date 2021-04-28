@@ -42,8 +42,6 @@ void AnimationSystem::Update(float& dt)
 			case AnimatedActorType::PLAYER:
 			{
 
-				
-				
 				float xdiff = anim_comp.last_position.x - transform.position.x;
 				bool south = false; bool north = false;
 				bool east = false; bool west = false;
@@ -72,24 +70,68 @@ void AnimationSystem::Update(float& dt)
 				
 				//horizontal frame offset refers to horizontal distance between a frame and 
 				//the first frame in sprite sheet.
-				if(south)
+				if(south && !west && !east)
 				{
 					anim_comp.horiz_frame_offset = 7;
 					anim_comp.frame_count = 0;
 				}
-				else if(north)
+				else if(north && !west && !east)
 				{
 					anim_comp.horiz_frame_offset = 6;
 					anim_comp.frame_count = 0;
 				}
 				
-				//limited to only 3 frames of animation
-				if(anim_comp.frame_count == 3 || no_move ){anim_comp.frame_count = 0;}
+				if(anim_comp.attackMode != -1)
+				{
+					switch(anim_comp.attackMode)
+					{
+						case 0:{ anim_comp.vert_frame_offset = 1; break;}
+					}
+					
+					if(west)
+					{
+						anim_comp.horiz_frame_offset = 2;
+					}
+					else if(east)
+					{
+						anim_comp.horiz_frame_offset = 0;
+					}
+					
+					if(south && !west && !east)
+					{
+						anim_comp.horiz_frame_offset = 7;
+						anim_comp.frame_count = 0;
+						anim_comp.vert_frame_offset = 0;
+					}
+					else if(north && !west && !east)
+					{
+						anim_comp.horiz_frame_offset = 6;
+						anim_comp.frame_count = 0;
+						anim_comp.vert_frame_offset = 0;
+					}
+					
+					if(anim_comp.frame_count == 2)
+					{
+						//reset attack mode
+						anim_comp.attackMode = -1;
+						anim_comp.vert_frame_offset = 0;
+					}
+				}
+				else
+				{
+					//limited to only 3 frames of animation
+					if(anim_comp.frame_count == 3 || no_move )
+					{
+						anim_comp.frame_count = 0;
+					}
+				}
+				
 				
 				//set render frame based on animation info
 			
 				//change x position of frame selector
-				render_comp.frame_rect.x = (anim_comp.frame_count + anim_comp.horiz_frame_offset)*anim_comp.frame_size;
+				render_comp.frame_rect.x = (anim_comp.frame_count + anim_comp.horiz_frame_offset)*anim_comp.frame_width;
+				render_comp.frame_rect.y = anim_comp.vert_frame_offset*anim_comp.frame_height;
 				break;
 			}
 			

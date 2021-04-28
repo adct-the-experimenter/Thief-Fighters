@@ -1,6 +1,6 @@
 
-#ifndef SPECIAL_POWER_MECHANIC_SYSTEM_H
-#define SPECIAL_POWER_MECHANIC_SYSTEM_H
+#ifndef ATTACK_POWER_MECHANIC_SYSTEM_H
+#define ATTACK_POWER_MECHANIC_SYSTEM_H
 
 #include "core/system.h"
 
@@ -12,7 +12,7 @@ struct PowerTransferTransaction
 	std::bitset <8> powerTransfered = 0;
 };
 
-class SpecialPowerMechanicSystem : public System
+class AttackPowerMechanicSystem : public System
 {
 public:
 	void Init();
@@ -21,6 +21,7 @@ public:
 
 private:
 	std::queue <PowerTransferTransaction> power_transfer_transaction_queue;
+	
 };
 
 #endif

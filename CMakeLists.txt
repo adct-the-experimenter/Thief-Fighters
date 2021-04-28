@@ -49,7 +49,7 @@ src/misc/MediaLoader.cpp
 src/misc/num_player_setter.cpp
 src/misc/char_selector.cpp
 src/misc/stage_selector.cpp
-src/systems/SpecialPowerMechanicSystem.cpp
+src/systems/AttackPowerMechanicSystem.cpp
 src/systems/PhysicsSystem.cpp
 src/systems/CameraSystem.cpp
 src/systems/AnimationSystem.cpp

@@ -1,4 +1,4 @@
-#include "SpecialPowerMechanicSystem.h"
+#include "AttackPowerMechanicSystem.h"
 
 #include "core/system.h"
 
@@ -9,12 +9,28 @@
 extern Coordinator gCoordinator;
 
 
-void SpecialPowerMechanicSystem::Init()
+void AttackPowerMechanicSystem::Init()
 {
 	
 }
 
-void SpecialPowerMechanicSystem::Update(float& dt)
+static void RunAttackPowerProcess(std::uint8_t& power)
+{
+	switch(power)
+	{
+		case 0:
+		{
+			//change player attack collision box to match power based on time
+			
+			//set attack mode in animation
+			
+			break;
+		}
+		default:{std::cout << "Calling undefined power!\n"; break;}
+	}
+}
+
+void AttackPowerMechanicSystem::Update(float& dt)
 {
 	
 	for (auto const& entity : mEntities)
@@ -22,6 +38,13 @@ void SpecialPowerMechanicSystem::Update(float& dt)
 		
 		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
 		auto& player = gCoordinator.GetComponent<Player>(entity);
+		auto& animation = gCoordinator.GetComponent<Animation>(entity);
+		
+		if(player.regularAttackButtonPressed)
+		{
+			animation.attackMode = 0;
+			player.regularAttackButtonPressed = false;
+		}
 		
 		//change and/or activate current power based on input
 		if(player.powerButtonPressed && player.requested_power != -1 &&
@@ -42,6 +65,7 @@ void SpecialPowerMechanicSystem::Update(float& dt)
 			
 			
 		}
+		
 		
 		//cooldown for power if activated
 		for(size_t i = 0; i < 7; i++)

@@ -8,7 +8,7 @@
 #include "systems/CameraSystem.h"
 #include "systems/RenderSystem.h"
 #include "systems/AnimationSystem.h"
-#include "systems/SpecialPowerMechanicSystem.h"
+#include "systems/AttackPowerMechanicSystem.h"
 #include "core/ControllerInputHandler.h"
 #include "core/ControllerInput.h"
 
@@ -61,7 +61,7 @@ std::shared_ptr <InputReactorSystem> input_ReactSystem;
 
 std::shared_ptr <PhysicsSystem> physicsSystem;
 
-std::shared_ptr <SpecialPowerMechanicSystem> specialPowerMechanicSystem;
+std::shared_ptr <AttackPowerMechanicSystem> attackPowerMechanicSystem;
 
 //function to init raylib system
 void InitRaylibSystem();
@@ -284,11 +284,14 @@ void logic()
 		}
 		case GameState::FIGHT_GAME:
 		{
+			attackPowerMechanicSystem->Update(dt);
 			
 			physicsSystem->Update(dt);
 			
 			//set up frame for render
 			animationSystem->Update(dt);
+			
+			
 			
 			break;
 		}
@@ -327,9 +330,7 @@ void render()
 			break;
 		}
 		case GameState::FIGHT_GAME:
-		{
-			DrawText("In game fight.", 0, 0, 20, BLACK);
-			
+		{			
 			
 			//draw the stage
 			DrawTexture(main_stage.texture, 0, 0, RAYWHITE);
@@ -442,13 +443,14 @@ void InitMainECS()
 	
 	//make special power mechanic system
 	
-	specialPowerMechanicSystem = gCoordinator.RegisterSystem<SpecialPowerMechanicSystem>();
-	specialPowerMechanicSystem->Init();
+	attackPowerMechanicSystem = gCoordinator.RegisterSystem<AttackPowerMechanicSystem>();
+	attackPowerMechanicSystem->Init();
 	
 	Signature special_power_mechanic_sig;
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Player>());
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Transform2D>());
-	gCoordinator.SetSystemSignature<SpecialPowerMechanicSystem>(special_power_mechanic_sig);
+	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Animation>());
+	gCoordinator.SetSystemSignature<AttackPowerMechanicSystem>(special_power_mechanic_sig);
 }
 
 void InitRaylibSystem()
