@@ -88,7 +88,9 @@ struct AttackBox
 struct Player
 {
 	std::uint8_t player_num;
-	std::uint8_t player_health;
+	
+	//making health signed to avoid health becoming large if it ends up being less than zero.
+	std::int16_t player_health;
 	
 	//parameters related to power
 	
@@ -104,8 +106,11 @@ struct Player
 	//bitset to indicate which power a player has activated
 	std::bitset <8> powers_activated;
 	
-	//cooldown timers for each power
-	std::array <float,8> cooldown_timer_val_array;
+	//cooldown timer for regular arract
+	float regular_attack_cooldown_timer_val;
+	
+	//cooldown timers for each special power
+	std::array <float,8> sp_attack_cooldown_timer_val_array;
 	
 	//current power set to be used
 	std::uint8_t current_power; //0-7

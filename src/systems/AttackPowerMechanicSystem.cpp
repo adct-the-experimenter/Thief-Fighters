@@ -65,22 +65,26 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		
 		if(player.regularAttackButtonPressed)
 		{
-			animation.attackMode = 0;
+			//if attack box is not active i.e. player is not attacking already
+			if(!player.attack_box.active)
+			{
+				animation.attackMode = 0;
 			
-			//initialize attack box and put it in array
-			
-			player.attack_box.active = true;
-			
-			//activate collision box
-			player.attack_box.collisionBox.x = transform.position.x + 10; 
-			player.attack_box.collisionBox.y = transform.position.y + 30;
-			player.attack_box.collisionBox.width = 30;
-			player.attack_box.collisionBox.height = 30;
-			
-			player.attack_box.player_num = player.player_num;
+				//initialize attack box
+				
+				player.attack_box.active = true;
+				
+				//activate collision box
+				player.attack_box.collisionBox.x = transform.position.x + 10; 
+				player.attack_box.collisionBox.y = transform.position.y + 30;
+				player.attack_box.collisionBox.width = 30;
+				player.attack_box.collisionBox.height = 30;
+				
+				player.attack_box.player_num = player.player_num;
+				
+			}
 			
 			player.regularAttackButtonPressed = false;
-			
 		}
 		
 		//change and/or activate current power based on input
@@ -104,20 +108,36 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		}
 		
 		
-		//cooldown for power if activated
+		//cooldown for regular attack or special power if activated
 		for(size_t i = 0; i < 8; i++)
 		{
+			//regular attack
+			if(player.attack_box.active)
+			{
+				player.regular_attack_cooldown_timer_val += dt;
+				
+				//if more than 1 second has passed
+				if(player.regular_attack_cooldown_timer_val >= 1)
+				{
+					//reset attackbox active
+					player.attack_box.active = false;
+					//reset timer value
+					player.regular_attack_cooldown_timer_val = 0;
+				}
+			}
+			
+			//special power
 			if(player.powers_activated[i])
 			{
-				player.cooldown_timer_val_array[i] += dt;
+				player.sp_attack_cooldown_timer_val_array[i] += dt;
 				
 				//if more than 2 seconds has passed
-				if(player.cooldown_timer_val_array[i] >= 2)
+				if(player.sp_attack_cooldown_timer_val_array[i] >= 2)
 				{
 					//reset bitset for power activated if cooldown time has finished
 					player.powers_activated[i] = 0;
 					//reset cooldown timer value
-					player.cooldown_timer_val_array[i] = 0;
+					player.sp_attack_cooldown_timer_val_array[i] = 0;
 				}
 			}
 		}
@@ -132,7 +152,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		
 		//if player health is at 0
 		//check which player had the last collision detection with this player
-		if(player.player_health == 0 && player.last_hit_by_player_num != 0)
+		if(player.player_health <= 0 && player.last_hit_by_player_num != 0)
 		{
 			//push power transaction to queue
 			
@@ -264,8 +284,6 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 {
 	int player_a_num = 0;
 	int player_b_num = 0;
-	
-	
 	
 	//if there is more than 1 player
 	//check player 1 and player 2 interaction
