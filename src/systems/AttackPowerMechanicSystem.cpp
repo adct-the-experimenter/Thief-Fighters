@@ -17,6 +17,7 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_health_ptrs[i] = nullptr;
 		player_position_ptrs[i] = nullptr;
 		player_last_hit_by_ptrs[i] = nullptr;
+		player_alive_ptrs[i] = nullptr;
 	}
 		
 	for (auto const& entity : mEntities)
@@ -31,6 +32,8 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_position_ptrs[player.player_num - 1] = &transform.position;
 		
 		player_last_hit_by_ptrs[player.player_num - 1] = &player.last_hit_by_player_num;
+		
+		player_alive_ptrs[player.player_num - 1] = &player.alive;
 	}
 	
 	m_num_players = num_players;
@@ -63,7 +66,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
 		
-		if(player.regularAttackButtonPressed)
+		if(player.regularAttackButtonPressed && player.alive)
 		{
 			//if attack box is not active i.e. player is not attacking already
 			if(!player.attack_box.active)
@@ -89,7 +92,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		
 		//change and/or activate current power based on input
 		else if(player.powerButtonPressed && player.requested_power != -1 &&
-		   player.requested_power < 8)
+		   player.requested_power < 8 && player.alive)
 		{
 			//check which power player is requesting
 			//change to power requested if player has this power
@@ -154,6 +157,8 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		//check which player had the last collision detection with this player
 		if(player.player_health <= 0 && player.last_hit_by_player_num != 0)
 		{
+			player.alive = false;
+			
 			//push power transaction to queue
 			
 			PowerTransferTransaction pT;

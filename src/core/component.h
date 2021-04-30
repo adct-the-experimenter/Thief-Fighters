@@ -92,6 +92,8 @@ struct Player
 	//making health signed to avoid health becoming large if it ends up being less than zero.
 	std::int16_t player_health;
 	
+	bool alive;
+	
 	//parameters related to power
 	
 	//indicate if player pressed power button
@@ -123,6 +125,8 @@ struct Player
 	
 	//attack collision box
 	AttackBox attack_box;
+	
+	
 };
 
 enum class InputReactorType : std::uint8_t { NONE=0, PLAYER, CAR};

@@ -130,7 +130,8 @@ void CharacterSelector::logic()
 								*player_entities_vec[i],
 								Player {
 									.player_num = i + 1,
-									.player_health = 30
+									.player_health = 30,
+									.alive = true
 								}
 							);
 														

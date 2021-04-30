@@ -139,8 +139,8 @@ void StageManager::PlacePlayersInStage(std::int8_t num_players)
 		auto& transform = gCoordinator.GetComponent<Transform2D>(i);
 		auto& collision_box = gCoordinator.GetComponent<CollisionBox>(i);
 		
-		transform.position.x = main_stage.player_start_array[i].x - collision_box.width/2;
-		transform.position.y = main_stage.player_start_array[i].y - collision_box.height;
+		transform.position.x = float(main_stage.player_start_array[i].x) - collision_box.width/2;
+		transform.position.y = float(main_stage.player_start_array[i].y) - collision_box.height;
 		
 	}
 }

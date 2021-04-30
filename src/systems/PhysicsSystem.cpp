@@ -29,6 +29,7 @@ static void PushBack(float& posX, float& posY, float& velX, float& velY, float& 
     else if(velX == 0){newPosX = posX;}
     
 	posX = newPosX;
+    velX = 0;
     
     //if going down, push up
     if(velY > 0){newPosY = posY - pushBackDist - (velY * dt);}
@@ -38,6 +39,7 @@ static void PushBack(float& posX, float& posY, float& velX, float& velY, float& 
 
     
     posY = newPosY;
+    velY = 0;
 }
 
 static bool CollisionWithPlatformDetected(Rectangle& platform,
@@ -135,9 +137,9 @@ void PhysicsSystem::Update(float& dt)
 				//account for acceleration due to gravity to rigid body velocity
 				//rigidBody.velocity.x += gravity.force.x * dt;
 				
-				float jumpVel = rigidBody.velocity.y;
+				float jumpVel = rigidBody.velocity.y*3;
 				
-				rigidBody.velocity.y += gravity.force.y * dt;
+				rigidBody.velocity.y += 3*gravity.force.y * dt;
 				
 				CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
 														  rigidBody.velocity.x, rigidBody.velocity.y,
@@ -145,7 +147,7 @@ void PhysicsSystem::Update(float& dt)
 														  collisionBox.width, collisionBox.height);
 				
 				//move transform component by velocity of rigid body multiplied by time
-				transform.position.x += rigidBody.velocity.x * dt;
+				transform.position.x += 3*rigidBody.velocity.x * dt;
 				transform.position.y += (rigidBody.velocity.y + jumpVel) * dt;
 				
 				break;
