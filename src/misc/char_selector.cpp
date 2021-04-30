@@ -120,7 +120,8 @@ void CharacterSelector::logic()
 								*player_entities_vec[i],
 								RenderModelComponent {
 									.texture_ptr = &base_fighter_texture,
-									.frame_rect = (Rectangle){0,0,30,80}
+									.frame_rect = (Rectangle){0,0,30,80} ,
+									.render = true
 								}
 							);
 				
@@ -131,7 +132,9 @@ void CharacterSelector::logic()
 								Player {
 									.player_num = i + 1,
 									.player_health = 30,
-									.alive = true
+									.alive = true,
+									.taking_damage = false,
+									
 								}
 							);
 														

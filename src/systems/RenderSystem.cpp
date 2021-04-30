@@ -19,7 +19,7 @@ void RenderSystem::Init(CustomCamera* camera)
         
 }
 
-bool IsObjectInCameraView(float& posX, float& posY, Rectangle& camera_rect)
+static bool IsObjectInCameraView(float& posX, float& posY, Rectangle& camera_rect)
 {
 	//half the width and height because the camera is centered on a player.
 	
@@ -58,11 +58,9 @@ void RenderSystem::Update()
 			auto& render_comp = gCoordinator.GetComponent<RenderModelComponent>(entity);
 			auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
 			
-			//bool renderObjectBool = IsObjectInCameraView(transform.position.x,transform.position.y,m_camera_ptr->camera_rect);
-			bool renderObjectBool = true;
 			
 			//if renderable object is within camera bounds.
-			if(renderObjectBool)
+			if(render_comp.render)
 			{
 				//DrawModelEx( render_comp.model, transform.position, (Vector3){ 1.0f, 0.0f, 0.0f }, -90.0f, (Vector3){ 1.0f, 1.0f, 1.0f }, WHITE);
 				

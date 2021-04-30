@@ -18,6 +18,7 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_position_ptrs[i] = nullptr;
 		player_last_hit_by_ptrs[i] = nullptr;
 		player_alive_ptrs[i] = nullptr;
+		player_taking_damage_state_ptrs[i] = nullptr;
 	}
 		
 	for (auto const& entity : mEntities)
@@ -34,6 +35,8 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_last_hit_by_ptrs[player.player_num - 1] = &player.last_hit_by_player_num;
 		
 		player_alive_ptrs[player.player_num - 1] = &player.alive;
+		
+		player_taking_damage_state_ptrs[player.player_num - 1] = &player.taking_damage;
 	}
 	
 	m_num_players = num_players;
@@ -66,7 +69,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
 		
-		if(player.regularAttackButtonPressed && player.alive)
+		if(player.regularAttackButtonPressed && player.alive && !player.taking_damage)
 		{
 			//if attack box is not active i.e. player is not attacking already
 			if(!player.attack_box.active)
@@ -92,7 +95,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		
 		//change and/or activate current power based on input
 		else if(player.powerButtonPressed && player.requested_power != -1 &&
-		   player.requested_power < 8 && player.alive)
+		   player.requested_power < 8 && player.alive && !player.taking_damage)
 		{
 			//check which power player is requesting
 			//change to power requested if player has this power
@@ -240,12 +243,27 @@ static bool PlayerCollisionWithRectangleDetected(Rectangle& rect,
 	return true;
 }
 
+bool AttackPowerMechanicSystem::AreBothPlayersAlive(int& player_a_num, int& player_b_num)
+{
+	if(*player_alive_ptrs[player_a_num - 1] && *player_alive_ptrs[player_b_num - 1])
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 AttackEvent AttackPowerMechanicSystem::CheckCollisionBetween2Players(int& player_a_num, int& player_b_num)
 {
 	AttackEvent attack_event;
 	attack_event.attack = false;
 	attack_event.player_num_victim = 0;
 	attack_event.player_num_attacker = 0;
+	
+	if(!AttackPowerMechanicSystem::AreBothPlayersAlive(player_a_num,player_b_num))
+	{
+		return attack_event;
+	}
 	
 	AttackBox* playerA_attackbox_ptr = player_attack_boxes_ptrs[player_a_num - 1];
 	AttackBox* playerB_attackbox_ptr = player_attack_boxes_ptrs[player_b_num - 1];
@@ -264,9 +282,12 @@ AttackEvent AttackPowerMechanicSystem::CheckCollisionBetween2Players(int& player
 												playerB_position_ptr->x, playerB_position_ptr->y, width,height)
 		   )
 		{
+			
+			
 			attack_event.attack = true;
 			attack_event.player_num_victim = player_b_num;
 			attack_event.player_num_attacker = player_a_num;
+			
 		}
 	}
 	//if player B attack box is active, player A attack box inactive
@@ -279,11 +300,14 @@ AttackEvent AttackPowerMechanicSystem::CheckCollisionBetween2Players(int& player
 			attack_event.attack = true;
 			attack_event.player_num_victim = player_a_num;
 			attack_event.player_num_attacker = player_b_num;
+			
 		}
 	}
 	
 	return attack_event;
 }
+
+
 
 void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 {
@@ -299,14 +323,24 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 		player_b_num = 2;
 		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
 		
-		//if attack happened
-		if(attack_event.attack)
+		//if attack happened, and player is not already in state of taking damage
+		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] )
 		{
+			//std::cout << "Player " << attack_event.player_num_attacker << "took away 3 HP from player " << attack_event.player_num_victim << std::endl;
+			
 			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
+			*player_health_ptrs[attack_event.player_num_victim - 1] -= 3;
 			//set last hit by player variable for victim player
 			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
 			
+			*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
+			
+			//std::cout << "Player " << attack_event.player_num_attacker << " health: " << *player_health_ptrs[attack_event.player_num_victim - 1] << std::endl;
+		}
+		else
+		{
+			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
+			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
 		}
 	}
 	

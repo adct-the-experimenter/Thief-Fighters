@@ -37,8 +37,9 @@ private:
 	std::array <Vector2*,8> player_position_ptrs;
 	std::array <std::uint8_t*,8> player_last_hit_by_ptrs;
 	std::array <bool*,8> player_alive_ptrs;
+	std::array <bool*,8> player_taking_damage_state_ptrs;
 	
-	//
+	bool AreBothPlayersAlive(int& player_a_num, int& player_b_num);
 	AttackEvent CheckCollisionBetween2Players(int& player_a_num, int& player_b_num);
 	
 	void CollisionDetectionBetweenPlayers();

@@ -75,6 +75,7 @@ struct RenderModelComponent
 	Texture2D* texture_ptr;
 	Rectangle frame_rect;
 	Color tint;
+	bool render;
 };
 
 struct AttackBox
@@ -125,6 +126,9 @@ struct Player
 	
 	//attack collision box
 	AttackBox attack_box;
+	
+	//bool to indicate if player is suffering damage already.
+	bool taking_damage;
 	
 	
 };
