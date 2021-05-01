@@ -69,7 +69,7 @@ void NumPlayerSetter::handle_controller_input(ControllerInput& input)
 	else if(input.gamepads_vec[i].left_y_dir_axis == 1 ||
 			input.gamepads_vec[i].left_y_dir_digital == 1)
 	{
-		if(m_current_slot < 8 && moveBool){m_current_slot++;}
+		if(m_current_slot < 7 && moveBool){m_current_slot++;}
 		moveBool = false;
 	}
 	

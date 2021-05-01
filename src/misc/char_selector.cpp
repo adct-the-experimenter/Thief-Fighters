@@ -79,7 +79,32 @@ void CharacterSelector::Init(std::vector <Entity> *entities_vec_ptr, std::uint8_
 		//for bottom side
 		else
 		{
+			fighter_boxes[i].background_box.x = i*150 + 10;
+			fighter_boxes[i].background_box.y = 350;
+			fighter_boxes[i].background_box.width = 150;
+			fighter_boxes[i].background_box.height = 225;
 			
+			fighter_boxes[i].player_num_string = "Player " + std::to_string(i + 1);
+			
+			fighter_boxes[i].player_num_rect.x = i*150 + 50;
+			fighter_boxes[i].player_num_rect.y = 375;
+			fighter_boxes[i].player_num_rect.width = 80;
+			fighter_boxes[i].player_num_rect.height = 25;
+			
+			fighter_boxes[i].char_slot_rect.x = i*150 + 50;
+			fighter_boxes[i].char_slot_rect.y = 400;
+			fighter_boxes[i].char_slot_rect.width = 80;
+			fighter_boxes[i].char_slot_rect.height = 25;
+			
+			fighter_boxes[i].special_power_slot_rect.x = i*150 + 50;
+			fighter_boxes[i].special_power_slot_rect.y = 450;
+			fighter_boxes[i].special_power_slot_rect.width = 80;
+			fighter_boxes[i].special_power_slot_rect.height = 25;
+			
+			fighter_boxes[i].confirm_selection_rect.x = i*150 + 50;
+			fighter_boxes[i].confirm_selection_rect.y = 500;
+			fighter_boxes[i].confirm_selection_rect.width = 80;
+			fighter_boxes[i].confirm_selection_rect.height = 25;
 		}
 		
 	}
