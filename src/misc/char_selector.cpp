@@ -46,7 +46,7 @@ void CharacterSelector::Init(std::vector <Entity> *entities_vec_ptr, std::uint8_
 	for(size_t i = 0; i < fighter_boxes.size(); i++)
 	{
 		//for top side
-		if(i < 3)
+		if(i < 4)
 		{
 			fighter_boxes[i].background_box.x = i*150 + 10;
 			fighter_boxes[i].background_box.y = 50;

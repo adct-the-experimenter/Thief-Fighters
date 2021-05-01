@@ -27,7 +27,7 @@ void NumPlayerSetter::Init()
 	//initialize render slot locations
 	for(size_t it = 0; it < num_players_boxes.size(); it++)
 	{
-		num_players_boxes[it].render_rect = {400 - 25,30*(it+1) + 400,100,20};
+		num_players_boxes[it].render_rect = {400 - 25, 30*(it+1) + 300, 100, 20};
 		if(it == 0)
 		{
 			num_players_boxes[it].text = " " + std::to_string( it + 1) + " Player";
@@ -69,7 +69,7 @@ void NumPlayerSetter::handle_controller_input(ControllerInput& input)
 	else if(input.gamepads_vec[i].left_y_dir_axis == 1 ||
 			input.gamepads_vec[i].left_y_dir_digital == 1)
 	{
-		if(m_current_slot < 3 && moveBool){m_current_slot++;}
+		if(m_current_slot < 8 && moveBool){m_current_slot++;}
 		moveBool = false;
 	}
 	

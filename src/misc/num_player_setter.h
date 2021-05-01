@@ -49,7 +49,7 @@ public:
 private:
 	
 	//vector to hold a number of players box
-	std::array <NumbersBox,4> num_players_boxes;
+	std::array <NumbersBox,8> num_players_boxes;
 	
 	size_t m_current_slot;
 	bool m_confirm_selection;
