@@ -25,6 +25,7 @@ private:
 	SDL_GameController* gGameController2;
 	SDL_GameController* gGameController3;
 	
+	void SetControllerAxisMotionVariables(ControllerInput::GamepadInfo& gamepad_info,SDL_Event& sdl_event);
 };
 
 #endif

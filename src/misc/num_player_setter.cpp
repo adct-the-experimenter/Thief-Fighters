@@ -59,13 +59,15 @@ void NumPlayerSetter::handle_controller_input(ControllerInput& input)
 	size_t i = 0;
 	
 	//if joystick moved up, go up a slot
-	if(input.gamepads_vec[i].left_y_dir_axis == -1)
+	if(input.gamepads_vec[i].left_y_dir_axis == -1 ||
+	   input.gamepads_vec[i].left_y_dir_digital == -1)
 	{
 		if(m_current_slot > 0 && moveBool){m_current_slot--;}
 		moveBool = false;
 	}
 	//else if joystick moved down, go down a slot
-	else if(input.gamepads_vec[i].left_y_dir_axis == 1)
+	else if(input.gamepads_vec[i].left_y_dir_axis == 1 ||
+			input.gamepads_vec[i].left_y_dir_digital == 1)
 	{
 		if(m_current_slot < 3 && moveBool){m_current_slot++;}
 		moveBool = false;

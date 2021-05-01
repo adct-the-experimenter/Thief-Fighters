@@ -47,6 +47,9 @@ public:
 		int16_t left_x_dir_axis;
 		int16_t left_y_dir_axis;
 		
+		int16_t left_x_dir_digital;
+		int16_t left_y_dir_digital;
+		
 		//includes buttons and dpad
 		SDL_GameControllerButton button;
 		//0 is null. 1 is pressed, 2 is released.
@@ -66,8 +69,12 @@ public:
 		for(size_t i = 0; i < gamepads_vec.size(); i++)
 		{
 			gamepads_vec[i].button =  SDL_CONTROLLER_BUTTON_INVALID;
+			gamepads_vec[i].left_x_dir_digital =  0;
+			gamepads_vec[i].left_y_dir_digital =  0;
 		}
 	};
+		
+	
 };
 
 #endif

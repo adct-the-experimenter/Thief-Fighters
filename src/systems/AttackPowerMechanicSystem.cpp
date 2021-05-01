@@ -37,6 +37,9 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_alive_ptrs[player.player_num - 1] = &player.alive;
 		
 		player_taking_damage_state_ptrs[player.player_num - 1] = &player.taking_damage;
+		
+		//set collected power for player
+		player.collected_powers[player.current_power] = 1;
 	}
 	
 	m_num_players = num_players;
@@ -193,6 +196,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 				//OR player collected power bits with the transfered power bits
 				player.collected_powers |= power_transfer_transaction_queue.front().powerTransfered;
 				power_transfer_transaction_queue.pop();
+				
 			}
 		}
 	}
@@ -346,7 +350,7 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 	
 	//if there are more than 2 players
 	//check player 1 and player 3, player 2 and player 3 interactions
-	if( m_num_players > 2)
+	if( m_num_players > 2 )
 	{
 		AttackEvent attack_event;
 		
@@ -357,7 +361,7 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
 		
 		//if attack happened
-		if(attack_event.attack)
+		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] )
 		{
 			//decrease health of victim player
 			*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;

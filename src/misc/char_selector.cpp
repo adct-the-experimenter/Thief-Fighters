@@ -4,8 +4,11 @@
 #include "core/coordinator.h"
 
 #include "misc/media.h" //for texture
+#include <array>
 
 extern Coordinator gCoordinator;
+
+static std::array <std::string,3> special_power_choices = {"Long Arms","Dash","Shield"};
 
 CharacterSelector::CharacterSelector()
 {
@@ -15,6 +18,7 @@ CharacterSelector::CharacterSelector()
 	move_next_state = false;
 	
 	m_num_fighters = 2;
+	m_num_special_powers = 3;
 }
 
 CharacterSelector::~CharacterSelector()
@@ -34,9 +38,51 @@ void CharacterSelector::Init(std::vector <Entity> *entities_vec_ptr, std::uint8_
 		player_entities_vec[i] = &entities_vec_ptr->at(i);
 	}
 	
-	fighter_boxes.resize(m_num_fighters);
+	fighter_boxes.resize(num_players);
 	
 	char_confirmations.resize(num_players);
+	
+	//set up fighter box positions and internals
+	for(size_t i = 0; i < fighter_boxes.size(); i++)
+	{
+		//for top side
+		if(i < 3)
+		{
+			fighter_boxes[i].background_box.x = i*150 + 10;
+			fighter_boxes[i].background_box.y = 50;
+			fighter_boxes[i].background_box.width = 150;
+			fighter_boxes[i].background_box.height = 225;
+			
+			fighter_boxes[i].player_num_string = "Player " + std::to_string(i + 1);
+			
+			fighter_boxes[i].player_num_rect.x = i*150 + 50;
+			fighter_boxes[i].player_num_rect.y = 75;
+			fighter_boxes[i].player_num_rect.width = 80;
+			fighter_boxes[i].player_num_rect.height = 25;
+			
+			fighter_boxes[i].char_slot_rect.x = i*150 + 50;
+			fighter_boxes[i].char_slot_rect.y = 100;
+			fighter_boxes[i].char_slot_rect.width = 80;
+			fighter_boxes[i].char_slot_rect.height = 25;
+			
+			fighter_boxes[i].special_power_slot_rect.x = i*150 + 50;
+			fighter_boxes[i].special_power_slot_rect.y = 150;
+			fighter_boxes[i].special_power_slot_rect.width = 80;
+			fighter_boxes[i].special_power_slot_rect.height = 25;
+			
+			fighter_boxes[i].confirm_selection_rect.x = i*150 + 50;
+			fighter_boxes[i].confirm_selection_rect.y = 200;
+			fighter_boxes[i].confirm_selection_rect.width = 80;
+			fighter_boxes[i].confirm_selection_rect.height = 25;
+			
+		}
+		//for bottom side
+		else
+		{
+			
+		}
+		
+	}
 	
 	
 }
@@ -47,7 +93,7 @@ void CharacterSelector::handle_input(ControllerInput& controller_input, Keyboard
 	CharacterSelector::handle_keyboard_input(key_input);
 }
 
-const int16_t joystick_border = 32600;
+static const int16_t joystick_border = 32600;
 
 void CharacterSelector::handle_controller_input(ControllerInput& input)
 {
@@ -57,31 +103,44 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 	for(size_t i = 0; i < input.gamepads_vec.size();i++)
 	{
 		//if joystick moved up, go up a slot
-		if(input.gamepads_vec[i].left_y_dir_axis < -joystick_border)
+		if(input.gamepads_vec[i].left_y_dir_digital == -1)
 		{
+			if(fighter_boxes[i].current_slot > 0){fighter_boxes[i].current_slot--;}
 			
 		}
 		//else if joystick moved down, go down a slot
-		else if(input.gamepads_vec[i].left_y_dir_axis > joystick_border)
+		else if(input.gamepads_vec[i].left_y_dir_digital == 1)
 		{
-			
+			if(fighter_boxes[i].current_slot < 2){fighter_boxes[i].current_slot++;}
 		}
 			
 		//if joystick moved left, go left on color choice
-		if(input.gamepads_vec[i].left_x_dir_axis < -joystick_border)
+		if(input.gamepads_vec[i].left_x_dir_digital == -1)
 		{
-			
+			//if on special power slot
+			if(fighter_boxes[i].current_slot == 1)
+			{
+				if(fighter_boxes[i].special_power_choice > 0){fighter_boxes[i].special_power_choice--;}
+			}
 		}
 		//if joystick moved right, go right on color choice
-		else if(input.gamepads_vec[i].left_x_dir_axis > joystick_border)
+		else if(input.gamepads_vec[i].left_x_dir_digital == 1)
 		{
-			
+			//if on special power slot
+			if(fighter_boxes[i].current_slot == 1)
+			{
+				if(fighter_boxes[i].special_power_choice < m_num_special_powers - 1){fighter_boxes[i].special_power_choice++;}
+			}
 		}
 		
 		//if a button pressed, turn confirm bool on
 		if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_A)
 		{
-			fighter_boxes[i].confirm_selection = true;
+			//if current slot is confirm slot
+			if(fighter_boxes[i].current_slot == 2)
+			{
+				fighter_boxes[i].confirm_selection = true;
+			}
 		}
 	}
 	
@@ -99,8 +158,6 @@ Vector2 player4_start = {-1.0f,2.0f};
 
 void CharacterSelector::logic()
 {
-	int width = 30;
-	
 	
 	for(size_t i = 0; i < fighter_boxes.size(); i++)
 	{  	
@@ -127,13 +184,19 @@ void CharacterSelector::logic()
 				
 				
 				//add player info component
+				//set special power according to choice
+				
+				std::bitset <8> collected_powers;
+				collected_powers[fighter_boxes[i].special_power_choice] = 1;
+				
 				gCoordinator.AddComponent(
 								*player_entities_vec[i],
 								Player {
 									.player_num = i + 1,
 									.player_health = 30,
 									.alive = true,
-									.taking_damage = false,
+									.current_power = fighter_boxes[i].special_power_choice,
+									.taking_damage = false
 									
 								}
 							);
@@ -240,9 +303,45 @@ void CharacterSelector::render()
 		//if selection is not confirmed
 		if(!fighter_boxes[i].confirm_selection)
 		{
-			//draw texture of character select boxes
-			DrawTexture(char_select_texture, 200, 100, WHITE);
+			//background box
+			DrawRectangle(fighter_boxes[i].background_box.x, 
+							fighter_boxes[i].background_box.y, 
+							fighter_boxes[i].background_box.width, 
+							fighter_boxes[i].background_box.height, GRAY);
 			
+			DrawText(fighter_boxes[i].player_num_string.c_str(),
+					fighter_boxes[i].player_num_rect.x,
+					fighter_boxes[i].player_num_rect.y,
+					14,BLACK);
+			
+			Color char_text_color;
+			if(fighter_boxes[i].current_slot == 0){char_text_color = YELLOW;}
+			else{char_text_color = BLACK;}
+			
+			//character fighter
+			DrawText("Randy", 
+					fighter_boxes[i].char_slot_rect.x, fighter_boxes[i].char_slot_rect.y, 
+					14, char_text_color);
+			
+			//draw texture of character choice
+			//DrawTexture(char_select_texture, 200, 100, WHITE);
+			
+			Color special_power_text_color;
+			if(fighter_boxes[i].current_slot == 1){special_power_text_color = YELLOW;}
+			else{special_power_text_color = BLACK;}
+			
+			//draw text for special power
+			DrawText(special_power_choices[fighter_boxes[i].special_power_choice].c_str(), 
+					fighter_boxes[i].special_power_slot_rect.x, fighter_boxes[i].special_power_slot_rect.y
+					, 14, special_power_text_color);
+			
+			Color confirm_text_color;
+			if(fighter_boxes[i].current_slot == 2){confirm_text_color = YELLOW;}
+			else{confirm_text_color = BLACK;}
+			
+			DrawText("Confirm", 
+					fighter_boxes[i].confirm_selection_rect.x, fighter_boxes[i].confirm_selection_rect.y
+					, 14, confirm_text_color);
 		}
 		
 	}

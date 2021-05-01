@@ -12,10 +12,6 @@
 #include "core/entity.h"
 
 
-
-	
-
-
 class CharacterSelector
 {
 public:
@@ -36,23 +32,26 @@ public:
 	
 	bool MoveToNextStateBool();
 	
-	std::uint8_t name_slot = 0;
-	std::uint8_t job_slot = 1;
-	std::uint8_t render_slot = 2; //index for first render slot
-	std::uint8_t last_slot = 7; //index for the last slot
-	
-
-	struct ChoiceIndicator
-	{
-		Rectangle frame_clip = {0,0,30,30};
-		
-	};
-
 	struct FighterBox
 	{
-				
-		ChoiceIndicator choice_indicator;
-			
+		Rectangle background_box;
+		
+		std::string player_num_string;
+		Rectangle player_num_rect;
+		
+		//slots: 0 = character, 1 = special_power, 2 = confirm
+		
+		//current slot
+		std::uint8_t current_slot = 0;
+
+		std::uint8_t special_power_choice = 0;
+		
+		Rectangle char_slot_rect;
+		
+		Rectangle special_power_slot_rect;
+		
+		Rectangle confirm_selection_rect;
+		
 		bool confirm_selection = false;
 	};
 	
@@ -77,7 +76,8 @@ private:
 	void handle_controller_input(ControllerInput& input);
 	void handle_keyboard_input(KeyboardInput& input);
 	
-	std::uint8_t m_num_fighters;
+	std::uint8_t m_num_fighters;	
+	std::uint8_t m_num_special_powers;
 };
 
 #endif

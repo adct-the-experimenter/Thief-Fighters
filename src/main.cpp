@@ -247,6 +247,7 @@ void logic()
 				
 				//move to next state
 				m_game_state = GameState::CHAR_SELECTOR;
+				
 			}
 			
 			break;
@@ -324,7 +325,7 @@ void render()
 		}
 		case GameState::CHAR_SELECTOR:
 		{
-			DrawText("In character selector. Press A to select character.", 80, 20, 20, BLACK);
+			DrawText("In character selector. Move joystick to change to desired choice. Press A/B to confirm choice.", 80, 20, 20, BLACK);
 			gCharSelector.render();
 			break;
 		}
