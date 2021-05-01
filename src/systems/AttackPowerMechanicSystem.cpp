@@ -85,7 +85,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 				
 				//activate collision box
 				player.attack_box.collisionBox.x = transform.position.x + 10; 
-				player.attack_box.collisionBox.y = transform.position.y + 30;
+				player.attack_box.collisionBox.y = transform.position.y + 20;
 				player.attack_box.collisionBox.width = 30;
 				player.attack_box.collisionBox.height = 30;
 				
@@ -97,22 +97,43 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		}
 		
 		//change and/or activate current power based on input
-		else if(player.powerButtonPressed && player.requested_power != -1 &&
+		else if(player.powerButtonPressed &&
 		   player.requested_power < 8 && player.alive && !player.taking_damage)
 		{
 			//check which power player is requesting
 			//change to power requested if player has this power
-			if(player.collected_powers[player.requested_power])
+			if( player.requested_power != -1 && player.collected_powers[player.requested_power])
 			{
-				player.current_power = player.requested_power;
-				
-				//set power activated bit, if not actived
+				//activate power, if not actived
 				if( !player.powers_activated[player.current_power])
 				{
+					player.current_power = player.requested_power;
+					
+					animation.attackMode = player.current_power + 1;
+					
+					std::cout << "current power of player " << int(player.player_num) << ": " << int(player.current_power) << std::endl;
+					player.powers_activated[player.current_power];
+				}
+				
+				
+			}
+			//else use the current power
+			else
+			{				
+				//activate power if not actived
+				if( !player.powers_activated[player.current_power])
+				{
+					animation.attackMode = player.current_power + 1;
+					
+					std::cout << "current power of player " << int(player.player_num) << ": " << int(player.current_power) << std::endl;
 					player.powers_activated[player.current_power];
 				}
 			}
 			
+			//reset requested power
+			player.requested_power = -1;
+			//reset power button pressed
+			player.powerButtonPressed = false;
 			
 		}
 		
@@ -140,22 +161,27 @@ void AttackPowerMechanicSystem::Update(float& dt)
 			{
 				player.sp_attack_cooldown_timer_val_array[i] += dt;
 				
-				//if more than 2 seconds has passed
-				if(player.sp_attack_cooldown_timer_val_array[i] >= 2)
+				//if more than 1 second has passed
+				if(player.sp_attack_cooldown_timer_val_array[i] >= 1)
 				{
-					//reset bitset for power activated if cooldown time has finished
-					player.powers_activated[i] = 0;
-					//reset cooldown timer value
-					player.sp_attack_cooldown_timer_val_array[i] = 0;
+					//disable attack box
+					
+					//reset attackbox active
+					player.attack_box.active = false;
+					
+					//if more than 2 seconds have passed
+					if(player.sp_attack_cooldown_timer_val_array[i] >= 2)
+					{
+						//reset bitset for power activated if cooldown time has finished
+						player.powers_activated[i] = 0;
+						//reset cooldown timer value
+						player.sp_attack_cooldown_timer_val_array[i] = 0;
+					}
 				}
+				
 			}
 		}
 		
-		
-		//reset requested power
-		player.requested_power = -1;
-		//reset power button pressed
-		player.powerButtonPressed = false;
 		
 		//power steal mechanic here
 		

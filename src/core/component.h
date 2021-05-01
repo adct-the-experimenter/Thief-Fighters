@@ -57,7 +57,7 @@ struct Animation
 	
 	
 	std::uint16_t frame_width = 30;
-	std::uint16_t frame_height = 80;
+	std::uint16_t frame_height = 60;
 	std::uint8_t frame_count = 0;
 	
 	//for movement based animation

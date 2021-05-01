@@ -43,6 +43,9 @@ public:
 		int16_t right_x_axis;
 		int16_t right_y_axis;
 		
+		int16_t right_x_dir_digital;
+		int16_t right_y_dir_digital;
+		
 		//joystick direction, gets reset for non-continous movement
 		int16_t left_x_dir_axis;
 		int16_t left_y_dir_axis;
@@ -71,6 +74,8 @@ public:
 			gamepads_vec[i].button =  SDL_CONTROLLER_BUTTON_INVALID;
 			gamepads_vec[i].left_x_dir_digital =  0;
 			gamepads_vec[i].left_y_dir_digital =  0;
+			gamepads_vec[i].right_x_dir_digital = 0;
+			gamepads_vec[i].right_y_dir_digital = 0;
 		}
 	};
 		

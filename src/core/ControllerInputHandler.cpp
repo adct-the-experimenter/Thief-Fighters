@@ -132,6 +132,8 @@ void ControllerInputHandler::SetControllerAxisMotionVariables(ControllerInput::G
 		gamepad_info.right_y_axis = sdl_event.caxis.value;
 	}
 	
+	//set left digital axis 
+	
 	if(gamepad_info.left_x_axis < -1*joystick_border)
 	{
 		gamepad_info.left_x_dir_digital = -1;
@@ -157,6 +159,34 @@ void ControllerInputHandler::SetControllerAxisMotionVariables(ControllerInput::G
 	{
 		gamepad_info.left_y_dir_digital = 0;
 	}
+	
+	//set right digital axis
+	if(gamepad_info.right_x_axis < -1*joystick_border)
+	{
+		gamepad_info.right_x_dir_digital = -1;
+	}
+	else if(gamepad_info.right_x_axis > joystick_border)
+	{
+		gamepad_info.right_x_dir_digital = 1;
+	}
+	else
+	{
+		gamepad_info.right_x_dir_digital = 0;
+	}
+	
+	if(gamepad_info.right_y_axis < -1*joystick_border)
+	{
+		gamepad_info.right_y_dir_digital = -1;
+	}
+	else if(gamepad_info.right_y_axis > joystick_border)
+	{
+		gamepad_info.right_y_dir_digital = 1;
+	}
+	else
+	{
+		gamepad_info.right_y_dir_digital = 0;
+	}
+	
 }
 
 void ControllerInputHandler::SetGamepadInfo(ControllerInput& input_info)

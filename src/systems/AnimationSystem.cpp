@@ -18,6 +18,7 @@ void AnimationSystem::Init()
 
 void AnimationSystem::Update(float& dt)
 {
+	float width_factor = 1;
 	
 	for (auto const& entity : mEntities)
 	{
@@ -83,10 +84,15 @@ void AnimationSystem::Update(float& dt)
 				
 				if(anim_comp.attackMode != -1)
 				{
-					switch(anim_comp.attackMode)
+					if((anim_comp.attackMode == 1 || anim_comp.attackMode == 2) && anim_comp.frame_count == 0)
 					{
-						case 0:{ anim_comp.vert_frame_offset = 1; break;}
+						width_factor = 2;
 					}
+					else
+					{
+						width_factor = 1;
+					}
+					anim_comp.vert_frame_offset = anim_comp.attackMode + 1;
 					
 					if(west)
 					{
@@ -110,15 +116,20 @@ void AnimationSystem::Update(float& dt)
 						anim_comp.vert_frame_offset = 0;
 					}
 					
+					//limited to only 2 frame of animation
 					if(anim_comp.frame_count == 2)
 					{
 						//reset attack mode
 						anim_comp.attackMode = -1;
 						anim_comp.vert_frame_offset = 0;
+						width_factor = 1;
 					}
 				}
 				else
 				{
+					width_factor = 1;
+					anim_comp.vert_frame_offset = 0;
+					
 					//limited to only 3 frames of animation
 					if(anim_comp.frame_count == 3 || no_move )
 					{
@@ -132,6 +143,7 @@ void AnimationSystem::Update(float& dt)
 				//change x position of frame selector
 				render_comp.frame_rect.x = (anim_comp.frame_count + anim_comp.horiz_frame_offset)*anim_comp.frame_width;
 				render_comp.frame_rect.y = anim_comp.vert_frame_offset*anim_comp.frame_height;
+				render_comp.frame_rect.width = width_factor * 30;
 				break;
 			}
 			

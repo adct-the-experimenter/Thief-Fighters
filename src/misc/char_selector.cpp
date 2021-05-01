@@ -202,7 +202,7 @@ void CharacterSelector::logic()
 								*player_entities_vec[i],
 								RenderModelComponent {
 									.texture_ptr = &base_fighter_texture,
-									.frame_rect = (Rectangle){0,0,30,80} ,
+									.frame_rect = (Rectangle){0,0,30,60} ,
 									.render = true
 								}
 							);
@@ -284,7 +284,7 @@ void CharacterSelector::logic()
 							*player_entities_vec.at(i),
 							CollisionBox{
 								.width = (std::uint32_t){30},
-								.height = (std::uint32_t){80}
+								.height = (std::uint32_t){60}
 							}
 						);
 				

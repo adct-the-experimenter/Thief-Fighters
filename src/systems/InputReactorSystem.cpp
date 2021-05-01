@@ -31,12 +31,13 @@ void InputReactorSystem::Update(ControllerInput& input)
 					//if player number matches game pad
 					if(inputReactor.player_num == i + 1)
 					{
-						
+						//if moved left joystick left
 						if(input.gamepads_vec[i].left_x_dir_axis == -1 
 							|| input.gamepads_vec[i].left_x_axis < -joystick_border )
 						{
 							rigidBody.velocity.x = -speed_factor;
 						}
+						//else if moved left joystick right
 						else if( input.gamepads_vec[i].left_x_dir_axis == 1 
 								|| input.gamepads_vec[i].left_x_axis > joystick_border )
 						{
@@ -47,6 +48,60 @@ void InputReactorSystem::Update(ControllerInput& input)
 							rigidBody.velocity.x = 0.0f;
 						}
 						
+						//set power requested based on position of right joystick
+						//       0
+						//    7     1
+						//  6		  2
+						//    5     3
+						//       4
+						//if up
+						if(input.gamepads_vec[i].right_y_dir_digital == -1)
+						{
+							if(input.gamepads_vec[i].right_x_dir_digital == -1)
+							{
+								player.requested_power = 7;
+							}
+							else if(input.gamepads_vec[i].right_x_dir_digital == 1)
+							{
+								player.requested_power = 1;
+							}
+							else
+							{
+								player.requested_power = 0;
+							}
+						}
+						else if(input.gamepads_vec[i].right_y_dir_digital == 1)
+						{
+							if(input.gamepads_vec[i].right_x_dir_digital == -1)
+							{
+								player.requested_power = 5;
+							}
+							else if(input.gamepads_vec[i].right_x_dir_digital == 1)
+							{
+								player.requested_power = 3;
+							}
+							else
+							{
+								player.requested_power = 4;
+							}
+						}
+						else
+						{
+							if(input.gamepads_vec[i].right_x_dir_digital == -1)
+							{
+								player.requested_power = 6;
+							}
+							else if(input.gamepads_vec[i].right_x_dir_digital == 1)
+							{
+								player.requested_power = 2;
+							}
+							else
+							{
+								player.requested_power = -1;
+							}
+						}
+						
+						
 						//if jump button pressed
 						if( input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_B ||
 							input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
@@ -55,7 +110,7 @@ void InputReactorSystem::Update(ControllerInput& input)
 						}
 						
 						//if special power button pressed
-						if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
+						if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
 						{
 							player.powerButtonPressed = true;
 						}
