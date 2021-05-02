@@ -33,6 +33,7 @@ private:
 	
 	//pointers for use with collision detection and health management
 	std::array <AttackBox*,8> player_attack_boxes_ptrs;
+	std::array <AttackBox*,8> player_special_attack_boxes_ptrs;
 	std::array <std::int16_t*,8> player_health_ptrs;
 	std::array <Vector2*,8> player_position_ptrs;
 	std::array <std::uint8_t*,8> player_last_hit_by_ptrs;

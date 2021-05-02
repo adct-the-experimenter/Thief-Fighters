@@ -66,6 +66,8 @@ struct Animation
 	//attack mode, indicates which attack mode a character is in
 	//for player, -1 = none, 0 = normal attack, 1-9 = special attack
 	std::int8_t attackMode = -1;
+	
+	bool facing_left = false; 
 };
 
 

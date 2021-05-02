@@ -61,6 +61,7 @@ static void RunAttackPowerProcess(std::uint8_t& power)
 	}
 }
 
+static float speed_boost = 10.0f;
 
 void AttackPowerMechanicSystem::Update(float& dt)
 {
@@ -69,6 +70,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 	{
 		
 		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
+		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
 		
@@ -100,7 +102,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		else if(player.powerButtonPressed &&
 		   player.requested_power < 8 && player.alive && !player.taking_damage)
 		{
-			std::cout << "Player " << int(player.player_num) << " requested this power: " << int(player.requested_power) << std::endl;
+			//std::cout << "Player " << int(player.player_num) << " requested this power: " << int(player.requested_power) << std::endl;
 			//check which power player is requesting
 			//change to power requested if player has this power
 			if( player.requested_power != -1 && player.collected_powers[player.requested_power])
@@ -110,73 +112,121 @@ void AttackPowerMechanicSystem::Update(float& dt)
 				{
 					player.current_power = player.requested_power;
 					
-					animation.attackMode = player.current_power + 1;
-					
-					std::cout << "current power of player " << int(player.player_num) << ": " << int(player.current_power) << std::endl;
-					player.powers_activated[player.current_power];
 				}
 				
 				
 			}
-			//else use the current power
-			else
-			{				
-				//activate power if not actived
-				if( !player.powers_activated[player.current_power])
+			
+			//activate power if not activated
+			if( !player.powers_activated[player.current_power])
+			{
+				animation.attackMode = player.current_power + 1;
+				
+				//std::cout << "current power of player " << int(player.player_num) << ": " << int(player.current_power) << std::endl;
+				player.powers_activated[player.current_power];
+				
+				//set attack box or player speed based on power
+				switch(player.current_power)
 				{
-					animation.attackMode = player.current_power + 1;
-					
-					std::cout << "current power of player " << int(player.player_num) << ": " << int(player.current_power) << std::endl;
-					player.powers_activated[player.current_power];
+					// sneak
+					case 0:
+					{
+						//do nothing, no attack box.
+						break;
+					}
+					//dash
+					case 1:
+					{
+						//increase horizontal speed
+						rigidBody.velocity.x = speed_boost*rigidBody.velocity.x;
+						break;
+					}
+					//shield
+					case 2:
+					{
+						//activate collision box
+						player.attack_box.active = true;
+						
+						player.attack_box.collisionBox.x = -5;
+						player.attack_box.collisionBox.y = -5;
+						//it won't collide with another attack box
+						break;
+					}
 				}
 			}
 			
-			//reset requested power
-			player.requested_power = -1;
 			//reset power button pressed
 			player.powerButtonPressed = false;
 			
 		}
 		
+		//regular attack cooldown
+		if(player.attack_box.active)
+		{
+			player.regular_attack_cooldown_timer_val += dt;
+			
+			//if more than 1 second has passed
+			if(player.regular_attack_cooldown_timer_val >= 1)
+			{
+				//reset attackbox active
+				player.attack_box.active = false;
+				//reset timer value
+				player.regular_attack_cooldown_timer_val = 0;
+			}
+		}
 		
-		//cooldown for regular attack or special power if activated
+		//cooldown for special power if activated
 		for(size_t i = 0; i < 8; i++)
 		{
-			//regular attack
-			if(player.attack_box.active)
-			{
-				player.regular_attack_cooldown_timer_val += dt;
-				
-				//if more than 1 second has passed
-				if(player.regular_attack_cooldown_timer_val >= 1)
-				{
-					//reset attackbox active
-					player.attack_box.active = false;
-					//reset timer value
-					player.regular_attack_cooldown_timer_val = 0;
-				}
-			}
 			
 			//special power
 			if(player.powers_activated[i])
 			{
 				player.sp_attack_cooldown_timer_val_array[i] += dt;
 				
-				//if more than 1 second has passed
-				if(player.sp_attack_cooldown_timer_val_array[i] >= 1)
+				//reset attack box or player speed based on power
+				switch(player.powers_activated[i])
 				{
-					//disable attack box
-					
-					//reset attackbox active
-					player.attack_box.active = false;
-					
-					//if more than 2 seconds have passed
-					if(player.sp_attack_cooldown_timer_val_array[i] >= 2)
+					// sneak
+					case 0:
 					{
-						//reset bitset for power activated if cooldown time has finished
-						player.powers_activated[i] = 0;
-						//reset cooldown timer value
-						player.sp_attack_cooldown_timer_val_array[i] = 0;
+						//do nothing, no attack box.
+						
+						//if more than 2 seconds have passed
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 2)
+						{
+							//reset bitset for power activated if cooldown time has finished
+							player.powers_activated[i] = 0;
+							//reset cooldown timer value
+							player.sp_attack_cooldown_timer_val_array[i] = 0;
+						}
+						break;
+					}
+					//dash
+					case 1:
+					{
+						//return to original horizontal speed after 1 second
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 1)
+						{
+							rigidBody.velocity.x = (1/speed_boost)*rigidBody.velocity.x;
+						}
+						
+						break;
+					}
+					//shield
+					case 2:
+					{
+						//if more than 4 seconds have passed
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 4)
+						{
+							player.attack_box.active = false;
+							
+							//reset bitset for power activated if cooldown time has finished
+							player.powers_activated[i] = 0;
+							//reset cooldown timer value
+							player.sp_attack_cooldown_timer_val_array[i] = 0;
+						}
+						
 					}
 				}
 				
@@ -357,7 +407,7 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 		//if attack happened, and player is not already in state of taking damage
 		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] )
 		{
-			//std::cout << "Player " << attack_event.player_num_attacker << "took away 3 HP from player " << attack_event.player_num_victim << std::endl;
+			std::cout << "Player " << attack_event.player_num_attacker << "took away 3 HP from player " << attack_event.player_num_victim << std::endl;
 			
 			//decrease health of victim player
 			*player_health_ptrs[attack_event.player_num_victim - 1] -= 3;
@@ -366,7 +416,7 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 			
 			*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
 			
-			//std::cout << "Player " << attack_event.player_num_attacker << " health: " << *player_health_ptrs[attack_event.player_num_victim - 1] << std::endl;
+			std::cout << "Player " << attack_event.player_num_attacker << " health: " << *player_health_ptrs[attack_event.player_num_victim - 1] << std::endl;
 		}
 		else
 		{

@@ -147,6 +147,7 @@ void PhysicsSystem::Update(float& dt)
 														  collisionBox.width, collisionBox.height);
 				
 				//move transform component by velocity of rigid body multiplied by time
+				//std::cout << "In physics system, player rigid body velocity: " << rigidBody.velocity.x << std::endl;
 				transform.position.x += 3*rigidBody.velocity.x * dt;
 				transform.position.y += (rigidBody.velocity.y + jumpVel) * dt;
 				
