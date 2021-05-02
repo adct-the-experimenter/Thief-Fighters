@@ -100,6 +100,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		else if(player.powerButtonPressed &&
 		   player.requested_power < 8 && player.alive && !player.taking_damage)
 		{
+			std::cout << "Player " << int(player.player_num) << " requested this power: " << int(player.requested_power) << std::endl;
 			//check which power player is requesting
 			//change to power requested if player has this power
 			if( player.requested_power != -1 && player.collected_powers[player.requested_power])

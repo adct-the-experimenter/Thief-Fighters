@@ -8,7 +8,9 @@
 
 extern Coordinator gCoordinator;
 
-static std::array <std::string,3> special_power_choices = {"Long Arms","Dash","Shield"};
+static std::array <std::string,3> special_power_choices = {"Sneak","Dash","Shield"};
+
+static std::array <Color,8> player_colors = {BROWN,GOLD,ORANGE,PINK,RED,GREEN,BLUE,PURPLE};
 
 CharacterSelector::CharacterSelector()
 {
@@ -203,6 +205,7 @@ void CharacterSelector::logic()
 								RenderModelComponent {
 									.texture_ptr = &base_fighter_texture,
 									.frame_rect = (Rectangle){0,0,30,60} ,
+									.tint = player_colors[i],
 									.render = true
 								}
 							);
@@ -337,7 +340,7 @@ void CharacterSelector::render()
 			DrawText(fighter_boxes[i].player_num_string.c_str(),
 					fighter_boxes[i].player_num_rect.x,
 					fighter_boxes[i].player_num_rect.y,
-					14,BLACK);
+					14,player_colors[i]);
 			
 			Color char_text_color;
 			if(fighter_boxes[i].current_slot == 0){char_text_color = YELLOW;}

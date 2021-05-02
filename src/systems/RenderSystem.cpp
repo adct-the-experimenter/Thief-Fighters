@@ -62,7 +62,7 @@ void RenderSystem::Update()
 			//if renderable object is within camera bounds.
 			if(render_comp.render)
 			{
-				DrawTextureRec(*render_comp.texture_ptr, render_comp.frame_rect, transform.position, RAYWHITE);
+				DrawTextureRec(*render_comp.texture_ptr, render_comp.frame_rect, transform.position, render_comp.tint);
 			}
 		}
 		
