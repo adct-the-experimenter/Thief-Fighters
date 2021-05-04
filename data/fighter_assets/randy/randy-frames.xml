@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<Root>
+  <Frames>
+	  <Character name="Randy" sheet_path="randy/testfighter_texture.png" frame_path="randy/testfighter_texture.png"/>
+  </Frames>    
+</Root>

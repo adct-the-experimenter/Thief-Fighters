@@ -12,6 +12,7 @@ extern Coordinator gCoordinator;
 
 #include "misc/level_maps.h"
 
+#include <misc/media.h>
 
 void RenderSystem::Init(CustomCamera* camera)
 {
@@ -62,7 +63,8 @@ void RenderSystem::Update()
 			//if renderable object is within camera bounds.
 			if(render_comp.render)
 			{
-				DrawTextureRec(*render_comp.texture_ptr, render_comp.frame_rect, transform.position, render_comp.tint);
+				//DrawTextureRec(*render_comp.texture_ptr, render_comp.frame_rect, transform.position, render_comp.tint);
+				DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, transform.position, render_comp.tint);
 			}
 		}
 		

@@ -3,7 +3,7 @@
 #include "core/system.h"
 #include "core/coordinator.h"
 
-#include "misc/media.h" //for texture
+
 #include <array>
 
 extern Coordinator gCoordinator;
@@ -149,6 +149,11 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 			{
 				if(fighter_boxes[i].special_power_choice > 0){fighter_boxes[i].special_power_choice--;}
 			}
+			//if on character slot
+			else if(fighter_boxes[i].current_slot == 0)
+			{
+				if(fighter_boxes[i].char_choice > 0 ){ fighter_boxes[i].char_choice--; }
+			}
 		}
 		//if joystick moved right, go right on color choice
 		else if(input.gamepads_vec[i].left_x_dir_digital == 1)
@@ -156,7 +161,12 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 			//if on special power slot
 			if(fighter_boxes[i].current_slot == 1)
 			{
-				if(fighter_boxes[i].special_power_choice < m_num_special_powers - 1){fighter_boxes[i].special_power_choice++;}
+				if(fighter_boxes[i].special_power_choice < m_num_special_powers - 1){ fighter_boxes[i].special_power_choice++; }
+			}
+			//if on character slot
+			else if(fighter_boxes[i].current_slot == 0)
+			{
+				if(fighter_boxes[i].char_choice < character_names.size() ){ fighter_boxes[i].char_choice++; }
 			}
 		}
 		
@@ -196,14 +206,16 @@ void CharacterSelector::logic()
 			//if not already created
 			if(!char_confirmations[i])
 			{
+				
 				char_confirmations[i] = true;
+				m_req_char.requested_by_player[i] = character_names[fighter_boxes[i].char_choice];
 				
 				//add render component 
 				
 				gCoordinator.AddComponent(
 								*player_entities_vec[i],
 								RenderModelComponent {
-									.texture_ptr = &base_fighter_texture,
+									.char_texture_index = fighter_boxes[i].char_choice,
 									.frame_rect = (Rectangle){0,0,30,60} ,
 									.tint = player_colors[i],
 									.render = true
@@ -347,7 +359,7 @@ void CharacterSelector::render()
 			else{char_text_color = BLACK;}
 			
 			//character fighter
-			DrawText("Randy", 
+			DrawText(character_names[fighter_boxes[i].char_choice].c_str(), 
 					fighter_boxes[i].char_slot_rect.x, fighter_boxes[i].char_slot_rect.y, 
 					14, char_text_color);
 			
@@ -382,3 +394,5 @@ void CharacterSelector::sound()
 }
 
 bool CharacterSelector::MoveToNextStateBool(){return move_next_state;}
+
+RequestedCharacters& CharacterSelector::GetRequestedCharacters(){return m_req_char;}

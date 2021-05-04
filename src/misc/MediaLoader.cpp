@@ -20,7 +20,7 @@ bool MediaLoader::loadMedia()
 	filepath = DATADIR_STR + "/char_select.png";
 	char_select_texture = LoadTexture(filepath.c_str());
 	
-	base_fighter_texture = LoadTexture("../data/fighter_assets/testfighter_texture.png");
+	//base_fighter_texture = LoadTexture("../data/fighter_assets/testfighter_texture.png");
 	
 	return true;
 }
@@ -29,4 +29,10 @@ void MediaLoader::freeMedia()
 {
 	UnloadTexture(title_menu_texture);
 	UnloadTexture(char_select_texture);
+	//UnloadTexture(base_fighter_texture);
+	
+	for(size_t i = 0; i < character_sheet_textures.size(); i++)
+	{
+		UnloadTexture(character_sheet_textures[i]);
+	}
 }

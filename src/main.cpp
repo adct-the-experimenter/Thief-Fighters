@@ -21,10 +21,12 @@
 #include "misc/globalvariables.h"
 
 #include "misc/StageManager.h"
+#include "misc/CharacterAssetManager.h"
 
 #include "misc/char_selector.h" //for CharacterSelector class
 #include "misc/stage_selector.h" //for StageSelector class
 #include "misc/num_player_setter.h" //for NumPlayerSetter class
+
 
 
 #include <string>
@@ -93,7 +95,7 @@ GameState m_game_state = GameState::TITLE_MENU;
 std::shared_ptr <CameraSystem> cameraSystem;
 CustomCamera main_camera;
 
-bool video_game_playing = false;
+CharacterAssetManager gCharAssetManager;
 
 CharacterSelector gCharSelector;
 std::int8_t gNumPlayers = 2;
@@ -104,6 +106,8 @@ const std::int16_t screenHeight = 600;
 StageManager gStageManager;
 
 StageSelector gStageSelector;
+
+bool quitGame = false;
 
 int main(int argc, char* args[])
 {
@@ -127,15 +131,13 @@ int main(int argc, char* args[])
 		
 		
 		
-		
-		bool quit = false;
 
-		while (!quit)
+		while (!quitGame)
 		{
 			// Detect window close button or ESC key
 			if(WindowShouldClose())
 			{
-				quit = true;
+				quitGame = true;
 			}    
 			
 			// Main game loop
@@ -259,6 +261,13 @@ void logic()
 			
 			if(gCharSelector.MoveToNextStateBool())
 			{
+				//load media for requested characters
+				RequestedCharacters& req_char = gCharSelector.GetRequestedCharacters();
+				if(!gCharAssetManager.LoadCharacterAssets( req_char, gNumPlayers ) )
+				{
+					quitGame = true;
+				}
+				
 				//initialize stage selector
 				gStageSelector.Init(gNumPlayers);
 				
@@ -363,14 +372,18 @@ void sound()
 
 bool loadMedia()
 {
-	bool success = true;
 	
 	if( !gMediaLoader.loadMedia() )
 	{
-		success = false;
+		return false;
 	}
 	
-	return success;
+	else if(!gCharAssetManager.LoadCharacterProfilesFromXML())
+	{
+		return false;
+	}
+	
+	return true;
 }
 
 void InitMainECS()

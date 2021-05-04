@@ -11,6 +11,7 @@
 #include "core/KeyboardInput.h"
 #include "core/entity.h"
 
+#include "misc/media.h" //for texture
 
 class CharacterSelector
 {
@@ -32,6 +33,8 @@ public:
 	
 	bool MoveToNextStateBool();
 	
+	RequestedCharacters& GetRequestedCharacters();
+	
 	struct FighterBox
 	{
 		Rectangle background_box;
@@ -43,7 +46,8 @@ public:
 		
 		//current slot
 		std::uint8_t current_slot = 0;
-
+		
+		std::uint8_t char_choice = 0;
 		std::uint8_t special_power_choice = 0;
 		
 		Rectangle char_slot_rect;
@@ -78,6 +82,8 @@ private:
 	
 	std::uint8_t m_num_fighters;	
 	std::uint8_t m_num_special_powers;
+	
+	RequestedCharacters m_req_char;
 };
 
 #endif

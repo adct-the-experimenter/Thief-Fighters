@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<Root>
+  <Profiles>
+	  <Profile name="Randy" img_path="randy/profile.png" />
+  </Profiles>    
+</Root>

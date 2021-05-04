@@ -74,7 +74,9 @@ struct Animation
 struct RenderModelComponent
 {
 	Vector2 position;
-	Texture2D* texture_ptr;
+	//Texture2D* texture_ptr;
+	//index to use from array holding character textures
+	std::int16_t char_texture_index; 
 	Rectangle frame_rect;
 	Color tint;
 	bool render;

@@ -19,12 +19,14 @@ INCLUDE(FindPkgConfig)
 # Let CMake search for a raylib-config.cmake
 find_package(raylib 3.5 QUIET) 
 
+#Pugi XML parsing
+find_path(pugixml_INCLUDE_DIRS pugixml.hpp)
+find_library(pugixml_LIBRARIES NAMES pugixml)
 
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 
 #For the shared library:
-#set ( PROJECT_LINK_LIBS  ${openal_LIBRARIES} ${pugixml_LIBRARIES})
-set ( PROJECT_LINK_LIBS  raylib ${SDL2_LIBRARIES})
+set ( PROJECT_LINK_LIBS  raylib ${SDL2_LIBRARIES} ${pugixml_LIBRARIES})
 #where to find library files .so 
 link_directories( /usr/lib /usr/local/lib ) 
 
@@ -49,6 +51,7 @@ src/misc/globalvariables.cpp
 src/misc/MediaLoader.cpp
 src/misc/num_player_setter.cpp
 src/misc/char_selector.cpp
+src/misc/CharacterAssetManager.cpp
 src/misc/stage_selector.cpp
 src/systems/AttackPowerMechanicSystem.cpp
 src/systems/PlayerDeathSystem.cpp
