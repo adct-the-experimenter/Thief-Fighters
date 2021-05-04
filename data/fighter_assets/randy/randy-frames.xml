@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <Root>
   <Frames>
-	  <Character name="Randy" sheet_path="randy/testfighter_texture.png" frame_path="randy/testfighter_texture.png"/>
+	  
+	  <!--Still Frames-->
+	  
+	  <!--Left Still-->
+	  <Frame x="90" y="0" w="30" h="60"/> 
+	  <!--Right Still-->
+	  <Frame x="0" y="0" w="30" h="60" />
+	  <!--Up Still-->
+	  <Frame x="180" y="0" w="30" h="60" /> 
+	  <!--Down Still-->
+	  <Frame x="210" y="0" w="30" h="60" /> 
+	  
+	  <!--Walk Frames-->
+	  
+	  <!--Left Walk Frames-->
+	  <Frame x="120" y="0" w="30" h="60" /> 
+	  <Frame x="150" y="0" w="30" h="60" /> 
+	  
+	  <!--Right Walk Frames-->
+	  <Frame x="30" y="0" w="30" h="60" /> 
+	  <Frame x="60" y="0" w="30" h="60" /> 
+	  
+	  <!--Attack Frames-->
+	    
+	  <!--Left Regular attack-->
+	  <Frame x="60" y="60" w="30" h="60" /> 
+	  <Frame x="90" y="60" w="30" h="60" /> 
+		
+	  <!--Left Sneak -->
+	  <Frame x="60" y="120" w="30" h="30" /> 
+	  <Frame x="60" y="120" w="30" h="30" /> 
+		
+	  <!--Left Dash-->
+	  <Frame x="60" y="180" w="30" h="60" /> 
+	  <Frame x="90" y="180" w="30" h="60" /> 
+		
+	  <!--Left Shield-->
+	  <Frame x="60" y="240" w="30" h="60" /> 
+	  <Frame x="90" y="240" w="30" h="60" /> 
+	  
+	  <!--Right Regular attack-->
+	  <Frame x="0" y="60" w="30" h="60" /> 
+	  <Frame x="30" y="60" w="30" h="60" /> 
+		
+	  <!--Right Sneak -->
+	  <Frame x="0" y="120" w="30" h="30" /> 
+	  <Frame x="30" y="120" w="30" h="30" /> 
+		
+	  <!--Right Dash-->
+	  <Frame x="0" y="180" w="30" h="60" /> 
+	  <Frame x="30" y="180" w="30" h="60" /> 
+		
+	  <!--Right Shield-->
+	  <Frame x="0" y="240" w="30" h="60" /> 
+	  <Frame x="30" y="240" w="30" h="60" /> 
+	  
   </Frames>    
 </Root>

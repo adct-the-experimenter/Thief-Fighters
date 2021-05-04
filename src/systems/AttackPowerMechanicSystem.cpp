@@ -158,6 +158,8 @@ void AttackPowerMechanicSystem::Update(float& dt)
 				player.attack_box.active = false;
 				//reset timer value
 				player.regular_attack_cooldown_timer_val = 0;
+				//reset animation
+				animation.attackMode = -1;
 			}
 		}
 		
@@ -185,6 +187,8 @@ void AttackPowerMechanicSystem::Update(float& dt)
 							player.powers_activated[i] = 0;
 							//reset cooldown timer value
 							player.sp_attack_cooldown_timer_val_array[i] = 0;
+							//reset animation for attack mode
+							animation.attackMode = -1;
 						}
 						break;
 					}
@@ -196,6 +200,8 @@ void AttackPowerMechanicSystem::Update(float& dt)
 						{
 							rigidBody.velocity.x = (1/speed_boost)*rigidBody.velocity.x;
 						}
+						//reset animation for attack mode
+						animation.attackMode = -1;
 						
 						break;
 					}
@@ -211,6 +217,9 @@ void AttackPowerMechanicSystem::Update(float& dt)
 							player.powers_activated[i] = 0;
 							//reset cooldown timer value
 							player.sp_attack_cooldown_timer_val_array[i] = 0;
+							
+							//reset animation for attack mode
+							animation.attackMode = -1;
 						}
 						
 					}

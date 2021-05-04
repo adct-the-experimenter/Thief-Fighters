@@ -37,14 +37,13 @@ struct CharFrames
 	
 	//frames for attack modes
 	//organized like this to use animation attack mode as index of array for quicker processing
-	//first is reular attack, 0
+	//first is regular attack, 0
 	// last frames are special attack/ability, 1-8
 	std::array <TwoFrameGroup,9> right_attack_mode_frames;
 	std::array <TwoFrameGroup,9> left_attack_mode_frames;
 	
 };
 
-extern CharFrames base_fighter_frames;
 
 //list of characters avaiable for playing
 extern std::array <std::string,8> character_names;
@@ -52,6 +51,8 @@ extern std::array <std::string,8> character_names;
 extern std::array <Texture2D,8> character_profile_textures;
 
 extern std::array <Texture2D,8> character_sheet_textures;
+
+extern std::array <CharFrames,8> character_frame_animations;
 
 struct RequestedCharacters
 {

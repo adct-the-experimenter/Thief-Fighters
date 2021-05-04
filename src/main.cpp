@@ -456,6 +456,7 @@ void InitMainECS()
 	
 	Signature animation_sig;
 	animation_sig.set(gCoordinator.GetComponentType<Transform2D>());
+	animation_sig.set(gCoordinator.GetComponentType<RigidBody2D>());
 	animation_sig.set(gCoordinator.GetComponentType<Animation>());
 	animation_sig.set(gCoordinator.GetComponentType<RenderModelComponent>());
 	gCoordinator.SetSystemSignature<AnimationSystem>(animation_sig);

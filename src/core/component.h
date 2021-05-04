@@ -43,6 +43,8 @@ struct CollisionBox
 
 enum class AnimatedActorType : std::int8_t {NONE=0,PLAYER,ENEMY};
 
+enum class FaceDirection : std::uint8_t {NONE=0,NORTH,SOUTH,EAST,WEST};
+
 struct Animation
 {
 	AnimatedActorType anim_actor_type; 
@@ -67,7 +69,8 @@ struct Animation
 	//for player, -1 = none, 0 = normal attack, 1-9 = special attack
 	std::int8_t attackMode = -1;
 	
-	bool facing_left = false; 
+	FaceDirection face_dir;
+	
 };
 
 
