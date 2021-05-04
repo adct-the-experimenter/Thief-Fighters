@@ -148,10 +148,23 @@ void AnimationSystem::Update(float& dt)
 						anim_comp.frame_count = 0;
 					}
 					
+					
 					//limited to only 2 frames of animation
 					if(anim_comp.frame_count == 2 || no_move )
 					{
 						anim_comp.frame_count = 0;
+						
+						if(no_move)
+						{
+							if(anim_comp.face_dir == FaceDirection::EAST)
+							{
+								frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_still_frame.frame;
+							}
+							else if(anim_comp.face_dir == FaceDirection::WEST)
+							{
+								frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].left_still_frame.frame;
+							}
+						}
 					}
 					
 				}
