@@ -110,7 +110,7 @@ static bool LoadFrameAnimationFromThisFile(std::string filepath_frames, CharFram
     //set up tile selector based on data
     pugi::xml_node framesRoot = root.child("Frames");
     
-    std::array <Rectangle,24> frames;
+    std::array <Rectangle,28> frames;
     
     size_t iterator = 0;
 	//go through each frame in frames node
@@ -155,19 +155,25 @@ static bool LoadFrameAnimationFromThisFile(std::string filepath_frames, CharFram
 	char_frame.left_attack_mode_frames[3].frames[0] = frames[14];
 	char_frame.left_attack_mode_frames[3].frames[1] = frames[15];
 	
+	char_frame.left_attack_mode_frames[4].frames[0] = frames[16];
+	char_frame.left_attack_mode_frames[4].frames[1] = frames[17];
+	
 	//get right attack frames
 	// 0 is regular attack, 1-9 is special
-	char_frame.right_attack_mode_frames[0].frames[0] = frames[16];
-	char_frame.right_attack_mode_frames[0].frames[1] = frames[17];
+	char_frame.right_attack_mode_frames[0].frames[0] = frames[18];
+	char_frame.right_attack_mode_frames[0].frames[1] = frames[19];
 	
-	char_frame.right_attack_mode_frames[1].frames[0] = frames[18];
-	char_frame.right_attack_mode_frames[1].frames[1] = frames[19];
+	char_frame.right_attack_mode_frames[1].frames[0] = frames[20];
+	char_frame.right_attack_mode_frames[1].frames[1] = frames[21];
 	
-	char_frame.right_attack_mode_frames[2].frames[0] = frames[20];
-	char_frame.right_attack_mode_frames[2].frames[1] = frames[21];
+	char_frame.right_attack_mode_frames[2].frames[0] = frames[22];
+	char_frame.right_attack_mode_frames[2].frames[1] = frames[23];
 	
-	char_frame.right_attack_mode_frames[3].frames[0] = frames[22];
-	char_frame.right_attack_mode_frames[3].frames[1] = frames[23];
+	char_frame.right_attack_mode_frames[3].frames[0] = frames[24];
+	char_frame.right_attack_mode_frames[3].frames[1] = frames[25];
+	
+	char_frame.right_attack_mode_frames[4].frames[0] = frames[26];
+	char_frame.right_attack_mode_frames[4].frames[1] = frames[27];
     
     return true;
 }

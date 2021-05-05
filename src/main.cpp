@@ -367,7 +367,7 @@ void render()
 		    //render any entity that has render component
 			renderSystem->Update();
 			
-			//attackPowerMechanicSystem->DebugRenderPlayerAttackBoxes();
+			attackPowerMechanicSystem->DebugRenderPlayerAttackBoxes();
 						
 			break;
 		}

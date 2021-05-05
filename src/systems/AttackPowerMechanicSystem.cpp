@@ -135,6 +135,14 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 						
 						break;
 					}
+					//chunks
+					case 3:
+					{
+						player.attack_box.active = true;
+
+						//decrease horizontal speed
+						rigidBody.velocity.x = 0.5*rigidBody.velocity.x;
+					}
 				}
 			}
 			
@@ -216,6 +224,29 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 						//if more than 4 seconds have passed
 						if(player.sp_attack_cooldown_timer_val_array[i] >= 4)
 						{
+							player.attack_box.active = false;
+							
+							//reset bitset for power activated if cooldown time has finished
+							player.powers_activated[i] = 0;
+							//reset cooldown timer value
+							player.sp_attack_cooldown_timer_val_array[i] = 0;
+							
+							//reset animation for attack mode
+							animation.attackMode = -1;
+							
+						}
+						
+						break;
+					}
+					//chunks
+					case 3:
+					{
+						//if more than 4 seconds have passed
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 4)
+						{
+							//decrease horizontal speed
+							rigidBody.velocity.x = 2*rigidBody.velocity.x;
+							
 							player.attack_box.active = false;
 							
 							//reset bitset for power activated if cooldown time has finished
@@ -435,6 +466,29 @@ void AttackPowerMechanicSystem::MoveAttackBoxesWithPlayer(float& dt)
 					
 					player.attack_box.player_num = player.player_num;
 					
+					break;
+				}
+				//chunks
+				case 4:
+				{
+					int offset_x = 0;
+			
+					if(animation.face_dir == FaceDirection::EAST)
+					{
+						offset_x = 10;
+					}
+					else if(animation.face_dir == FaceDirection::WEST)
+					{
+						offset_x = -10;
+					}
+					
+					//activate collision box
+					player.attack_box.collisionBox.x = transform.position.x + offset_x; 
+					player.attack_box.collisionBox.y = transform.position.y ;
+					player.attack_box.collisionBox.width = 50;
+					player.attack_box.collisionBox.height = 50;
+					
+					player.attack_box.player_num = player.player_num;
 					break;
 				}
 				default:{break;}
