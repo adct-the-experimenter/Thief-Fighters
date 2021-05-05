@@ -483,6 +483,7 @@ void InitMainECS()
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Transform2D>());
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<RigidBody2D>());
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Animation>());
+	special_power_mechanic_sig.set(gCoordinator.GetComponentType<CollisionBox>());
 	gCoordinator.SetSystemSignature<AttackPowerMechanicSystem>(special_power_mechanic_sig);
 	
 	

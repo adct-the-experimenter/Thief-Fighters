@@ -59,6 +59,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
+		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
 		
 		if(player.regularAttackButtonPressed && player.alive && !player.taking_damage)
 		{
@@ -142,6 +143,23 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 
 						//decrease horizontal speed
 						rigidBody.velocity.x = 0.5*rigidBody.velocity.x;
+						break;
+					}
+					//big
+					case 4:
+					{
+						player.attack_box.active = true;
+						
+						//move player up
+						transform.position.y -= 60;
+						
+						//change player collision box to match the large size
+						collisionBox.width = 60;
+						collisionBox.height = 120;
+						
+						//set horizontal speed to zero
+						rigidBody.velocity.x = 0.0f;
+						break;
 					}
 				}
 			}
@@ -260,6 +278,34 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 						}
 						
 						break;
+					}
+					//big
+					case 4:
+					{
+						//if more than 5 seconds have passed
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 1)
+						{
+							//reset speed
+							rigidBody.velocity.x = rigidBody.velocity.x;
+							
+							//move player down
+							//transform.position.y += 60;
+							
+							//change player collision box to match the normal size
+							collisionBox.width = 30;
+							collisionBox.height = 60;
+							
+							player.attack_box.active = false;
+							
+							//reset bitset for power activated if cooldown time has finished
+							player.powers_activated[i] = 0;
+							//reset cooldown timer value
+							player.sp_attack_cooldown_timer_val_array[i] = 0;
+							
+							//reset animation for attack mode
+							animation.attackMode = -1;
+							
+						}
 					}
 				}
 				
@@ -439,6 +485,7 @@ void AttackPowerMechanicSystem::MoveAttackBoxesWithPlayer(float& dt)
 		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
+		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
 		
 		if(player.attack_box.active)
 		{
@@ -490,6 +537,28 @@ void AttackPowerMechanicSystem::MoveAttackBoxesWithPlayer(float& dt)
 					
 					player.attack_box.player_num = player.player_num;
 					break;
+				}
+				//big
+				case 5:
+				{
+					int offset_x = 0;
+			
+					if(animation.face_dir == FaceDirection::EAST)
+					{
+						offset_x = 10;
+					}
+					else if(animation.face_dir == FaceDirection::WEST)
+					{
+						offset_x = -10;
+					}
+					
+					//activate attack collision box
+					player.attack_box.collisionBox.x = transform.position.x + offset_x; 
+					player.attack_box.collisionBox.y = transform.position.y ;
+					player.attack_box.collisionBox.width = 60;
+					player.attack_box.collisionBox.height = 120;
+					
+					player.attack_box.player_num = player.player_num;
 				}
 				default:{break;}
 			}

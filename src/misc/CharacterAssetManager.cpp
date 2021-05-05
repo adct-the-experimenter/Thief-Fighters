@@ -66,24 +66,6 @@ static void ReadReactangleFromXMLFrameSingle(Rectangle& rect, pugi::xml_node& fr
 	
 }
 
-static TwoFrameGroup ReadReactangleFromXMLFrameTwoFrame(pugi::xml_node& frame_node)
-{
-	TwoFrameGroup two_frames;
-	
-	
-	two_frames.frames[0].x = atoi( std::string(frame_node.attribute("x1").value() ).c_str());
-	two_frames.frames[0].y = atoi( std::string(frame_node.attribute("y1").value() ).c_str());
-	two_frames.frames[0].width = atoi( std::string(frame_node.attribute("w1").value() ).c_str());
-	two_frames.frames[0].height = atoi( std::string(frame_node.attribute("h1").value() ).c_str());
-	
-	two_frames.frames[1].x = atoi( std::string(frame_node.attribute("x2").value() ).c_str());
-	two_frames.frames[1].y = atoi( std::string(frame_node.attribute("y2").value() ).c_str());
-	two_frames.frames[1].width = atoi( std::string(frame_node.attribute("w2").value() ).c_str());
-	two_frames.frames[1].height = atoi( std::string(frame_node.attribute("h2").value() ).c_str());
-	
-	return two_frames;
-}
-
 static bool LoadFrameAnimationFromThisFile(std::string filepath_frames, CharFrames& char_frame)
 {
 	
@@ -110,7 +92,7 @@ static bool LoadFrameAnimationFromThisFile(std::string filepath_frames, CharFram
     //set up tile selector based on data
     pugi::xml_node framesRoot = root.child("Frames");
     
-    std::array <Rectangle,28> frames;
+    std::array <Rectangle,32> frames;
     
     size_t iterator = 0;
 	//go through each frame in frames node
@@ -158,22 +140,32 @@ static bool LoadFrameAnimationFromThisFile(std::string filepath_frames, CharFram
 	char_frame.left_attack_mode_frames[4].frames[0] = frames[16];
 	char_frame.left_attack_mode_frames[4].frames[1] = frames[17];
 	
+	char_frame.left_attack_mode_frames[5].frames[0] = frames[18];
+	char_frame.left_attack_mode_frames[5].frames[1] = frames[19];
+	std::cout << "left attack mode big: " << char_frame.left_attack_mode_frames[5].frames[0].x << ", "
+	<< char_frame.left_attack_mode_frames[5].frames[0].y << ", " << 
+	char_frame.left_attack_mode_frames[5].frames[0].width << ", " << 
+	char_frame.left_attack_mode_frames[5].frames[0].height << std::endl;
+	
 	//get right attack frames
 	// 0 is regular attack, 1-9 is special
-	char_frame.right_attack_mode_frames[0].frames[0] = frames[18];
-	char_frame.right_attack_mode_frames[0].frames[1] = frames[19];
+	char_frame.right_attack_mode_frames[0].frames[0] = frames[20];
+	char_frame.right_attack_mode_frames[0].frames[1] = frames[21];
 	
-	char_frame.right_attack_mode_frames[1].frames[0] = frames[20];
-	char_frame.right_attack_mode_frames[1].frames[1] = frames[21];
+	char_frame.right_attack_mode_frames[1].frames[0] = frames[22];
+	char_frame.right_attack_mode_frames[1].frames[1] = frames[23];
 	
-	char_frame.right_attack_mode_frames[2].frames[0] = frames[22];
-	char_frame.right_attack_mode_frames[2].frames[1] = frames[23];
+	char_frame.right_attack_mode_frames[2].frames[0] = frames[24];
+	char_frame.right_attack_mode_frames[2].frames[1] = frames[25];
 	
-	char_frame.right_attack_mode_frames[3].frames[0] = frames[24];
-	char_frame.right_attack_mode_frames[3].frames[1] = frames[25];
+	char_frame.right_attack_mode_frames[3].frames[0] = frames[26];
+	char_frame.right_attack_mode_frames[3].frames[1] = frames[27];
 	
-	char_frame.right_attack_mode_frames[4].frames[0] = frames[26];
-	char_frame.right_attack_mode_frames[4].frames[1] = frames[27];
+	char_frame.right_attack_mode_frames[4].frames[0] = frames[28];
+	char_frame.right_attack_mode_frames[4].frames[1] = frames[29];
+	
+	char_frame.right_attack_mode_frames[5].frames[0] = frames[30];
+	char_frame.right_attack_mode_frames[5].frames[1] = frames[31];
     
     return true;
 }

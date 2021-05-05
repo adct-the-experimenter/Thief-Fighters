@@ -8,7 +8,7 @@
 
 extern Coordinator gCoordinator;
 
-static std::array <std::string,4> special_power_choices = {"Sneak","Dash","Shield","Chunks"};
+static std::array <std::string,5> special_power_choices = {"Sneak","Dash","Shield","Chunks","Big"};
 
 static std::array <Color,8> player_colors = {BROWN,GOLD,ORANGE,PINK,RED,GREEN,BLUE,PURPLE};
 
@@ -19,8 +19,8 @@ CharacterSelector::CharacterSelector()
 	
 	move_next_state = false;
 	
-	m_num_fighters = 2;
-	m_num_special_powers = 4;
+	m_num_fighters = 1;
+	m_num_special_powers = special_power_choices.size();
 }
 
 CharacterSelector::~CharacterSelector()
@@ -166,7 +166,7 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 			//if on character slot
 			else if(fighter_boxes[i].current_slot == 0)
 			{
-				if(fighter_boxes[i].char_choice < character_names.size() ){ fighter_boxes[i].char_choice++; }
+				if(fighter_boxes[i].char_choice < m_num_fighters - 1 ){ fighter_boxes[i].char_choice++; }
 			}
 		}
 		
