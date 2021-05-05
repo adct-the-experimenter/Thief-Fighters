@@ -14,11 +14,13 @@ Fighting game in which the players steal a special power from the others after a
 
 2. mkdir build
 
-3. cmake -DCMAKE_BUILD_TYPE=Debug ..
+3. cd build
 
-4. make
+4. cmake -DCMAKE_BUILD_TYPE=Debug ..
 
-5. ./theif-fighters
+5. make
+
+6. ./theif-fighters
 
 ## Controls
 
