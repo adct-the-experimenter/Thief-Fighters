@@ -79,13 +79,15 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 		//change and/or activate current power based on input
 		else if(player.powerButtonPressed && player.requested_power < 8 && player.alive && !player.taking_damage)
 		{
+			std::cout << "power button pressed by player " << int(player.player_num) << std::endl;
+			
 			//std::cout << "Player " << int(player.player_num) << " requested this power: " << int(player.requested_power) << std::endl;
 			//check which power player is requesting
 			//change to power requested if player has this power
 			if( player.requested_power != -1 && player.collected_powers[player.requested_power])
 			{
-				//activate power, if not actived
-				if( !player.powers_activated[player.current_power])
+				//activate power, if not active
+				if( !player.powers_activated[player.requested_power])
 				{
 					player.current_power = player.requested_power;
 					
@@ -100,7 +102,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 				animation.attackMode = player.current_power + 1;
 				
 				//std::cout << "current power of player " << int(player.player_num) << ": " << int(player.current_power) << std::endl;
-				player.powers_activated[player.current_power];
+				player.powers_activated[player.current_power] = 1;
 				
 				//set attack box or player speed based on power
 				switch(player.current_power)
@@ -138,6 +140,8 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 			
 		}
 		
+		//cool down timers
+		
 		//regular attack cooldown
 		if(player.attack_box.active)
 		{
@@ -159,11 +163,12 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 		for(size_t i = 0; i < 8; i++)
 		{
 			
-			//special power
-			if(player.powers_activated[i])
+			//if special power is active
+			if(player.powers_activated.test(i))
 			{
-				player.sp_attack_cooldown_timer_val_array[i] += dt;
 				
+				player.sp_attack_cooldown_timer_val_array[i] += dt;
+								
 				//reset attack box or player speed based on power
 				switch(i)
 				{
@@ -172,7 +177,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 					{
 						
 						//if more than 2 seconds have passed
-						if(player.sp_attack_cooldown_timer_val_array[i] >= 2)
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 3)
 						{
 							//reset bitset for power activated if cooldown time has finished
 							player.powers_activated[i] = 0;
@@ -206,7 +211,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 					case 2:
 					{
 						//if more than 4 seconds have passed
-						if(player.sp_attack_cooldown_timer_val_array[i] >= 4)
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 3)
 						{
 							player.attack_box.active = false;
 							
@@ -217,6 +222,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 							
 							//reset animation for attack mode
 							animation.attackMode = -1;
+							
 						}
 						
 						break;
