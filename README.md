@@ -11,7 +11,26 @@ Fighting game in which the players steal a special power from the others after a
 Buttons:
 
 A = Attack
+
+
 Right Shoulder/Trigger = Special
+
+
 Left Shoulder/Trigger or B = Jump
 
-Switch from collection of stolen powers with right joystick.
+
+Switch current power to a different power from collection of stolen powers with right joystick.
+
+Right Joystick
+
+
+Up = Sneak
+
+
+Up Right = Dash
+
+
+Right = Shield
+
+
+Down Right = Chunks
