@@ -34,7 +34,7 @@ void AnimationSystem::Update(float& dt)
 		//increment frame count
 		m_time_counter += dt;
 		
-		if(m_time_counter >= 0.25f)
+		if(m_time_counter >= 1.00f)
 		{
 			anim_comp.frame_count++;
 			m_time_counter = 0;
@@ -117,6 +117,10 @@ void AnimationSystem::Update(float& dt)
 				//if not attacking
 				else
 				{
+					if(anim_comp.frame_count == 2)
+					{
+						anim_comp.frame_count = 0;
+					}
 					
 					if(west)
 					{
@@ -131,8 +135,6 @@ void AnimationSystem::Update(float& dt)
 						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_walk_frames.frames[anim_comp.frame_count];
 					}
 					
-					//horizontal frame offset refers to horizontal distance between a frame and 
-					//the first frame in sprite sheet.
 					if(south && !west && !east)
 					{
 						anim_comp.face_dir = FaceDirection::SOUTH;
@@ -150,7 +152,7 @@ void AnimationSystem::Update(float& dt)
 					
 					
 					//limited to only 2 frames of animation
-					if(anim_comp.frame_count == 2 || no_move )
+					if(no_move )
 					{
 						anim_comp.frame_count = 0;
 						

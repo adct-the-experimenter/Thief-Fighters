@@ -24,9 +24,16 @@ class AttackPowerMechanicSystem : public System
 {
 public:
 	void Init(std::uint8_t num_players);
-
-	void Update(float& dt);
 	
+	void HandlePowerActivation(float& dt);
+	
+	void MoveAttackBoxesWithPlayer(float& dt);
+	
+	void PerformNeededPowerTransactions();
+	
+	void CollisionDetectionBetweenPlayers();
+	
+	void DebugRenderPlayerAttackBoxes();
 	
 private:
 	std::queue <PowerTransferTransaction> power_transfer_transaction_queue;
@@ -43,7 +50,7 @@ private:
 	bool AreBothPlayersAlive(int& player_a_num, int& player_b_num);
 	AttackEvent CheckCollisionBetween2Players(int& player_a_num, int& player_b_num);
 	
-	void CollisionDetectionBetweenPlayers();
+	
 	
 	std::uint8_t m_num_players;
 };

@@ -49,7 +49,7 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 
 static float speed_boost = 10.0f;
 
-void AttackPowerMechanicSystem::Update(float& dt)
+void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 {
 	
 	for (auto const& entity : mEntities)
@@ -71,22 +71,13 @@ void AttackPowerMechanicSystem::Update(float& dt)
 				
 				player.attack_box.active = true;
 				
-				//activate collision box
-				player.attack_box.collisionBox.x = transform.position.x + 10; 
-				player.attack_box.collisionBox.y = transform.position.y + 20;
-				player.attack_box.collisionBox.width = 30;
-				player.attack_box.collisionBox.height = 30;
-				
-				player.attack_box.player_num = player.player_num;
-				
 			}
 			
 			player.regularAttackButtonPressed = false;
 		}
 		
 		//change and/or activate current power based on input
-		else if(player.powerButtonPressed &&
-		   player.requested_power < 8 && player.alive && !player.taking_damage)
+		else if(player.powerButtonPressed && player.requested_power < 8 && player.alive && !player.taking_damage)
 		{
 			//std::cout << "Player " << int(player.player_num) << " requested this power: " << int(player.requested_power) << std::endl;
 			//check which power player is requesting
@@ -136,6 +127,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 						player.attack_box.collisionBox.x = -5;
 						player.attack_box.collisionBox.y = -5;
 						//it won't collide with another attack box
+						
 						break;
 					}
 				}
@@ -178,10 +170,9 @@ void AttackPowerMechanicSystem::Update(float& dt)
 					// sneak
 					case 0:
 					{
-						//do nothing, no attack box.
 						
 						//if more than 2 seconds have passed
-						if(player.sp_attack_cooldown_timer_val_array[i] >= 3)
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 2)
 						{
 							//reset bitset for power activated if cooldown time has finished
 							player.powers_activated[i] = 0;
@@ -199,9 +190,15 @@ void AttackPowerMechanicSystem::Update(float& dt)
 						if(player.sp_attack_cooldown_timer_val_array[i] >= 1)
 						{
 							rigidBody.velocity.x = (1/speed_boost)*rigidBody.velocity.x;
+							
+							//reset bitset for power activated if cooldown time has finished
+							player.powers_activated[i] = 0;
+							//reset cooldown timer value
+							player.sp_attack_cooldown_timer_val_array[i] = 0;
+							//reset animation for attack mode
+							animation.attackMode = -1;
 						}
-						//reset animation for attack mode
-						animation.attackMode = -1;
+						
 						
 						break;
 					}
@@ -222,6 +219,7 @@ void AttackPowerMechanicSystem::Update(float& dt)
 							animation.attackMode = -1;
 						}
 						
+						break;
 					}
 				}
 				
@@ -229,7 +227,21 @@ void AttackPowerMechanicSystem::Update(float& dt)
 		}
 		
 		
-		//power steal mechanic here
+		
+		
+		
+	}
+	
+}
+
+void AttackPowerMechanicSystem::PerformNeededPowerTransactions()
+{
+	
+	//power steal mechanic here
+	
+	for (auto const& entity : mEntities)
+	{
+		auto& player = gCoordinator.GetComponent<Player>(entity);
 		
 		//if player health is at 0
 		//check which player had the last collision detection with this player
@@ -248,13 +260,9 @@ void AttackPowerMechanicSystem::Update(float& dt)
 			//set last player hit number to zero
 			player.last_hit_by_player_num = 0;
 		}
-		
-		
 	}
 	
-	//collision detection between attack box and player
-	AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers();
-	
+			
 	//perform power transfer based on info from queue
 	while(!power_transfer_transaction_queue.empty())
 	{
@@ -272,7 +280,6 @@ void AttackPowerMechanicSystem::Update(float& dt)
 			}
 		}
 	}
-	
 }
 
 static bool PlayerCollisionWithRectangleDetected(Rectangle& rect,
@@ -383,7 +390,55 @@ AttackEvent AttackPowerMechanicSystem::CheckCollisionBetween2Players(int& player
 	return attack_event;
 }
 
-
+void AttackPowerMechanicSystem::MoveAttackBoxesWithPlayer(float& dt)
+{
+	for (auto const& entity : mEntities)
+	{
+		
+		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
+		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
+		auto& player = gCoordinator.GetComponent<Player>(entity);
+		auto& animation = gCoordinator.GetComponent<Animation>(entity);
+		
+		if(player.attack_box.active)
+		{
+			switch(animation.attackMode)
+			{
+				//regular attack
+				case 0:
+				{
+					int offset_x = 0;
+			
+					if(animation.face_dir == FaceDirection::EAST)
+					{
+						offset_x = 10;
+					}
+					else if(animation.face_dir == FaceDirection::WEST)
+					{
+						offset_x = -10;
+					}
+					
+					//activate collision box
+					player.attack_box.collisionBox.x = transform.position.x + offset_x; 
+					player.attack_box.collisionBox.y = transform.position.y + 20;
+					player.attack_box.collisionBox.width = 30;
+					player.attack_box.collisionBox.height = 30;
+					
+					player.attack_box.player_num = player.player_num;
+					
+					break;
+				}
+				default:{break;}
+			}
+			
+			
+		}
+		
+		
+		
+	}
+	
+}
 
 void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 {
@@ -998,5 +1053,23 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
 			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
 		}
+	}
+}
+
+
+
+void AttackPowerMechanicSystem::DebugRenderPlayerAttackBoxes()
+{
+	for (auto const& entity : mEntities)
+	{
+		
+		auto& player = gCoordinator.GetComponent<Player>(entity);
+		
+		if(player.attack_box.active)
+		{
+			DrawRectangleRec(player.attack_box.collisionBox, RED);
+		}
+		
+		
 	}
 }

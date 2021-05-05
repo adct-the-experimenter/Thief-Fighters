@@ -298,9 +298,21 @@ void logic()
 		}
 		case GameState::FIGHT_GAME:
 		{
-			attackPowerMechanicSystem->Update(dt);
+			//handle activating powers based on input
+			attackPowerMechanicSystem->HandlePowerActivation(dt);
 			
+			//move players and other entities
 			physicsSystem->Update(dt);
+			
+			//move attack boxes with players
+			attackPowerMechanicSystem->MoveAttackBoxesWithPlayer(dt);
+			
+			//check collisions between players
+			attackPowerMechanicSystem->CollisionDetectionBetweenPlayers();
+			
+			//perform power transactions if needed so that players can
+			//receive their slain opponent's power
+			attackPowerMechanicSystem->PerformNeededPowerTransactions();
 			
 			//set up frame for render
 			animationSystem->Update(dt);
@@ -355,6 +367,7 @@ void render()
 		    //render any entity that has render component
 			renderSystem->Update();
 			
+			attackPowerMechanicSystem->DebugRenderPlayerAttackBoxes();
 						
 			break;
 		}
