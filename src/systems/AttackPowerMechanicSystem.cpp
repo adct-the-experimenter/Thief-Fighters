@@ -47,7 +47,7 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 
 
 
-static float speed_boost = 10.0f;
+static float speed_boost = 20.0f;
 
 void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 {
@@ -118,6 +118,10 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 					{
 						//increase horizontal speed
 						rigidBody.velocity.x = speed_boost*rigidBody.velocity.x;
+						
+						//cancel any attack if dashing
+						player.attack_box.active = false;
+						
 						break;
 					}
 					//shield
@@ -211,7 +215,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 					case 2:
 					{
 						//if more than 4 seconds have passed
-						if(player.sp_attack_cooldown_timer_val_array[i] >= 3)
+						if(player.sp_attack_cooldown_timer_val_array[i] >= 4)
 						{
 							player.attack_box.active = false;
 							
