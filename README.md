@@ -4,11 +4,23 @@ This game is a work in progress.
 
 Entity Component System code adapted from Austin Morlan's ECS code.
 
-Much work is needed before minimal gameplay is established.
+Minimal gameplay is mostly established. Needs sound effects and better art.
 
 Fighting game in which the players steal a special power from the others after a kill.
 
-Buttons:
+## Install
+
+1. cd thief-fighters
+
+2. mkdir build
+
+3. cmake -DCMAKE_BUILD_TYPE=Debug ..
+
+4. make
+
+5. ./theif-fighters
+
+## Controls
 
 A = Attack
 
