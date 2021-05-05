@@ -79,7 +79,6 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 		//change and/or activate current power based on input
 		else if(player.powerButtonPressed && player.requested_power < 8 && player.alive && !player.taking_damage)
 		{
-			std::cout << "power button pressed by player " << int(player.player_num) << std::endl;
 			
 			//std::cout << "Player " << int(player.player_num) << " requested this power: " << int(player.requested_power) << std::endl;
 			//check which power player is requesting
