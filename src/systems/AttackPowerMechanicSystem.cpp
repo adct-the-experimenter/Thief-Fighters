@@ -793,7 +793,7 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 		*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
 		
 		//knock back
-		float knockback = 10;
+		float knockback = 3;
 		float sign = 1;
 		
 		if(player_position_ptrs[attack_event.player_num_victim - 1]->x < 
