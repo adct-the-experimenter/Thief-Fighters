@@ -1204,8 +1204,11 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 	}
 }
 
+
+
+
 static bool debugRenderAttackBox = false;
-static bool debugDrawPowerRequest = true;
+static bool debugDrawPowerRequest = false;
 
 void AttackPowerMechanicSystem::DebugRender()
 {
