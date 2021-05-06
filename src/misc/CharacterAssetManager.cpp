@@ -166,7 +166,47 @@ static bool LoadFrameAnimationFromThisFile(std::string filepath_frames, CharFram
 	
 	char_frame.right_attack_mode_frames[5].frames[0] = frames[30];
 	char_frame.right_attack_mode_frames[5].frames[1] = frames[31];
+	
+	//get up attack frames
+	
+	char_frame.up_attack_mode_frames[0].frames[0] = char_frame.up_still_frame.frame;
+	char_frame.up_attack_mode_frames[0].frames[1] = char_frame.up_still_frame.frame;
+	
+	char_frame.up_attack_mode_frames[1].frames[0] = char_frame.right_attack_mode_frames[1].frames[0];
+	char_frame.up_attack_mode_frames[1].frames[1] = char_frame.right_attack_mode_frames[1].frames[1];
+	
+	char_frame.up_attack_mode_frames[2].frames[0] = char_frame.right_attack_mode_frames[2].frames[0];
+	char_frame.up_attack_mode_frames[2].frames[1] = char_frame.right_attack_mode_frames[2].frames[1];
+	
+	char_frame.up_attack_mode_frames[3].frames[0] = char_frame.right_attack_mode_frames[3].frames[0];
+	char_frame.up_attack_mode_frames[3].frames[1] = char_frame.right_attack_mode_frames[3].frames[1];
+	
+	char_frame.up_attack_mode_frames[4].frames[0] = char_frame.right_attack_mode_frames[4].frames[0];
+	char_frame.up_attack_mode_frames[4].frames[1] = char_frame.right_attack_mode_frames[4].frames[1];
+	
+	char_frame.up_attack_mode_frames[5].frames[0] = char_frame.right_attack_mode_frames[5].frames[0];
+	char_frame.up_attack_mode_frames[5].frames[1] = char_frame.right_attack_mode_frames[5].frames[1];
+	
+	//get down attack frames
     
+    char_frame.down_attack_mode_frames[0].frames[0] = char_frame.down_still_frame.frame;
+	char_frame.down_attack_mode_frames[0].frames[1] = char_frame.down_still_frame.frame;
+	
+	char_frame.down_attack_mode_frames[1].frames[0] = char_frame.left_attack_mode_frames[1].frames[0];
+	char_frame.down_attack_mode_frames[1].frames[1] = char_frame.left_attack_mode_frames[1].frames[1];
+	
+	char_frame.down_attack_mode_frames[2].frames[0] = char_frame.left_attack_mode_frames[2].frames[0];
+	char_frame.down_attack_mode_frames[2].frames[1] = char_frame.left_attack_mode_frames[2].frames[1];
+	
+	char_frame.down_attack_mode_frames[3].frames[0] = char_frame.left_attack_mode_frames[3].frames[0];
+	char_frame.down_attack_mode_frames[3].frames[1] = char_frame.left_attack_mode_frames[3].frames[1];
+	
+	char_frame.down_attack_mode_frames[4].frames[0] = char_frame.left_attack_mode_frames[4].frames[0];
+	char_frame.down_attack_mode_frames[4].frames[1] = char_frame.left_attack_mode_frames[4].frames[1];
+	
+	char_frame.down_attack_mode_frames[5].frames[0] = char_frame.left_attack_mode_frames[5].frames[0];
+	char_frame.down_attack_mode_frames[5].frames[1] = char_frame.left_attack_mode_frames[5].frames[1];
+	
     return true;
 }
 

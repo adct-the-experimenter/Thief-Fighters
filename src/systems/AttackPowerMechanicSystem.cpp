@@ -285,27 +285,38 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 						//if more than 5 seconds have passed
 						if(player.sp_attack_cooldown_timer_val_array[i] >= 1)
 						{
-							//reset speed
-							rigidBody.velocity.x = rigidBody.velocity.x;
 							
-							//move player down
-							//transform.position.y += 60;
+							if(player.sp_attack_cooldown_timer_val_array[i] >= 4)
+							{
+								//reset bitset for power activated if cooldown time has finished
+								player.powers_activated[i] = 0;
+								//reset cooldown timer value
+								player.sp_attack_cooldown_timer_val_array[i] = 0;
+							}
+							else
+							{
+								//reset speed
+								rigidBody.velocity.x = rigidBody.velocity.x;
+								
+								
+								//change player collision box to match the normal size
+								collisionBox.width = 30;
+								collisionBox.height = 60;
+								
+								player.attack_box.active = false;
+								
+								
+								//reset animation for attack mode
+								animation.attackMode = -1;
+							}
 							
-							//change player collision box to match the normal size
-							collisionBox.width = 30;
-							collisionBox.height = 60;
 							
-							player.attack_box.active = false;
 							
-							//reset bitset for power activated if cooldown time has finished
-							player.powers_activated[i] = 0;
-							//reset cooldown timer value
-							player.sp_attack_cooldown_timer_val_array[i] = 0;
 							
-							//reset animation for attack mode
-							animation.attackMode = -1;
 							
 						}
+						
+						break;
 					}
 				}
 				
@@ -1190,7 +1201,7 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 
 
 
-void AttackPowerMechanicSystem::DebugRenderPlayerAttackBoxes()
+void AttackPowerMechanicSystem::DebugRender()
 {
 	for (auto const& entity : mEntities)
 	{

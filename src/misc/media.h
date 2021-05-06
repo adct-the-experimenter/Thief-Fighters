@@ -41,6 +41,9 @@ struct CharFrames
 	// last frames are special attack/ability, 1-8
 	std::array <TwoFrameGroup,9> right_attack_mode_frames;
 	std::array <TwoFrameGroup,9> left_attack_mode_frames;
+	std::array <TwoFrameGroup,9> up_attack_mode_frames;
+	std::array <TwoFrameGroup,9> down_attack_mode_frames;
+	
 	
 };
 

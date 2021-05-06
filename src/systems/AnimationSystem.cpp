@@ -88,7 +88,7 @@ void AnimationSystem::Update(float& dt)
 						anim_comp.face_dir = FaceDirection::SOUTH;
 						
 						//face down
-						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].down_still_frame.frame;
+						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].down_attack_mode_frames[anim_comp.attackMode].frames[anim_comp.frame_count];
 						anim_comp.frame_count = 0;
 					}
 					else if(north && !west && !east)
@@ -96,7 +96,7 @@ void AnimationSystem::Update(float& dt)
 						anim_comp.face_dir = FaceDirection::NORTH;
 						
 						//face up
-						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].up_still_frame.frame;
+						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].up_attack_mode_frames[anim_comp.attackMode].frames[anim_comp.frame_count];
 						anim_comp.frame_count = 0;
 					}
 					

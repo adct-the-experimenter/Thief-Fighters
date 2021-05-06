@@ -292,6 +292,7 @@ void logic()
 				
 				gStageManager.PlacePlayersInStage(gNumPlayers);
 				attackPowerMechanicSystem->Init(gNumPlayers);
+				playerDeathSystem->Init(gNumPlayers);
 			}
 			
 			break;
@@ -319,6 +320,11 @@ void logic()
 			
 			//check for dead players, set bool to stop rendering them
 			playerDeathSystem->Update();
+			
+			//if(playerDeathSystem->OnePlayerWon() && gNumPlayers > 1)
+			//{
+				//do something
+			//}
 			
 			break;
 		}
@@ -367,7 +373,7 @@ void render()
 		    //render any entity that has render component
 			renderSystem->Update();
 			
-			//attackPowerMechanicSystem->DebugRenderPlayerAttackBoxes();
+			attackPowerMechanicSystem->DebugRender();
 						
 			break;
 		}

@@ -33,7 +33,7 @@ public:
 	
 	void CollisionDetectionBetweenPlayers();
 	
-	void DebugRenderPlayerAttackBoxes();
+	void DebugRender();
 	
 private:
 	std::queue <PowerTransferTransaction> power_transfer_transaction_queue;
