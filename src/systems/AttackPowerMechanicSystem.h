@@ -49,7 +49,7 @@ private:
 	
 	bool AreBothPlayersAlive(int& player_a_num, int& player_b_num);
 	AttackEvent CheckCollisionBetween2Players(int& player_a_num, int& player_b_num);
-	
+	void HandlePossibleCollisionBetweenPlayers(int& player_a_num, int& player_b_num);
 	
 	
 	std::uint8_t m_num_players;

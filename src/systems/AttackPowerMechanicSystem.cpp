@@ -428,69 +428,6 @@ static bool PlayerCollisionWithRectangleDetected(Rectangle& rect,
 	return true;
 }
 
-bool AttackPowerMechanicSystem::AreBothPlayersAlive(int& player_a_num, int& player_b_num)
-{
-	if(*player_alive_ptrs[player_a_num - 1] && *player_alive_ptrs[player_b_num - 1])
-	{
-		return true;
-	}
-	
-	return false;
-}
-
-AttackEvent AttackPowerMechanicSystem::CheckCollisionBetween2Players(int& player_a_num, int& player_b_num)
-{
-	AttackEvent attack_event;
-	attack_event.attack = false;
-	attack_event.player_num_victim = 0;
-	attack_event.player_num_attacker = 0;
-	
-	if(!AttackPowerMechanicSystem::AreBothPlayersAlive(player_a_num,player_b_num))
-	{
-		return attack_event;
-	}
-	
-	AttackBox* playerA_attackbox_ptr = player_attack_boxes_ptrs[player_a_num - 1];
-	AttackBox* playerB_attackbox_ptr = player_attack_boxes_ptrs[player_b_num - 1];
-	
-	Vector2* playerA_position_ptr = player_position_ptrs[player_a_num - 1];
-	Vector2* playerB_position_ptr = player_position_ptrs[player_b_num - 1];
-	
-	//player width and height
-	std::uint32_t width = 30;
-	std::uint32_t height = 80;
-
-	//if this player A attack box is active, player B attack box inactive
-	if( playerA_attackbox_ptr->active && !playerB_attackbox_ptr->active)
-	{
-		if(PlayerCollisionWithRectangleDetected(playerA_attackbox_ptr->collisionBox,
-												playerB_position_ptr->x, playerB_position_ptr->y, width,height)
-		   )
-		{
-			
-			
-			attack_event.attack = true;
-			attack_event.player_num_victim = player_b_num;
-			attack_event.player_num_attacker = player_a_num;
-			
-		}
-	}
-	//if player B attack box is active, player A attack box inactive
-	else if(playerB_attackbox_ptr->active && !playerA_attackbox_ptr->active)
-	{
-		if(PlayerCollisionWithRectangleDetected(playerB_attackbox_ptr->collisionBox,
-												playerA_position_ptr->x, playerA_position_ptr->y, width,height)
-		   )
-		{
-			attack_event.attack = true;
-			attack_event.player_num_victim = player_a_num;
-			attack_event.player_num_attacker = player_b_num;
-			
-		}
-	}
-	
-	return attack_event;
-}
 
 void AttackPowerMechanicSystem::MoveAttackBoxesWithPlayer(float& dt)
 {
@@ -597,30 +534,9 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 	//check player 1 and player 2 interaction
 	if( m_num_players > 1)
 	{
-		AttackEvent attack_event;
 		player_a_num = 1;
 		player_b_num = 2;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened, and player is not already in state of taking damage
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] )
-		{
-			//std::cout << "Player " << attack_event.player_num_attacker << "took away 3 HP from player " << attack_event.player_num_victim << std::endl;
-			
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-			*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
-			
-			//std::cout << "Player " << attack_event.player_num_attacker << " health: " << *player_health_ptrs[attack_event.player_num_victim - 1] << std::endl;
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 	}
 	
 	//if there are more than 2 players
@@ -633,42 +549,13 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 		
 		player_a_num = 1;
 		player_b_num = 3;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] )
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
 		//check player 2 and player 3 interaction
 		
 		player_a_num = 2;
 		player_b_num = 3;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 	}
 	
@@ -676,386 +563,111 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 	//check player 1 and player 4, player 2 and player 4, player 3 and player 4 interactions
 	if( m_num_players > 3)
 	{
-		AttackEvent attack_event;
 		
 		//check player 1 and player 4 interaction
 		player_a_num = 1;
 		player_b_num = 4;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 2 and player 4 interaction
 		player_a_num = 2;
 		player_b_num = 4;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 3 and player 4 interaction
 		player_a_num = 3;
 		player_b_num = 4;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 	}
 	
 	//if there are 5 players
 	if(m_num_players > 4)
 	{
-		AttackEvent attack_event;
 		
 		//check player 1 and player 5 interaction
 		player_a_num = 1;
 		player_b_num = 5;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 2 and player 5 interaction
 		player_a_num = 2;
 		player_b_num = 5;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 3 and player 5 interaction
 		player_a_num = 3;
 		player_b_num = 5;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 4 and player 5 interaction
 		player_a_num = 4;
 		player_b_num = 5;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 	}
 	
 	//if there are 6 players
 	if(m_num_players > 5)
 	{
-		AttackEvent attack_event;
 		
 		//check player 1 and player 6 interaction
 		player_a_num = 1;
 		player_b_num = 6;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 2 and player 6 interaction
 		player_a_num = 2;
 		player_b_num = 6;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 3 and player 6 interaction
 		player_a_num = 3;
 		player_b_num = 6;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 4 and player 6 interaction
 		player_a_num = 4;
 		player_b_num = 6;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
-		
-		//check player 4 and player 5 interaction
+		//check player 5 and player 6 interaction
 		player_a_num = 5;
 		player_b_num = 6;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 	}
 	
 	//if there are 7 players
 	if(m_num_players > 6)
-	{
-		AttackEvent attack_event;
-		
+	{		
 		//check player 1 and player 7 interaction
 		player_a_num = 1;
 		player_b_num = 7;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 2 and player 7 interaction
 		player_a_num = 2;
 		player_b_num = 7;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 3 and player 7 interaction
 		player_a_num = 3;
 		player_b_num = 7;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 4 and player 7 interaction
 		player_a_num = 4;
 		player_b_num = 7;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 5 and player 7 interaction
 		player_a_num = 5;
 		player_b_num = 7;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 6 and player 7 interaction
 		player_a_num = 6;
 		player_b_num = 7;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 	}
 	//if there are 8 players
 	if(m_num_players > 7)
@@ -1065,146 +677,140 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 		//check player 1 and player 8 interaction
 		player_a_num = 1;
 		player_b_num = 8;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 2 and player 8 interaction
 		player_a_num = 2;
 		player_b_num = 8;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 3 and player 8 interaction
 		player_a_num = 3;
 		player_b_num = 8;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 4 and player 8 interaction
 		player_a_num = 4;
 		player_b_num = 8;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 5 and player 8 interaction
 		player_a_num = 5;
 		player_b_num = 8;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 6 and player 8 interaction
 		player_a_num = 6;
 		player_b_num = 8;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 		
 		//check player 7 and player 8 interaction
 		player_a_num = 7;
 		player_b_num = 8;
-		attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
-		
-		//if attack happened
-		if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-		{
-			//decrease health of victim player
-			*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
-			//set last hit by player variable for victim player
-			*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
-			
-		}
-		else
-		{
-			*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-			*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-		}
+		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 	}
 }
 
+bool AttackPowerMechanicSystem::AreBothPlayersAlive(int& player_a_num, int& player_b_num)
+{
+	if(*player_alive_ptrs[player_a_num - 1] && *player_alive_ptrs[player_b_num - 1])
+	{
+		return true;
+	}
+	
+	return false;
+}
 
+AttackEvent AttackPowerMechanicSystem::CheckCollisionBetween2Players(int& player_a_num, int& player_b_num)
+{
+	AttackEvent attack_event;
+	attack_event.attack = false;
+	attack_event.player_num_victim = 0;
+	attack_event.player_num_attacker = 0;
+	
+	if(!AttackPowerMechanicSystem::AreBothPlayersAlive(player_a_num,player_b_num))
+	{
+		return attack_event;
+	}
+	
+	AttackBox* playerA_attackbox_ptr = player_attack_boxes_ptrs[player_a_num - 1];
+	AttackBox* playerB_attackbox_ptr = player_attack_boxes_ptrs[player_b_num - 1];
+	
+	Vector2* playerA_position_ptr = player_position_ptrs[player_a_num - 1];
+	Vector2* playerB_position_ptr = player_position_ptrs[player_b_num - 1];
+	
+	//player width and height
+	std::uint32_t width = 30;
+	std::uint32_t height = 80;
+
+	//if this player A attack box is active, player B attack box inactive
+	if( playerA_attackbox_ptr->active && !playerB_attackbox_ptr->active)
+	{
+		if(PlayerCollisionWithRectangleDetected(playerA_attackbox_ptr->collisionBox,
+												playerB_position_ptr->x, playerB_position_ptr->y, width,height)
+		   )
+		{
+			
+			
+			attack_event.attack = true;
+			attack_event.player_num_victim = player_b_num;
+			attack_event.player_num_attacker = player_a_num;
+			
+		}
+	}
+	//if player B attack box is active, player A attack box inactive
+	else if(playerB_attackbox_ptr->active && !playerA_attackbox_ptr->active)
+	{
+		if(PlayerCollisionWithRectangleDetected(playerB_attackbox_ptr->collisionBox,
+												playerA_position_ptr->x, playerA_position_ptr->y, width,height)
+		   )
+		{
+			attack_event.attack = true;
+			attack_event.player_num_victim = player_a_num;
+			attack_event.player_num_attacker = player_b_num;
+			
+		}
+	}
+	
+	return attack_event;
+}
+
+void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& player_a_num, int& player_b_num)
+{
+	AttackEvent attack_event;
+	attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
+	
+	//if attack happened, and player is not already in state of taking damage
+	if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] )
+	{
+		//std::cout << "Player " << attack_event.player_num_attacker << "took away 3 HP from player " << attack_event.player_num_victim << std::endl;
+		
+		//decrease health of victim player
+		*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
+		//set last hit by player variable for victim player
+		*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
+		
+		*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
+		
+		//knock back
+		float knockback = 10;
+		float sign = 1;
+		
+		if(player_position_ptrs[attack_event.player_num_victim - 1]->x < 
+			player_position_ptrs[attack_event.player_num_attacker - 1]->x)
+		{
+			sign = -1;
+		}
+		
+		player_position_ptrs[attack_event.player_num_victim - 1]->x += sign*knockback;
+		
+	}
+	else
+	{
+		*player_taking_damage_state_ptrs[player_a_num - 1] = false;
+		*player_taking_damage_state_ptrs[player_b_num - 1] = false;
+	}
+}
 
 
 static bool debugRenderAttackBox = false;
