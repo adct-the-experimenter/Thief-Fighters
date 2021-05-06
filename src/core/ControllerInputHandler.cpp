@@ -110,8 +110,8 @@ void ControllerInputHandler::Update(ControllerInput* input)
 	ControllerInputHandler::SetGamepadInfo(*input);
 }
 
-static const int16_t joystick_border = 32600;
-static const int16_t joystick_border_analog = 8000;
+static const int16_t joystick_border = 32765;
+static const int16_t joystick_border_analog = 10000;
 
 void ControllerInputHandler::SetControllerAxisMotionVariables(ControllerInput::GamepadInfo& gamepad_info, SDL_Event& sdl_event)
 {

@@ -95,6 +95,11 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 				
 				
 			}
+			else
+			{
+				//reset back to the power that the player has used previously saved in current power.
+				player.requested_power = player.current_power;
+			}
 			
 			//activate power if not activated
 			if( !player.powers_activated[player.current_power])
@@ -1199,7 +1204,8 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 	}
 }
 
-
+static bool debugRenderAttackBox = false;
+static bool debugDrawPowerRequest = true;
 
 void AttackPowerMechanicSystem::DebugRender()
 {
@@ -1208,11 +1214,18 @@ void AttackPowerMechanicSystem::DebugRender()
 		
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		
-		if(player.attack_box.active)
+		if(player.attack_box.active && debugRenderAttackBox)
 		{
 			DrawRectangleRec(player.attack_box.collisionBox, RED);
 		}
 		
+		
+		
+		if(debugDrawPowerRequest)
+		{
+			std::string req_num_str = std::to_string(player.requested_power);
+			DrawText(req_num_str.c_str(), 100 + 20*player.player_num, 20, 20, RED); 
+		}
 		
 	}
 }

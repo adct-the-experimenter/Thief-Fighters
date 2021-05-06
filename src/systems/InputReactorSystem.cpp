@@ -9,7 +9,7 @@ extern Coordinator gCoordinator;
 float speed_factor = 40.0f;
 
 static const int16_t joystick_border = 32600;
-static const int16_t joystick_border_analog = 8000;
+static const int16_t joystick_border_analog = 10000;
 
 
 void InputReactorSystem::Update(ControllerInput& input)
@@ -56,8 +56,12 @@ void InputReactorSystem::Update(ControllerInput& input)
 						//  6		  2
 						//    5     3
 						//       4
+						
+						//std::cout << "right joystick x:" << input.gamepads_vec[i].right_x_axis << std::endl;
+						//std::cout << "right joystick y:" << input.gamepads_vec[i].right_y_axis << std::endl;
+						
 						//if up
-						if(input.gamepads_vec[i].right_y_axis < -joystick_border_analog*0.8)
+						if(input.gamepads_vec[i].right_y_axis < -joystick_border_analog)
 						{
 							if(input.gamepads_vec[i].right_x_axis < -joystick_border_analog)
 							{
@@ -72,6 +76,7 @@ void InputReactorSystem::Update(ControllerInput& input)
 								player.requested_power = 0;
 							}
 						}
+						//if down
 						else if(input.gamepads_vec[i].right_y_axis > joystick_border_analog*0.8)
 						{
 							if(input.gamepads_vec[i].right_x_axis < -joystick_border_analog)
@@ -89,17 +94,17 @@ void InputReactorSystem::Update(ControllerInput& input)
 						}
 						else
 						{
-							if(input.gamepads_vec[i].right_x_dir_digital == -1)
-							{
-								player.requested_power = 6;
-							}
-							else if(input.gamepads_vec[i].right_x_dir_digital == 1)
+							if(input.gamepads_vec[i].right_x_axis > joystick_border_analog)
 							{
 								player.requested_power = 2;
 							}
+							else if(input.gamepads_vec[i].right_x_axis < -joystick_border_analog)
+							{
+								player.requested_power = 6;
+							}
 							else
 							{
-								player.requested_power = player.current_power;
+								//player.requested_power = player.current_power;
 							}
 						}
 						
