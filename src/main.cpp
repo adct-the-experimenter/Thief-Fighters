@@ -109,6 +109,10 @@ StageSelector gStageSelector;
 
 bool quitGame = false;
 
+RenderTexture2D target;
+int gameScreenWidth = 800;
+int gameScreenHeight = 600;
+		
 int main(int argc, char* args[])
 {
 	InitRaylibSystem();
@@ -130,6 +134,11 @@ int main(int argc, char* args[])
 		InitMainECS();
 		
 		
+		
+		// Render texture initialization, used to hold the rendering result so we can easily resize it
+		target = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
+		SetTextureFilter(target.texture, FILTER_ANISOTROPIC_16X);  // Texture scale filter to use
+		SetTextureWrap(target.texture,WRAP_CLAMP);
 		
 
 		while (!quitGame)
@@ -335,10 +344,14 @@ Vector3 mapPosition = { -16.0f, 0.0f, -8.0f };  // Set model position
 
 void render()
 {
+	// Compute required framebuffer scaling
+    float scale = std::min((float)GetScreenWidth()/gameScreenWidth, (float)GetScreenHeight()/gameScreenHeight);
+    
 	BeginDrawing();
 
 	ClearBackground(RAYWHITE);
 	
+	BeginTextureMode(target);
 	
 	switch(m_game_state)
 	{
@@ -379,8 +392,14 @@ void render()
 		}
 	}
 	
+	EndTextureMode();
 	
-	
+	// Draw RenderTexture2D to window, properly scaled
+	DrawTexturePro(target.texture, (Rectangle){ 0.0f, 0.0f, (float)target.texture.width, (float)-target.texture.height },
+				   (Rectangle){ (GetScreenWidth() - ((float)gameScreenWidth*scale))*0.5f, (GetScreenHeight() - ((float)gameScreenHeight*scale))*0.5f,
+				   (float)gameScreenWidth*scale, (float)gameScreenHeight*scale }, (Vector2){ 0, 0 }, 0.0f, WHITE);
+
+
 	EndDrawing();
 }
 
@@ -509,6 +528,8 @@ void InitRaylibSystem()
 {
 	
 	SetConfigFlags(FLAG_MSAA_4X_HINT);  // Set MSAA 4X hint before windows creation
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);    // Window configuration flags
+	SetConfigFlags(FLAG_VSYNC_HINT);    // set v sync
 	
     InitWindow(screenWidth, screenHeight, "Thief Fighters");
 	
