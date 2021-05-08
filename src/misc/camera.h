@@ -9,30 +9,55 @@ class CustomCamera
 	
 public:
 
-	void Init()
+	void Init(	std::uint16_t game_res_width,
+				std::uint16_t game_res_height)
 	{
-		// Define the camera to look into our 3d world
-		camera = { 0 };
-		camera.position = (Vector3){ 10.0f, 10.0f, 10.0f }; // Camera position
-		camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
-		camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-		camera.fovy = 45.0f;                                // Camera field-of-view Y
-		camera.type = CAMERA_PERSPECTIVE;                   // Camera mode type
+		camera_rect = {0,0,game_res_width,game_res_height};
 	}
 	
-	Camera* GetPointerToCamera()
+	void SetLevelBounds(std::uint16_t level_bound_left_x,
+				std::uint16_t level_bound_right_x,
+				std::uint16_t level_bound_up_y,
+				std::uint16_t level_bound_down_y)
 	{
-		return &camera;
+		m_level_bound_left_x = level_bound_left_x;
+		m_level_bound_right_x = level_bound_right_x;
+		m_level_bound_up_y = level_bound_up_y;
+		m_level_bound_down_y = level_bound_down_y;
 	}
 	
-	Camera& GetReferenceToCamera()
+	std::uint16_t& GetLeftLevelBound()
 	{
-		return camera;
+		return m_level_bound_left_x;
+	}
+	
+	std::uint16_t& GetRightLevelBound()
+	{
+		return m_level_bound_right_x;
+	}
+	
+	std::uint16_t& GetUpLevelBound()
+	{
+		return m_level_bound_up_y;
+	}
+	
+	std::uint16_t& GetDownLevelBound()
+	{
+		return m_level_bound_down_y;
+	}
+	
+	Rectangle* GetCameraRectPointer()
+	{
+		return &camera_rect;
 	}
 	
 private:
 
-	Camera camera;
+	Rectangle camera_rect;
+	std::uint16_t m_level_bound_left_x;
+	std::uint16_t m_level_bound_right_x;
+	std::uint16_t m_level_bound_up_y;
+	std::uint16_t m_level_bound_down_y;
 	
 };
 

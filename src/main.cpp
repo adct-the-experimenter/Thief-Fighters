@@ -252,7 +252,9 @@ void logic()
 				gCharSelector.Init(&entities,gNumPlayers);
 				
 				//initialize camera system
-				cameraSystem->Init(&main_camera,screenWidth,screenHeight);
+				main_camera.Init(gameScreenWidth,gameScreenHeight);
+				main_camera.SetLevelBounds(0,720,0,360);
+				cameraSystem->Init(&main_camera,gNumPlayers);
 				
 				//initialize render system
 				renderSystem->Init(&main_camera);
@@ -381,10 +383,11 @@ void render()
 		case GameState::FIGHT_GAME:
 		{			
 			
-			//draw the stage
-			DrawTexture(main_stage.texture, 0, 0, RAYWHITE);
+			cameraSystem->Update(scale);
 			
-			//cameraSystem->Update();
+			//draw the stage
+			
+			DrawTextureRec(main_stage.texture, *main_camera.GetCameraRectPointer(), Vector2{0,0}, RAYWHITE);
 			
 		    //render any entity that has render component
 			renderSystem->Update();
@@ -485,6 +488,7 @@ void InitMainECS()
 	
 	Signature camera_sig;
 	camera_sig.set(gCoordinator.GetComponentType<Transform2D>());
+	camera_sig.set(gCoordinator.GetComponentType<CollisionBox>());
 	camera_sig.set(gCoordinator.GetComponentType<Player>());
 	gCoordinator.SetSystemSignature<CameraSystem>(camera_sig);
 	

@@ -11,14 +11,15 @@
 class CameraSystem : public System
 {
 public:
-	void Init(CustomCamera* camera_ptr,
-				std::uint16_t screenWidth, std::uint16_t screenHeight);
-
-	void Update();
+	void Init(CustomCamera* camera_ptr, std::uint8_t num_players);
+	
+	//updates scale according to calculations
+	void Update(float& scale);
 	
 protected:
 
 	CustomCamera* m_camera_ptr;
+	std::uint8_t m_num_players;
 };
 
 #endif

@@ -63,8 +63,13 @@ void RenderSystem::Update()
 			//if renderable object is within camera bounds.
 			if(render_comp.render)
 			{
-				//DrawTextureRec(*render_comp.texture_ptr, render_comp.frame_rect, transform.position, render_comp.tint);
-				DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, transform.position, render_comp.tint);
+				//adjust render position of relative to camera position
+				Vector2 adjusted_pos;
+				adjusted_pos.x = transform.position.x - m_camera_ptr->GetCameraRectPointer()->x;
+				adjusted_pos.y = transform.position.y - m_camera_ptr->GetCameraRectPointer()->y;
+				
+				//render texuture according to frame, adjusted camera composition, tint
+				DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
 			}
 		}
 		

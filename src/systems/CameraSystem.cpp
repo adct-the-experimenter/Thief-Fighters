@@ -9,40 +9,81 @@
 extern Coordinator gCoordinator;
 
 
-void CameraSystem::Init(CustomCamera* camera,
-				std::uint16_t screenWidth, std::uint16_t screenHeight)
+void CameraSystem::Init(CustomCamera* camera, std::uint8_t num_players)
 {
 	m_camera_ptr = camera;
-	
-	*m_camera_ptr->GetPointerToCamera() = { { 0.2f, 0.4f, 0.2f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, 45.0f, 0 };
-	//m_camera_ptr->camera_rect.width = screenWidth;
-	//m_camera_ptr->camera_rect.height = screenHeight;
-	//SetCameraMode(camera->GetReferenceToCamera(), CAMERA_FREE);     // Set camera mode
-	
-	
+	m_num_players = num_players;
 }
 
-void CameraSystem::Update()
+void CameraSystem::Update(float& scale)
 {
 	std::uint8_t current_player = 0;
+	
+	
 	
 	for (auto const& entity : mEntities)
 	{
 		
-		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
-		auto& player = gCoordinator.GetComponent<Player>(entity);
+		auto& transform = gCoordinator.GetComponent <Transform2D> (entity);
+		auto& collisionBox = gCoordinator.GetComponent <CollisionBox> (entity);
+		auto& player = gCoordinator.GetComponent <Player> (entity);
 		
 		
-		//center camera to follow both players
+		//center camera to follow all players on screen
 		
-		//put camera at halfway point of distance vector made from  2 players positions
-		//zoom based on distance between 2 players.
+		Rectangle* camera_rect_ptr = m_camera_ptr->GetCameraRectPointer();
 		
+		//if only 1 player is playing
+		if(m_num_players == 1)
+		{
+			//center camera over the only player
+			camera_rect_ptr->x = ( transform.position.x + (collisionBox.width / 2) ) - (camera_rect_ptr->width / 2);
+			camera_rect_ptr->y = ( transform.position.y + (collisionBox.height / 2) ) - (camera_rect_ptr->height / 2);
+			
+			
+		}
+		//else if more than 1 player is playing
+		else if(m_num_players > 1)
+		{
+			//center camera to point between player on the farthest left side
+			//and player on the farthest right side
+			
+		}
+		
+		
+		
+		//get level bounds
+		std::uint16_t& boundDown = m_camera_ptr->GetDownLevelBound();
+		std::uint16_t& boundUp = m_camera_ptr->GetUpLevelBound();
+		std::uint16_t& boundLeft = m_camera_ptr->GetLeftLevelBound();
+		std::uint16_t& boundRight = m_camera_ptr->GetRightLevelBound();
+		
+		//Keep the camera in bounds
+		if( camera_rect_ptr->x < 0 )
+		{ 
+			camera_rect_ptr->x = 0;
+		}
+		
+		if( camera_rect_ptr->y < 0 )
+		{
+			camera_rect_ptr->y = 0;
+		}
+		
+		if( camera_rect_ptr->x > boundRight - camera_rect_ptr->width )
+		{
+			camera_rect_ptr->x = boundRight - camera_rect_ptr->width;
+		}
+		
+		if( camera_rect_ptr->y > boundDown - camera_rect_ptr->height )
+		{
+			camera_rect_ptr->y = boundDown - camera_rect_ptr->height;
+		}
+		
+		//std::cout << "\nIn Camera System\n";
+		//std::cout << "camera position: " << camera_rect_ptr->x << " , " << camera_rect_ptr->y << std::endl;
 		
 	}
-	
-	// Update camera
-	//UpdateCamera(m_camera_ptr->GetPointerToCamera());      
+	 
 	
 }
 
