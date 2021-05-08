@@ -138,7 +138,7 @@ int main(int argc, char* args[])
 		
 		// Render texture initialization, used to hold the rendering result so we can easily resize it
 		target = LoadRenderTexture(gameScreenWidth, gameScreenHeight);
-		SetTextureFilter(target.texture, FILTER_ANISOTROPIC_16X);  // Texture scale filter to use
+		SetTextureFilter(target.texture, FILTER_BILINEAR);  // Texture scale filter to use
 		SetTextureWrap(target.texture,WRAP_CLAMP);
 		
 
