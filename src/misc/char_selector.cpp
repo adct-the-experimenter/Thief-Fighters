@@ -44,69 +44,82 @@ void CharacterSelector::Init(std::vector <Entity> *entities_vec_ptr, std::uint8_
 	
 	char_confirmations.resize(num_players);
 	
+	int background_box_y_row1 = 50;
+	
+	int background_box_width = 150;
+	int background_box_height = 150;
+	
+	int slot_x_offset = 100;
+	int slot_y_offset = 20;
+	
+	int slot_height = 20;
+	int slot_width = 80;
+	
+	int background_box_y_row2 = 205;
+	
 	//set up fighter box positions and internals
 	for(size_t i = 0; i < fighter_boxes.size(); i++)
 	{
 		//for top side
 		if(i < 4)
 		{
-			fighter_boxes[i].background_box.x = i*150 + 10;
-			fighter_boxes[i].background_box.y = 50;
-			fighter_boxes[i].background_box.width = 150;
-			fighter_boxes[i].background_box.height = 225;
+			fighter_boxes[i].background_box.x = i*slot_x_offset + 10;
+			fighter_boxes[i].background_box.y = background_box_y_row1;
+			fighter_boxes[i].background_box.width = background_box_width;
+			fighter_boxes[i].background_box.height = background_box_height;
 			
 			fighter_boxes[i].player_num_string = "Player " + std::to_string(i + 1);
 			
-			fighter_boxes[i].player_num_rect.x = i*150 + 50;
-			fighter_boxes[i].player_num_rect.y = 75;
-			fighter_boxes[i].player_num_rect.width = 80;
-			fighter_boxes[i].player_num_rect.height = 25;
+			fighter_boxes[i].player_num_rect.x = i*slot_x_offset + 50;
+			fighter_boxes[i].player_num_rect.y = background_box_y_row1 + slot_y_offset;
+			fighter_boxes[i].player_num_rect.width = slot_width;
+			fighter_boxes[i].player_num_rect.height = slot_height ;
 			
-			fighter_boxes[i].char_slot_rect.x = i*150 + 50;
-			fighter_boxes[i].char_slot_rect.y = 100;
-			fighter_boxes[i].char_slot_rect.width = 80;
-			fighter_boxes[i].char_slot_rect.height = 25;
+			fighter_boxes[i].char_slot_rect.x = i*slot_x_offset + 50;
+			fighter_boxes[i].char_slot_rect.y = background_box_y_row1 + 2*slot_y_offset;
+			fighter_boxes[i].char_slot_rect.width = slot_width;
+			fighter_boxes[i].char_slot_rect.height = slot_height ;
 			
-			fighter_boxes[i].special_power_slot_rect.x = i*150 + 50;
-			fighter_boxes[i].special_power_slot_rect.y = 150;
-			fighter_boxes[i].special_power_slot_rect.width = 80;
-			fighter_boxes[i].special_power_slot_rect.height = 25;
+			fighter_boxes[i].special_power_slot_rect.x = i*slot_x_offset + 50;
+			fighter_boxes[i].special_power_slot_rect.y = background_box_y_row1 + 3*slot_y_offset;
+			fighter_boxes[i].special_power_slot_rect.width = slot_width;
+			fighter_boxes[i].special_power_slot_rect.height = slot_height;
 			
-			fighter_boxes[i].confirm_selection_rect.x = i*150 + 50;
-			fighter_boxes[i].confirm_selection_rect.y = 200;
-			fighter_boxes[i].confirm_selection_rect.width = 80;
-			fighter_boxes[i].confirm_selection_rect.height = 25;
+			fighter_boxes[i].confirm_selection_rect.x = i*slot_x_offset + 50;
+			fighter_boxes[i].confirm_selection_rect.y = background_box_y_row1 + 4*slot_y_offset;
+			fighter_boxes[i].confirm_selection_rect.width = slot_width;
+			fighter_boxes[i].confirm_selection_rect.height = slot_height;
 			
 		}
 		//for bottom side
 		else
 		{
-			fighter_boxes[i].background_box.x = i*150 + 10;
-			fighter_boxes[i].background_box.y = 350;
-			fighter_boxes[i].background_box.width = 150;
-			fighter_boxes[i].background_box.height = 225;
+			fighter_boxes[i].background_box.x = (i-4)*slot_x_offset + 10;
+			fighter_boxes[i].background_box.y = background_box_y_row2;
+			fighter_boxes[i].background_box.width = background_box_width;
+			fighter_boxes[i].background_box.height = background_box_height;
 			
 			fighter_boxes[i].player_num_string = "Player " + std::to_string(i + 1);
 			
-			fighter_boxes[i].player_num_rect.x = i*150 + 50;
-			fighter_boxes[i].player_num_rect.y = 375;
-			fighter_boxes[i].player_num_rect.width = 80;
-			fighter_boxes[i].player_num_rect.height = 25;
+			fighter_boxes[i].player_num_rect.x = (i-4)*slot_x_offset + 50;
+			fighter_boxes[i].player_num_rect.y = background_box_y_row2 + slot_y_offset;
+			fighter_boxes[i].player_num_rect.width = slot_width;
+			fighter_boxes[i].player_num_rect.height = slot_height ;
 			
-			fighter_boxes[i].char_slot_rect.x = i*150 + 50;
-			fighter_boxes[i].char_slot_rect.y = 400;
-			fighter_boxes[i].char_slot_rect.width = 80;
-			fighter_boxes[i].char_slot_rect.height = 25;
+			fighter_boxes[i].char_slot_rect.x = (i-4)*slot_x_offset + 50;
+			fighter_boxes[i].char_slot_rect.y = background_box_y_row2 + 2*slot_y_offset;
+			fighter_boxes[i].char_slot_rect.width = slot_width;
+			fighter_boxes[i].char_slot_rect.height = slot_height ;
 			
-			fighter_boxes[i].special_power_slot_rect.x = i*150 + 50;
-			fighter_boxes[i].special_power_slot_rect.y = 450;
-			fighter_boxes[i].special_power_slot_rect.width = 80;
-			fighter_boxes[i].special_power_slot_rect.height = 25;
+			fighter_boxes[i].special_power_slot_rect.x = (i-4)*slot_x_offset + 50;
+			fighter_boxes[i].special_power_slot_rect.y = background_box_y_row2 + 3*slot_y_offset;
+			fighter_boxes[i].special_power_slot_rect.width = slot_width;
+			fighter_boxes[i].special_power_slot_rect.height = slot_height;
 			
-			fighter_boxes[i].confirm_selection_rect.x = i*150 + 50;
-			fighter_boxes[i].confirm_selection_rect.y = 500;
-			fighter_boxes[i].confirm_selection_rect.width = 80;
-			fighter_boxes[i].confirm_selection_rect.height = 25;
+			fighter_boxes[i].confirm_selection_rect.x = (i-4)*slot_x_offset + 50;
+			fighter_boxes[i].confirm_selection_rect.y = background_box_y_row2 + 4*slot_y_offset;
+			fighter_boxes[i].confirm_selection_rect.width = slot_width;
+			fighter_boxes[i].confirm_selection_rect.height = slot_height;
 		}
 		
 	}

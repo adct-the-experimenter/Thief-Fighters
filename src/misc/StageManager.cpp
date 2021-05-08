@@ -98,9 +98,9 @@ bool StageManager::LoadLevel(std::uint16_t level)
 	{
 		case 0:
 		{  
-			collisionMapFilePath = DATADIR_STR + "/stage_assets/training_stage/training_map_collisions.txt";
-			textureFilePath = DATADIR_STR + "/stage_assets/training_stage/training_map_image.png";
-			playerStartFilePath = DATADIR_STR + "/stage_assets/training_stage/training_map_start.txt";
+			collisionMapFilePath = DATADIR_STR + "/stage_assets/city-sky-scrapper/city_sky_collisions.txt";
+			textureFilePath = DATADIR_STR + "/stage_assets/city-sky-scrapper/city_sky_image.png";
+			playerStartFilePath = DATADIR_STR + "/stage_assets/city-sky-scrapper/city_sky_start.txt";
 			break;
 		}
 	}

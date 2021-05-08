@@ -101,7 +101,7 @@ CharacterSelector gCharSelector;
 std::int8_t gNumPlayers = 2;
 
 const std::int16_t screenWidth = 800;
-const std::int16_t screenHeight = 600;
+const std::int16_t screenHeight = 450;
 
 StageManager gStageManager;
 
@@ -109,9 +109,10 @@ StageSelector gStageSelector;
 
 bool quitGame = false;
 
+//using render texture of resolution 640x360 to scale it up better by integers.
 RenderTexture2D target;
-int gameScreenWidth = 800;
-int gameScreenHeight = 600;
+int gameScreenWidth = 640;
+int gameScreenHeight = 360;
 		
 int main(int argc, char* args[])
 {
@@ -348,10 +349,12 @@ void render()
     float scale = std::min((float)GetScreenWidth()/gameScreenWidth, (float)GetScreenHeight()/gameScreenHeight);
     
 	BeginDrawing();
-
-	ClearBackground(RAYWHITE);
+	
+	ClearBackground(BLACK);
 	
 	BeginTextureMode(target);
+	
+	ClearBackground(RAYWHITE);
 	
 	switch(m_game_state)
 	{
@@ -526,13 +529,15 @@ void InitMainECS()
 
 void InitRaylibSystem()
 {
-	
-	SetConfigFlags(FLAG_MSAA_4X_HINT);  // Set MSAA 4X hint before windows creation
-	SetConfigFlags(FLAG_WINDOW_RESIZABLE);    // Window configuration flags
-	SetConfigFlags(FLAG_VSYNC_HINT);    // set v sync
+	// Window configuration flags
+	// Set MSAA 4X hint before windows creation
+	// set v sync
+	//set resizeable window
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT | FLAG_MSAA_4X_HINT);  
+    
 	
     InitWindow(screenWidth, screenHeight, "Thief Fighters");
-	
+	SetWindowMinSize(0.5*gameScreenWidth, 0.5*gameScreenHeight);
 	
 	// initialize SDL2 for gamepad handling
 	if( SDL_Init( SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) < 0 )
@@ -548,6 +553,8 @@ void InitRaylibSystem()
 
 void CloseRaylibSystem()
 {
+	UnloadRenderTexture(target);    // Unload render texture
+	
     CloseWindow();        // Close window and OpenGL context
     
     //Quit SDL subsystems

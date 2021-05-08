@@ -27,7 +27,7 @@ void NumPlayerSetter::Init()
 	//initialize render slot locations
 	for(size_t it = 0; it < num_players_boxes.size(); it++)
 	{
-		num_players_boxes[it].render_rect = {400 - 25, 30*(it+1) + 300, 100, 20};
+		num_players_boxes[it].render_rect = {320 - 25, 100 + 30*(it+1), 100, 20};
 		if(it == 0)
 		{
 			num_players_boxes[it].text = " " + std::to_string( it + 1) + " Player";
