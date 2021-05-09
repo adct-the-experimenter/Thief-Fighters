@@ -15,11 +15,13 @@ void CameraSystem::Init(CustomCamera* camera, std::uint8_t num_players)
 	m_camera_ptr = camera;
 	m_num_players = num_players;
 	
+	zoom_time_counter = 0;
 
 }
 
 void CameraSystem::Update(float& scale)
 {
+	
 	std::uint8_t current_player = 0;
 	
 	
@@ -103,10 +105,11 @@ void CameraSystem::Update(float& scale)
 		
 		float zoom_factor = dist_between_players / 640;
 		
+		zoom_factor = round(zoom_factor / 0.001f)*0.001f;
 		
 		camera_rect_ptr->width = (1 + zoom_factor)*640;
-		if(camera_rect_ptr->width < 320){camera_rect_ptr->width = 320;}
-		if(camera_rect_ptr->width > 640 ){camera_rect_ptr->width = 640;}
+		if(camera_rect_ptr->width < 300){camera_rect_ptr->width = 300;}
+		if(camera_rect_ptr->width > 700 ){camera_rect_ptr->width = 700;}
 		
 		camera_rect_ptr->height = (1 + 0.5*zoom_factor)*360;
 		
@@ -153,6 +156,8 @@ void CameraSystem::Update(float& scale)
 		std::cout << "zoom factor: " << zoom_factor << std::endl;
 		std::cout << "scale factor: " << scale << std::endl;
 		
+		
+		
 	}
 	
 	
@@ -187,3 +192,4 @@ void CameraSystem::Update(float& scale)
 	
 }
 
+void CameraSystem::update_timer(float& dt){zoom_time_counter += dt;}

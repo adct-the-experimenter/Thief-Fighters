@@ -340,6 +340,10 @@ void logic()
 				//do something
 			//}
 			
+			cameraSystem->update_timer(dt);
+			
+			
+			
 			break;
 		}
 	}
@@ -384,7 +388,6 @@ void render()
 		}
 		case GameState::FIGHT_GAME:
 		{			
-			
 			std::cout << "scale before camera system: " << scale << std::endl;
 			
 			cameraSystem->Update(scale);
