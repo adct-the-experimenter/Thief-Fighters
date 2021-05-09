@@ -67,13 +67,13 @@ void CameraSystem::Update(float& scale)
 		else if(m_num_players > 1)
 		{
 			//if this is the first player, initialze farthest left and farthest right
-			if(player.player_num == 1)
+			if(player.player_num == 1 && player.alive)
 			{
 				farthest_left = transform.position.x;
 				farthest_right = transform.position.x + 10;
 			}
 			
-			//if a player is more left than the current fartherst left
+			//if a player is more left than the current farthest left
 			if(transform.position.x - (collisionBox.width / 2) < farthest_left
 			  && transform.position.x - (collisionBox.width / 2) > boundLeft)
 			{
@@ -108,8 +108,8 @@ void CameraSystem::Update(float& scale)
 		zoom_factor = round(zoom_factor / 0.001f)*0.001f;
 		
 		camera_rect_ptr->width = (1 + zoom_factor)*640;
-		if(camera_rect_ptr->width < 300){camera_rect_ptr->width = 300;}
-		if(camera_rect_ptr->width > 700 ){camera_rect_ptr->width = 700;}
+		if(camera_rect_ptr->width < 340){camera_rect_ptr->width = 300;}
+		if(camera_rect_ptr->width > 680 ){camera_rect_ptr->width = 700;}
 		
 		camera_rect_ptr->height = (1 + 0.5*zoom_factor)*360;
 		
@@ -145,7 +145,7 @@ void CameraSystem::Update(float& scale)
 		
 		
 		scale = std::min((float)GetScreenWidth()/camera_rect_ptr->width, (float)GetScreenHeight()/camera_rect_ptr->height);
-		
+		/*
 		std::cout << "\nCamera System\n";
 		
 		std::cout << "camera x: " << camera_rect_ptr->x << std::endl;
@@ -155,7 +155,7 @@ void CameraSystem::Update(float& scale)
 		std::cout << "dist between players: " << dist_between_players << std::endl;
 		std::cout << "zoom factor: " << zoom_factor << std::endl;
 		std::cout << "scale factor: " << scale << std::endl;
-		
+		*/
 		
 		
 	}

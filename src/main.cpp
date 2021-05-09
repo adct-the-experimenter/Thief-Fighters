@@ -387,7 +387,7 @@ void render()
 		}
 		case GameState::FIGHT_GAME:
 		{			
-			std::cout << "scale before camera system: " << scale << std::endl;
+			//std::cout << "scale before camera system: " << scale << std::endl;
 			
 			cameraSystem->Update(scale);
 			
@@ -422,10 +422,10 @@ void render()
 	float rect_width = (float)main_camera.GetCameraRectPointer()->width*scale;
 	float rect_height = (float)main_camera.GetCameraRectPointer()->height*scale;
 	
-	std::cout << "render x: " << rect_x << std::endl;
-	std::cout << "render y: " << rect_y << std::endl;
-	std::cout << "render width: " << rect_width << std::endl;
-	std::cout << "render height: " << rect_height << std::endl;
+	//std::cout << "render x: " << rect_x << std::endl;
+	//std::cout << "render y: " << rect_y << std::endl;
+	//std::cout << "render width: " << rect_width << std::endl;
+	//std::cout << "render height: " << rect_height << std::endl;
 	
 	DrawTexturePro(target.texture, (Rectangle){ 0.0f, 0.0f, (float)target.texture.width, (float)-target.texture.height },
 				   
