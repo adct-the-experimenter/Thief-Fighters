@@ -20,6 +20,8 @@ protected:
 
 	CustomCamera* m_camera_ptr;
 	std::uint8_t m_num_players;
+	
+	
 };
 
 #endif

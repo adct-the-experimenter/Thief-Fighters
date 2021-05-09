@@ -141,6 +141,9 @@ int main(int argc, char* args[])
 		SetTextureFilter(target.texture, FILTER_BILINEAR);  // Texture scale filter to use
 		SetTextureWrap(target.texture,WRAP_CLAMP);
 		
+		//set camera
+		main_camera.Init(gameScreenWidth,gameScreenHeight);
+		main_camera.SetLevelBounds(0,720,0,360);
 
 		while (!quitGame)
 		{
@@ -252,8 +255,7 @@ void logic()
 				gCharSelector.Init(&entities,gNumPlayers);
 				
 				//initialize camera system
-				main_camera.Init(gameScreenWidth,gameScreenHeight);
-				main_camera.SetLevelBounds(0,720,0,360);
+				
 				cameraSystem->Init(&main_camera,gNumPlayers);
 				
 				//initialize render system
@@ -383,6 +385,8 @@ void render()
 		case GameState::FIGHT_GAME:
 		{			
 			
+			std::cout << "scale before camera system: " << scale << std::endl;
+			
 			cameraSystem->Update(scale);
 			
 			//draw the stage
@@ -400,11 +404,31 @@ void render()
 	
 	EndTextureMode();
 	
+	
 	// Draw RenderTexture2D to window, properly scaled
+	//DrawTexturePro(target.texture, (Rectangle){ 0.0f, 0.0f, (float)target.texture.width, (float)-target.texture.height },
+	//			   (Rectangle){ (GetScreenWidth() - ((float)gameScreenWidth*scale))*0.5f, (GetScreenHeight() - ((float)gameScreenHeight*scale))*0.5f,
+	//			   (float)gameScreenWidth*scale, (float)gameScreenHeight*scale }, (Vector2){ 0, 0 }, 0.0f, WHITE);
+	
+	//float rect_x = (float)main_camera.GetCameraRectPointer()->x*scale;
+	float rect_x = 0;
+	if(rect_x <= 0){rect_x = 0;}
+	
+	float rect_y = (float)main_camera.GetCameraRectPointer()->y*scale;
+	if(rect_y <= 0){rect_y = 0;}
+	
+	float rect_width = (float)main_camera.GetCameraRectPointer()->width*scale;
+	float rect_height = (float)main_camera.GetCameraRectPointer()->height*scale;
+	
+	std::cout << "render x: " << rect_x << std::endl;
+	std::cout << "render y: " << rect_y << std::endl;
+	std::cout << "render width: " << rect_width << std::endl;
+	std::cout << "render height: " << rect_height << std::endl;
+	
 	DrawTexturePro(target.texture, (Rectangle){ 0.0f, 0.0f, (float)target.texture.width, (float)-target.texture.height },
-				   (Rectangle){ (GetScreenWidth() - ((float)gameScreenWidth*scale))*0.5f, (GetScreenHeight() - ((float)gameScreenHeight*scale))*0.5f,
-				   (float)gameScreenWidth*scale, (float)gameScreenHeight*scale }, (Vector2){ 0, 0 }, 0.0f, WHITE);
-
+				   
+				   (Rectangle){ rect_x, rect_y, rect_width, rect_height },
+				       (Vector2){ 0, 0 }, 0.0f, WHITE);
 
 	EndDrawing();
 }
