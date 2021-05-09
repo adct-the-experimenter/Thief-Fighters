@@ -340,7 +340,6 @@ void logic()
 				//do something
 			//}
 			
-			cameraSystem->update_timer(dt);
 			
 			
 			
