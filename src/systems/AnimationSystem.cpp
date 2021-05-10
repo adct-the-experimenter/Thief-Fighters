@@ -122,52 +122,103 @@ void AnimationSystem::Update(float& dt)
 						anim_comp.frame_count = 0;
 					}
 					
-					if(west)
+					//if player is hurt
+					if(anim_comp.hurt)
 					{
-						anim_comp.face_dir = FaceDirection::WEST;
-						//face left
-						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].left_walk_frames.frames[anim_comp.frame_count];
-					}
-					else if(east)
-					{
-						anim_comp.face_dir = FaceDirection::EAST;
-						//face right
-						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_walk_frames.frames[anim_comp.frame_count];
-					}
-					
-					if(south && !west && !east)
-					{
-						anim_comp.face_dir = FaceDirection::SOUTH;
-						//face down
-						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].down_still_frame.frame;
-						anim_comp.frame_count = 0;
-					}
-					else if(north && !west && !east)
-					{
-						anim_comp.face_dir = FaceDirection::NORTH;
-						//face up
-						frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].up_still_frame.frame;
-						anim_comp.frame_count = 0;
-					}
-					
-					
-					//limited to only 2 frames of animation
-					if(no_move )
-					{
-						anim_comp.frame_count = 0;
-						
+						if(west)
+						{
+							anim_comp.face_dir = FaceDirection::WEST;
+							
+							//face left
+							frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_hurt_frames.frames[anim_comp.frame_count];
+						}
+						else if(east)
+						{
+							anim_comp.face_dir = FaceDirection::EAST;
+							//face right hurt
+							frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_hurt_frames.frames[anim_comp.frame_count];
+						}
+						else if(south && !west && !east)
+						{
+							anim_comp.face_dir = FaceDirection::SOUTH;
+							
+							//need to add down hurt frames
+							
+							anim_comp.frame_count = 0;
+						}
+						else if(north && !west && !east)
+						{
+							anim_comp.face_dir = FaceDirection::NORTH;
+							
+							//need to add up hurt frames
+							
+							anim_comp.frame_count = 0;
+						}
 						if(no_move)
 						{
 							if(anim_comp.face_dir == FaceDirection::EAST)
 							{
-								frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_still_frame.frame;
+								frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_hurt_frames.frames[anim_comp.frame_count];
 							}
 							else if(anim_comp.face_dir == FaceDirection::WEST)
 							{
-								frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].left_still_frame.frame;
+								frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].left_hurt_frames.frames[anim_comp.frame_count];
 							}
 						}
 					}
+					//else if player is not hurt
+					else
+					{
+						if(west)
+						{
+							anim_comp.face_dir = FaceDirection::WEST;
+							//face left
+							frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].left_walk_frames.frames[anim_comp.frame_count];
+						}
+						else if(east)
+						{
+							anim_comp.face_dir = FaceDirection::EAST;
+							//face right
+							frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_walk_frames.frames[anim_comp.frame_count];
+						}
+						
+						if(south && !west && !east)
+						{
+							anim_comp.face_dir = FaceDirection::SOUTH;
+							//face down
+							frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].down_still_frame.frame;
+							anim_comp.frame_count = 0;
+						}
+						else if(north && !west && !east)
+						{
+							anim_comp.face_dir = FaceDirection::NORTH;
+							//face up
+							frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].up_still_frame.frame;
+							anim_comp.frame_count = 0;
+						}
+						
+						
+						//limited to only 2 frames of animation
+						if(no_move )
+						{
+							anim_comp.frame_count = 0;
+							
+							if(no_move)
+							{
+								if(anim_comp.face_dir == FaceDirection::EAST)
+								{
+									frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].right_still_frame.frame;
+								}
+								else if(anim_comp.face_dir == FaceDirection::WEST)
+								{
+									frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].left_still_frame.frame;
+								}
+							}
+						}
+					}
+					
+					
+					
 					
 				}
 				

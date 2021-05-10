@@ -709,6 +709,7 @@ void AttackPowerMechanicSystem::CollisionDetectionBetweenPlayers()
 		player_b_num = 8;
 		AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(player_a_num,player_b_num);
 	}
+	
 }
 
 bool AttackPowerMechanicSystem::AreBothPlayersAlive(int& player_a_num, int& player_b_num)
@@ -812,6 +813,37 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 	}
 }
 
+void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
+{
+	for(auto const& entity: mEntities)
+	{
+		
+		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
+		auto& player = gCoordinator.GetComponent<Player>(entity);
+		auto& animation = gCoordinator.GetComponent<Animation>(entity);
+		//auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
+		
+		//if player is in state of taking damage 
+		//activate hurt animation and keep them from moving
+		if(player.taking_damage)
+		{
+			//reset animation
+			animation.attackMode = -1;
+			animation.frame_count = 0;
+			animation.hurt = true;
+			
+			//stop player from moving
+			rigidBody.velocity.x = 0.0f;
+			rigidBody.velocity.y = 0.0f;
+		
+		}
+		else
+		{
+			animation.hurt = false;
+		}
+		
+	}
+}
 
 static bool debugRenderAttackBox = false;
 static bool debugDrawPowerRequest = false;

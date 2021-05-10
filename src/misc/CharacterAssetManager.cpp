@@ -92,7 +92,7 @@ static bool LoadFrameAnimationFromThisFile(std::string filepath_frames, CharFram
     //set up tile selector based on data
     pugi::xml_node framesRoot = root.child("Frames");
     
-    std::array <Rectangle,32> frames;
+    std::array <Rectangle,36> frames;
     
     size_t iterator = 0;
 	//go through each frame in frames node
@@ -206,6 +206,14 @@ static bool LoadFrameAnimationFromThisFile(std::string filepath_frames, CharFram
 	
 	char_frame.down_attack_mode_frames[5].frames[0] = char_frame.left_attack_mode_frames[5].frames[0];
 	char_frame.down_attack_mode_frames[5].frames[1] = char_frame.left_attack_mode_frames[5].frames[1];
+	
+	//hurt frames
+	
+	char_frame.left_hurt_frames.frames[0] = frames[32];
+	char_frame.left_hurt_frames.frames[1] = frames[33];
+	
+	char_frame.right_hurt_frames.frames[0] = frames[34];
+	char_frame.right_hurt_frames.frames[1] = frames[35];
 	
     return true;
 }

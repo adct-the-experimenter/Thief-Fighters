@@ -35,6 +35,7 @@ struct CharFrames
 	TwoFrameGroup right_walk_frames;
 	TwoFrameGroup left_walk_frames;
 	
+	
 	//frames for attack modes
 	//organized like this to use animation attack mode as index of array for quicker processing
 	//first is regular attack, 0
@@ -44,7 +45,9 @@ struct CharFrames
 	std::array <TwoFrameGroup,9> up_attack_mode_frames;
 	std::array <TwoFrameGroup,9> down_attack_mode_frames;
 	
-	
+	//frames for being hurt
+	TwoFrameGroup right_hurt_frames;
+	TwoFrameGroup left_hurt_frames;
 };
 
 

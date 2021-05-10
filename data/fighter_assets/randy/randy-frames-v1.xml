@@ -73,5 +73,15 @@
 	  <Frame x="0" y="360" w="60" h="120" /> 
 	  <Frame x="60" y="360" w="60" h="120" />
 	  
+	  <!-- Hurt Frames-->
+	  
+	  <!-- Left Hurt-->
+	  <Frame x="210" y="120" w="30" h="60" /> 
+	  <Frame x="240" y="120" w="30" h="60" />
+	  
+	  <!-- Right Hurt-->
+	  <Frame x="150" y="120" w="30" h="60" /> 
+	  <Frame x="180" y="120" w="30" h="60" />
+	  
   </Frames>    
 </Root>

@@ -33,6 +33,8 @@ public:
 	
 	void CollisionDetectionBetweenPlayers();
 	
+	void ReactToCollisions(float& dt);
+	
 	void DebugRender();
 	
 private:
@@ -47,9 +49,11 @@ private:
 	std::array <bool*,8> player_alive_ptrs;
 	std::array <bool*,8> player_taking_damage_state_ptrs;
 	
+	//collision handling functions to determine if players hit each other
 	bool AreBothPlayersAlive(int& player_a_num, int& player_b_num);
 	AttackEvent CheckCollisionBetween2Players(int& player_a_num, int& player_b_num);
 	void HandlePossibleCollisionBetweenPlayers(int& player_a_num, int& player_b_num);
+	
 	
 	
 	std::uint8_t m_num_players;

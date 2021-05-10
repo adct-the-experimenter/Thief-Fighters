@@ -325,6 +325,9 @@ void logic()
 			//check collisions between players
 			attackPowerMechanicSystem->CollisionDetectionBetweenPlayers();
 			
+			//react to collisions
+			attackPowerMechanicSystem->ReactToCollisions(dt);
+			
 			//perform power transactions if needed so that players can
 			//receive their slain opponent's power
 			attackPowerMechanicSystem->PerformNeededPowerTransactions();

@@ -90,7 +90,11 @@ struct Animation
 	//for player, -1 = none, 0 = normal attack, 1-9 = special attack
 	std::int8_t attackMode = -1;
 	
+	//direction that player is facing
 	FaceDirection face_dir;
+	
+	//bool to indicate if player was hurt and needs to be in hurt animation
+	bool hurt;
 	
 };
 
