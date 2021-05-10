@@ -10,7 +10,25 @@ extern Coordinator gCoordinator;
 
 static std::array <std::string,5> special_power_choices = {"Sneak","Dash","Shield","Chunks","Big"};
 
-static std::array <Color,8> player_colors = {BROWN,GOLD,ORANGE,PINK,RED,GREEN,BLUE,PURPLE};
+
+static Color SNES_BROWN = (Color){135,90,30,255}; 
+static Color SNES_GOLD = (Color){255,163,1,255};
+static Color SNES_ORANGE = (Color){252,124,1,255};
+static Color SNES_PINK = (Color){248,66,175,255};
+static Color SNES_WHITE = (Color){232,232,232,255}; 
+static Color SNES_GREEN = (Color){0,206,2,255};
+static Color SNES_BLUE = (Color){133,222,205,255};
+static Color SNES_PURPLE = (Color){75,73,142,255};
+
+static std::array <Color,8> player_colors = { SNES_BLUE, //SNES Brown
+											  SNES_GOLD, //SNES Gold
+											  SNES_ORANGE, //SNES Orange
+											  SNES_PINK, //SNES Pink
+											  SNES_WHITE, //SNES Red
+											  SNES_GREEN, //SNES green
+											  SNES_BROWN, //SNES blue
+											  SNES_PURPLE //SNES purple
+											  };
 
 CharacterSelector::CharacterSelector()
 {
