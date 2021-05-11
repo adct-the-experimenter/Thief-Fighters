@@ -8,6 +8,12 @@ Minimal gameplay is established. Needs sound effects and better art.
 
 Fighting game in which the players steal a special power from the others after a kill.
 
+# Required Libraries
+
+- Raylib version 3.5
+- PugiXML
+- SDL2
+
 ## Install
 
 1. cd thief-fighters
