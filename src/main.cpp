@@ -397,6 +397,7 @@ void render()
 			//draw the stage
 			
 			DrawTextureRec(main_stage.texture, *main_camera.GetCameraRectPointer(), Vector2{0,0}, RAYWHITE);
+			//DrawTexture(main_stage.texture, 0,0, RAYWHITE);
 			
 		    //render any entity that has render component
 			renderSystem->Update();
@@ -419,7 +420,8 @@ void render()
 	float rect_x = 0;
 	if(rect_x <= 0){rect_x = 0;}
 	
-	float rect_y = (float)main_camera.GetCameraRectPointer()->y*scale;
+	//float rect_y = (float)main_camera.GetCameraRectPointer()->y*scale;
+	float rect_y = 0;
 	if(rect_y <= 0){rect_y = 0;}
 	
 	float rect_width = (float)main_camera.GetCameraRectPointer()->width*scale;
