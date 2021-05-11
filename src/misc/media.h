@@ -67,6 +67,10 @@ struct RequestedCharacters
 	// -1 is null request
 	std::array <std::string,8> requested_by_player;
 	
+	//array to hold character texture index for character asked by 8 players
+	//index is the player who request character. value is the char texture index.
+	std::array <std::int16_t,8> char_texture_index_req;
+	
 };
 
 #endif

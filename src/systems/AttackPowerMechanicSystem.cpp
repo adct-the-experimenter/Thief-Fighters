@@ -784,10 +784,10 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 	//if attack happened, and player is not already in state of taking damage
 	if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] )
 	{
-		//std::cout << "Player " << attack_event.player_num_attacker << "took away 3 HP from player " << attack_event.player_num_victim << std::endl;
+		//std::cout << "Player " << attack_event.player_num_attacker << "took away 10 HP from player " << attack_event.player_num_victim << std::endl;
 		
 		//decrease health of victim player
-		*player_health_ptrs[attack_event.player_num_victim - 1] -= 1;
+		*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
 		//set last hit by player variable for victim player
 		*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
 		
@@ -805,6 +805,12 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 		
 		player_position_ptrs[attack_event.player_num_victim - 1]->x += sign*knockback;
 		
+	}
+	//if attack happened and player is already taking damage
+	else if(attack_event.attack && *player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
+	{
+		*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
+		*player_taking_damage_state_ptrs[attack_event.player_num_attacker - 1] = false;
 	}
 	else
 	{

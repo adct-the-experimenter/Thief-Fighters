@@ -18,9 +18,14 @@ void AnimationSystem::Init()
 
 //face direction order: SOUTH=0,SOUTHWEST,WEST,NORTHWEST,NORTH,NORTHEAST,EAST,SOUTHEAST
 
+static int framesCounter = 0;
+static int framesSpeed = 1; 
+
 void AnimationSystem::Update(float& dt)
 {
-	
+	//increment frame counter
+	framesCounter++;
+        
 	for (auto const& entity : mEntities)
 	{
 			
@@ -30,15 +35,16 @@ void AnimationSystem::Update(float& dt)
 		auto& render_comp = gCoordinator.GetComponent<RenderModelComponent>(entity);
 		
 		//update animation
-		
-		//increment frame count
-		m_time_counter += dt;
-		
-		if(m_time_counter >= 1.00f)
+					
+		if (framesCounter >= (60/framesSpeed))
 		{
+			framesCounter = 0;
 			anim_comp.frame_count++;
-			m_time_counter = 0;
+
+			if (anim_comp.frame_count > 1){anim_comp.frame_count = 0;}
+
 		}
+		
 		
 		switch( anim_comp.anim_actor_type)
 		{

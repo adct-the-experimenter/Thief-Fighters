@@ -37,7 +37,7 @@ CharacterSelector::CharacterSelector()
 	
 	move_next_state = false;
 	
-	m_num_fighters = 1;
+	m_num_fighters = 3;
 	m_num_special_powers = special_power_choices.size();
 }
 
@@ -240,6 +240,7 @@ void CharacterSelector::logic()
 				
 				char_confirmations[i] = true;
 				m_req_char.requested_by_player[i] = character_names[fighter_boxes[i].char_choice];
+				m_req_char.char_texture_index_req[i] = fighter_boxes[i].char_choice;
 				
 				//add render component 
 				

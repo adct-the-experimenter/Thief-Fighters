@@ -3,6 +3,8 @@
 #include "globalvariables.h"
 #include "pugixml.hpp"
 
+#include <vector>
+
 //define character variables from media.h
 std::array <std::string,8> character_names;
 std::array <Texture2D,8> character_profile_textures;
@@ -250,44 +252,72 @@ bool CharacterAssetManager::LoadCharacterAssets(RequestedCharacters& req_chars, 
     pugi::xml_node charRoot = root.child("Characters");
     
     std::array <std::string,8> filepaths_char_animations;
+    
+    //initialize which characters to load
+    std::vector <std::string> char_to_load_vec;
+    std::vector <std::uint16_t> char_index_to_load_vec;
+    
+    std::array <bool,8> char_req_bool;
+    
+    for(size_t i = 0; i < num_players; i++)
+    {
+		//if character not already requested
+		if(!char_req_bool[req_chars.char_texture_index_req[i]] )
+		{
+			//add it to vector
+			char_to_load_vec.push_back( character_names[req_chars.char_texture_index_req[i]] );
+			char_index_to_load_vec.push_back(req_chars.char_texture_index_req[i]);
+			char_req_bool[req_chars.char_texture_index_req[i]] = true;
+		}
+		
+	}
         
     //for each player
-    for(std::uint8_t player_iterator = 0; player_iterator < num_players; player_iterator++)
+    //for(std::uint8_t player_iterator = 0; player_iterator < num_players; player_iterator++)
+    for(std::uint8_t char_iterator = 0; char_iterator < char_to_load_vec.size(); char_iterator++)
     {
 		//go through each character in character node
 		for (pugi::xml_node char_node = charRoot.first_child(); char_node; char_node = char_node.next_sibling())
 		{
 			std::string nameString = char_node.attribute("name").value();
 			
-			if(nameString == req_chars.requested_by_player[player_iterator])		
+			//if(nameString == req_chars.requested_by_player[player_iterator])
+			if(nameString == char_to_load_vec[char_iterator])
 			{
 									
 				std::string filepath_texture_sheet = char_node.attribute("sheet_path").value();
 				
 				std::string filePathTextureSheetFull = DATADIR_STR + "/fighter_assets/" + filepath_texture_sheet;
 				
-				character_sheet_textures[player_iterator] = LoadTexture(filePathTextureSheetFull.c_str());
+				//character_sheet_textures[player_iterator] = LoadTexture(filePathTextureSheetFull.c_str());
+				character_sheet_textures[ char_index_to_load_vec[char_iterator] ] = LoadTexture(filePathTextureSheetFull.c_str());
 				
 				std::string filepath_frames = char_node.attribute("frame_path").value();
-				filepaths_char_animations[player_iterator] = DATADIR_STR + "/fighter_assets/" + filepath_frames;
+				//filepaths_char_animations[player_iterator] = DATADIR_STR + "/fighter_assets/" + filepath_frames;
+				filepaths_char_animations[ char_index_to_load_vec[char_iterator] ] = DATADIR_STR + "/fighter_assets/" + filepath_frames;
 			}
 			
 		}
 		
-		if(filepaths_char_animations[player_iterator] == "")
+		//if(filepaths_char_animations[player_iterator] == "")
+		if(filepaths_char_animations[ char_index_to_load_vec[char_iterator] ] == "")
 		{
-			std::cout << "\nFailed to load assets for requested character " << req_chars.requested_by_player[player_iterator] << std::endl;
+			//std::cout << "\nFailed to load assets for requested character " << req_chars.requested_by_player[player_iterator] << std::endl;
+			std::cout << "\nFailed to load assets for requested character " << character_names[char_iterator] << std::endl;
 			return false;
 			break;
 		}
 	}
 	
 	//load the frame animation data from xml files
-	for(std::uint8_t player_iterator = 0; player_iterator < num_players; player_iterator++)
+	//for(std::uint8_t player_iterator = 0; player_iterator < num_players; player_iterator++)
+	for(std::uint8_t char_iterator = 0; char_iterator < char_to_load_vec.size(); char_iterator++)
 	{
-		if( !LoadFrameAnimationFromThisFile(filepaths_char_animations[player_iterator], character_frame_animations[player_iterator] ) )
+		//if( !LoadFrameAnimationFromThisFile(filepaths_char_animations[player_iterator], character_frame_animations[player_iterator] ) )
+		if( !LoadFrameAnimationFromThisFile(filepaths_char_animations[ char_index_to_load_vec[char_iterator] ], character_frame_animations[ char_index_to_load_vec[char_iterator] ] ) )
 		{
-			std::cout << "\nFailed to load frame animations for requested character " << req_chars.requested_by_player[player_iterator] << std::endl;
+			//std::cout << "\nFailed to load frame animations for requested character " << req_chars.requested_by_player[player_iterator] << std::endl;
+			std::cout << "\nFailed to load frame animations for requested character " << req_chars.requested_by_player[char_iterator] << std::endl;
 			return false;
 			break;
 		}

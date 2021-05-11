@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <Root>
   <Characters>
-	  <Character name="Randy" sheet_path="randy/theif-fighters-randy-v1.png" frame_path="randy/randy-frames-v1.xml"/>
+	  <Character name="Randy" sheet_path="randy/theif-fighters-randy.png" frame_path="randy/randy-frames-v1.xml"/>
+	  <Character name="Shadow" sheet_path="shadow/theif-fighters-shadow.png" frame_path="shadow/shadow-frames-v1.xml"/>
+	  <Character name="Sun Man" sheet_path="sun_man/theif-fighters-sun-man.png" frame_path="sun_man/sun-man-frames-v1.xml"/>
   </Characters>    
 </Root>
