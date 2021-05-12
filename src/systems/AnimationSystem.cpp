@@ -56,7 +56,6 @@ void AnimationSystem::Update(float& dt)
 		
 		if (anim_comp.frame_count > 1){anim_comp.frame_count = 0;}
 		
-		if(iterator == 1)std::cout << "player " << (iterator + 1) << ", frames count: " << framesCounter << ", frame count in anim comp: " << int(anim_comp.frame_count) << std::endl;
 		
 		switch( anim_comp.anim_actor_type)
 		{
