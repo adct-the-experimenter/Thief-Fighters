@@ -1,0 +1,12 @@
+
+[Desktop Entry]
+Name=Thief Fighters
+StartupWMClass=Thief-Fighters
+Comment=Video game. Steal powers.
+GenericName=Video Game
+Exec=thief-fighters
+Icon=thief-fighters
+Type=Application
+Categories=Audio;
+MimeType=text/xml;application/xhtml+xml;application/xml;
+Keywords=Thief;Fighters;
