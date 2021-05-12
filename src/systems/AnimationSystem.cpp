@@ -25,7 +25,22 @@ void AnimationSystem::Update(float& dt)
 {
 	//increment frame counter
 	framesCounter++;
-        
+       
+    int iterator = 0;
+    
+    bool increment_frame_count = false;
+    
+    //update animation
+		
+	if (framesCounter >= (60/framesSpeed))
+	{
+		framesCounter = 0;
+		
+		increment_frame_count = true;
+		
+					
+	}
+    
 	for (auto const& entity : mEntities)
 	{
 			
@@ -34,17 +49,14 @@ void AnimationSystem::Update(float& dt)
 		auto& anim_comp = gCoordinator.GetComponent<Animation>(entity);
 		auto& render_comp = gCoordinator.GetComponent<RenderModelComponent>(entity);
 		
-		//update animation
-					
-		if (framesCounter >= (60/framesSpeed))
+		if(increment_frame_count)
 		{
-			framesCounter = 0;
 			anim_comp.frame_count++;
-
-			if (anim_comp.frame_count > 1){anim_comp.frame_count = 0;}
-
 		}
 		
+		if (anim_comp.frame_count > 1){anim_comp.frame_count = 0;}
+		
+		if(iterator == 1)std::cout << "player " << (iterator + 1) << ", frames count: " << framesCounter << ", frame count in anim comp: " << int(anim_comp.frame_count) << std::endl;
 		
 		switch( anim_comp.anim_actor_type)
 		{
@@ -239,8 +251,12 @@ void AnimationSystem::Update(float& dt)
 			
 			
 		}
-				
+			
+		iterator++;	
 	}
+	
+	//reset increment frame count
+	increment_frame_count = false;
 }
 
 

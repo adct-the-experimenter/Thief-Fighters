@@ -103,15 +103,15 @@ void CameraSystem::Update(float& scale)
 	//if more than 1 player
 	if(m_num_players > 1)
 	{
-		std::cout << "farthest left:" << farthest_left << std::endl;
-		std::cout << "farthest right:" << farthest_right << std::endl;
+		//std::cout << "farthest left:" << farthest_left << std::endl;
+		//std::cout << "farthest right:" << farthest_right << std::endl;
 		
 		//calculate center point between players
 		//float center_x = farthest_left + ( (farthest_right - farthest_left) / 2);
 		float center_x = 0.5*(farthest_left + farthest_right);
 		float center_y = 180;
 		
-		std::cout << "center x:" << center_x << std::endl;
+		//std::cout << "center x:" << center_x << std::endl;
 		
 		float dist_between_players = abs(farthest_right - farthest_left) - far_right_player_width;
 		
@@ -160,12 +160,12 @@ void CameraSystem::Update(float& scale)
 		
 		scale = std::min((float)GetScreenWidth()/camera_rect_ptr->width, (float)GetScreenHeight()/camera_rect_ptr->height);
 		
-		std::cout << "\nCamera System\n";
+		//std::cout << "\nCamera System\n";
 		
-		std::cout << "camera x: " << camera_rect_ptr->x << std::endl;
-		std::cout << "camera y: " << camera_rect_ptr->y << std::endl;
-		std::cout << "camera width: " << camera_rect_ptr->width << std::endl;
-		std::cout << "camera height: " << camera_rect_ptr->height << std::endl;
+		//std::cout << "camera x: " << camera_rect_ptr->x << std::endl;
+		//std::cout << "camera y: " << camera_rect_ptr->y << std::endl;
+		//std::cout << "camera width: " << camera_rect_ptr->width << std::endl;
+		//std::cout << "camera height: " << camera_rect_ptr->height << std::endl;
 		//std::cout << "dist between players: " << dist_between_players << std::endl;
 		//std::cout << "zoom factor: " << zoom_factor << std::endl;
 		//std::cout << "scale factor: " << scale << std::endl;

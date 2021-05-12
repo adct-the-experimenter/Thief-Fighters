@@ -4,5 +4,6 @@
 	  <Character name="Randy" sheet_path="randy/theif-fighters-randy.png" frame_path="randy/randy-frames-v1.xml"/>
 	  <Character name="Shadow" sheet_path="shadow/theif-fighters-shadow.png" frame_path="shadow/shadow-frames-v1.xml"/>
 	  <Character name="Sun Man" sheet_path="sun_man/theif-fighters-sun-man.png" frame_path="sun_man/sun-man-frames-v1.xml"/>
+	  <Character name="Moon Man" sheet_path="moon_man/theif-fighters-moon-man.png" frame_path="moon_man/moon-man-frames-v1.xml"/>
   </Characters>    
 </Root>

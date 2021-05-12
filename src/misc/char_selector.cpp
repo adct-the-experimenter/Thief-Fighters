@@ -11,23 +11,23 @@ extern Coordinator gCoordinator;
 static std::array <std::string,5> special_power_choices = {"Sneak","Dash","Shield","Chunks","Big"};
 
 
-static Color SNES_BROWN = (Color){135,90,30,255}; 
-static Color SNES_GOLD = (Color){255,163,1,255};
-static Color SNES_ORANGE = (Color){252,124,1,255};
-static Color SNES_PINK = (Color){248,66,175,255};
-static Color SNES_WHITE = (Color){232,232,232,255}; 
-static Color SNES_GREEN = (Color){0,206,2,255};
-static Color SNES_BLUE = (Color){133,222,205,255};
-static Color SNES_PURPLE = (Color){75,73,142,255};
+static Color LIGHT_BROWN = (Color){202,186,186,255}; 
+static Color LIGHT_GOLD = (Color){202,195,181,255};
+static Color LIGHT_ORANGE = (Color){202,198,180,255};
+static Color LIGHT_PINK = (Color){202,181,199,255};
+static Color LIGHT_WHITE = (Color){255,255,255,255}; 
+static Color LIGHT_GREEN = (Color){181,202,186,255};
+static Color LIGHT_BLUE = (Color){181,202,201,255};
+static Color LIGHT_PURPLE = (Color){194,181,202,255};
 
-static std::array <Color,8> player_colors = { SNES_BLUE, //SNES Brown
-											  SNES_GOLD, //SNES Gold
-											  SNES_ORANGE, //SNES Orange
-											  SNES_PINK, //SNES Pink
-											  SNES_WHITE, //SNES Red
-											  SNES_GREEN, //SNES green
-											  SNES_BROWN, //SNES blue
-											  SNES_PURPLE //SNES purple
+static std::array <Color,8> player_colors = { LIGHT_BLUE, //LIGHT Brown
+											  LIGHT_GOLD, //LIGHT Gold
+											  LIGHT_ORANGE, //LIGHT Orange
+											  LIGHT_PINK, //LIGHT Pink
+											  LIGHT_WHITE, //LIGHT Red
+											  LIGHT_GREEN, //LIGHT green
+											  LIGHT_BROWN, //LIGHT blue
+											  LIGHT_PURPLE //LIGHT purple
 											  };
 
 CharacterSelector::CharacterSelector()
@@ -37,7 +37,7 @@ CharacterSelector::CharacterSelector()
 	
 	move_next_state = false;
 	
-	m_num_fighters = 3;
+	m_num_fighters = 4;
 	m_num_special_powers = special_power_choices.size();
 }
 
