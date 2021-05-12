@@ -117,6 +117,55 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 	}
 }
 
+static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y, 
+										float& obj_vx, float& obj_vy, 
+										float& dt, 
+										std::uint32_t& obj_width,
+										std::uint32_t& obj_height)
+{
+	//if go to the right of the level bound
+	if(obj_x + obj_width >= 720)
+	{
+		//push back player 
+		PushBack(obj_x, obj_y, 
+			obj_vx, obj_vy, 
+			dt);
+			
+		obj_x = 720 - obj_width - 1;
+	}
+	//if go to the left of level bound
+	else if(obj_x <= 0)
+	{
+		//push back player 
+		PushBack(obj_x, obj_y, 
+			obj_vx, obj_vy, 
+			dt);
+		
+		obj_x = 0 + 1;
+	}
+	
+	//if go above up bound
+	if(obj_y <= 0)
+	{
+		//push back player 
+		PushBack(obj_x, obj_y, 
+			obj_vx, obj_vy, 
+			dt);
+		obj_y = 0 + 1;
+	}
+	
+	//if go below down bound
+	else if(obj_y + obj_height >= 360)
+	{
+		//push back player 
+		PushBack(obj_x, obj_y, 
+			obj_vx, obj_vy, 
+			dt);
+		
+		obj_y = 360 - obj_height - 1;
+	}
+}
+
 void PhysicsSystem::Update(float& dt)
 {
 	
@@ -142,6 +191,11 @@ void PhysicsSystem::Update(float& dt)
 				rigidBody.velocity.y += 3*gravity.force.y * dt;
 				
 				CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
+														  rigidBody.velocity.x, rigidBody.velocity.y,
+														  dt,
+														  collisionBox.width, collisionBox.height);
+				
+				CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,
 														  rigidBody.velocity.x, rigidBody.velocity.y,
 														  dt,
 														  collisionBox.width, collisionBox.height);
