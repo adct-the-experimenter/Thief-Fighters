@@ -37,13 +37,13 @@ void InputReactorSystem::Update(ControllerInput& input)
 						if(input.gamepads_vec[i].left_x_dir_axis == -1 
 							|| input.gamepads_vec[i].left_x_axis < -joystick_border )
 						{
-							rigidBody.velocity.x = -speed_factor;
+							rigidBody.velocity.x = -speed_factor*player.speed_factor;
 						}
 						//else if moved left joystick right
 						else if( input.gamepads_vec[i].left_x_dir_axis == 1 
 								|| input.gamepads_vec[i].left_x_axis > joystick_border )
 						{
-							rigidBody.velocity.x = speed_factor;
+							rigidBody.velocity.x = speed_factor*player.speed_factor;
 						}
 						else
 						{
@@ -113,7 +113,7 @@ void InputReactorSystem::Update(ControllerInput& input)
 						if( input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_B ||
 							input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
 						{
-							rigidBody.velocity.y = -speed_factor;
+							rigidBody.velocity.y = -speed_factor*player.jump_factor;
 						}
 						
 						//if special power button pressed

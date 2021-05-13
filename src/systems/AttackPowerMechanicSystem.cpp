@@ -19,6 +19,7 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_last_hit_by_ptrs[i] = nullptr;
 		player_alive_ptrs[i] = nullptr;
 		player_taking_damage_state_ptrs[i] = nullptr;
+		player_attack_damage_factor_ptrs[i] = nullptr;
 	}
 		
 	for (auto const& entity : mEntities)
@@ -37,6 +38,8 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_alive_ptrs[player.player_num - 1] = &player.alive;
 		
 		player_taking_damage_state_ptrs[player.player_num - 1] = &player.taking_damage;
+		
+		player_attack_damage_factor_ptrs[player.player_num - 1] = &player.damage_factor;
 		
 		//set collected power for player
 		player.collected_powers[player.current_power] = 1;
@@ -447,15 +450,15 @@ void AttackPowerMechanicSystem::MoveAttackBoxesWithPlayer(float& dt)
 				//regular attack
 				case 0:
 				{
-					int offset_x = 0;
+					float offset_x = 0;
 			
 					if(animation.face_dir == FaceDirection::EAST)
 					{
-						offset_x = 10;
+						offset_x = player.attack_box_offset;
 					}
 					else if(animation.face_dir == FaceDirection::WEST)
 					{
-						offset_x = -10;
+						offset_x = -player.attack_box_offset;
 					}
 					
 					//activate collision box
@@ -787,14 +790,14 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 		//std::cout << "Player " << attack_event.player_num_attacker << "took away 10 HP from player " << attack_event.player_num_victim << std::endl;
 		
 		//decrease health of victim player
-		*player_health_ptrs[attack_event.player_num_victim - 1] -= 10;
+		*player_health_ptrs[attack_event.player_num_victim - 1] -= 10*(*player_attack_damage_factor_ptrs[attack_event.player_num_attacker - 1]);
 		//set last hit by player variable for victim player
 		*player_last_hit_by_ptrs[attack_event.player_num_victim - 1] = attack_event.player_num_attacker;
 		
 		*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
 		
 		//knock back
-		float knockback = 3;
+		float knockback = 3*(*player_attack_damage_factor_ptrs[attack_event.player_num_attacker - 1]);
 		float sign = 1;
 		
 		if(player_position_ptrs[attack_event.player_num_victim - 1]->x < 

@@ -49,6 +49,7 @@ private:
 	std::array <bool*,8> player_alive_ptrs;
 	std::array <bool*,8> player_taking_damage_state_ptrs;
 	std::array <bool*,8> player_hurt_ptrs;
+	std::array <float*,8> player_attack_damage_factor_ptrs;
 	
 	//collision handling functions to determine if players hit each other
 	bool AreBothPlayersAlive(int& player_a_num, int& player_b_num);

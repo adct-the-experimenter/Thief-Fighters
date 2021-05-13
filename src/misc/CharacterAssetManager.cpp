@@ -375,7 +375,13 @@ bool CharacterAssetManager::LoadCharacterAssets(RequestedCharacters& req_chars, 
 		
 		CharStats stat;
 		
-		ReadCharacterStatsFromFile( filepaths_char_stats[ req_chars.char_texture_index_req[i] ], stat);
+		if( !ReadCharacterStatsFromFile( filepaths_char_stats[ req_chars.char_texture_index_req[i] ], stat) )
+		{
+			std::cout << "\nFailed to read stats from filepath: " << filepaths_char_stats[ req_chars.char_texture_index_req[i] ]
+			<< std::endl;
+			
+			return false;
+		}
 		
 		
 		collision_box.width = stat.collision_box_width;
@@ -383,13 +389,16 @@ bool CharacterAssetManager::LoadCharacterAssets(RequestedCharacters& req_chars, 
 		
 		
 		player.attack_box_offset = stat.attack_box_offset;
+		
 		player.health_factor = stat.health_factor;
+		player.player_health *= player.health_factor;
+		
 		player.speed_factor = stat.speed_factor;
 		player.jump_factor = stat.jump_factor;
 		player.damage_factor = stat.damage_factor;
 		
-		std::cout << "Player " << i << " , req char index " << req_chars.char_texture_index_req[i] << " initialized!" 
-		<< " from file " << filepaths_char_stats[ req_chars.char_texture_index_req[i] ] << std::endl;
+		//std::cout << "Player " << i << " , req char index " << req_chars.char_texture_index_req[i] << " initialized!" 
+		//<< " from file " << filepaths_char_stats[ req_chars.char_texture_index_req[i] ] << std::endl;
 	}
 	
 	
