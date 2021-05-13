@@ -43,7 +43,7 @@ else
 fi
 
 
-cmake ../.. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DDATAPATH=./data && make -j$(nproc) && make install DESTDIR=AppDir
+cmake ../.. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DDATAPATH=${HOME}/thief-fighters-data && make -j$(nproc) && make install DESTDIR=AppDir
 
 if [ -f "linuxdeploy-x86_64.AppImage" ]; then
 	echo "linuxdeploy-x86_64.AppImage exists."
@@ -62,5 +62,6 @@ else
 fi
 
 cp Thief*.AppImage thief-fighters-$VERSION
-cp -r ../../data ./thief-fighters-$VERSION
+cp -r ../../data ./thief-fighters-$VERSION/thief-fighters-data
+cp ../app_image_resources/INSTALL ./thief-fighters-$VERSION
 tar -czvf thief-fighters-$VERSION.tar.gz ./thief-fighters-$VERSION
