@@ -74,3 +74,6 @@ src/core/ControllerInputHandler.cpp src/core/KeyboardTypingInputHandler.cpp
 add_executable(${PROJECT_NAME} ${SOURCES})
 #link libraries
 target_link_libraries(${PROJECT_NAME} ${PROJECT_LINK_LIBS})
+
+#make install ops
+install(TARGETS thief-fighters DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
