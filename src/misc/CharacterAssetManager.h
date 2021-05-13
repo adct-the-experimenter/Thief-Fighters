@@ -16,6 +16,8 @@ public:
 	//loads Character textures and sprite animations for chracters requested
 	bool LoadCharacterAssets(RequestedCharacters& req_chars, std::uint8_t num_players);
 	
+	bool LoadCharacterStats(RequestedCharacters& req_chars, std::uint8_t num_players);
+	
 	
 };
 

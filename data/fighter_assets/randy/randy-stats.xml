@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<Root>
+  <Stats c_box_width="30" c_box_height="60" attackbox_offset="10" health_factor="1.0" speed_factor="1.0" jump_factor="1.0" damage_factor="1.0";/>
+</Root>

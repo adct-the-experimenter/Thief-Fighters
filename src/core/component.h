@@ -118,6 +118,7 @@ struct AttackBox
 	
 };
 
+
 struct Player
 {
 	std::uint8_t player_num;
@@ -162,7 +163,12 @@ struct Player
 	//bool to indicate if player is suffering damage already.
 	bool taking_damage;
 	
-	
+	//character-specific variables for player
+	float attack_box_offset;
+	float health_factor;
+	float speed_factor;
+	float jump_factor;
+	float damage_factor;
 };
 
 enum class InputReactorType : std::uint8_t { NONE=0, PLAYER, CAR};

@@ -50,6 +50,17 @@ struct CharFrames
 	TwoFrameGroup left_hurt_frames;
 };
 
+//fighting stats for character
+struct CharStats
+{
+	float collision_box_width;
+	float collision_box_height; 
+	float attack_box_offset;
+	float health_factor;
+	float speed_factor;
+	float jump_factor;
+	float damage_factor;
+};
 
 //list of characters avaiable for playing
 extern std::array <std::string,8> character_names;
