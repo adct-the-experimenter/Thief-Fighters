@@ -188,17 +188,29 @@ void PhysicsSystem::Update(float& dt)
 				
 				float jumpVel = rigidBody.velocity.y*3;
 				
-				rigidBody.velocity.y += 3*gravity.force.y * dt;
+				if(jumpVel < 0)
+				{
+					std::cout << "\nplayer is jumping.\n";
+					
+					rigidBody.velocity.y += 3*gravity.force.y * dt;
+				}
+				else
+				{
+					rigidBody.velocity.y += 3*gravity.force.y * dt;
 				
-				CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
+					CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
 														  rigidBody.velocity.x, rigidBody.velocity.y,
 														  dt,
 														  collisionBox.width, collisionBox.height);
+				}
+				
 				
 				CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,
 														  rigidBody.velocity.x, rigidBody.velocity.y,
 														  dt,
 														  collisionBox.width, collisionBox.height);
+				
+				
 				
 				//move transform component by velocity of rigid body multiplied by time
 				//std::cout << "In physics system, player rigid body velocity: " << rigidBody.velocity.x << std::endl;

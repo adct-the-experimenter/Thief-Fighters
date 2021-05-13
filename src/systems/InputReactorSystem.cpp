@@ -110,19 +110,19 @@ void InputReactorSystem::Update(ControllerInput& input)
 						
 						
 						//if jump button pressed
-						if( input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_B ||
-							input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
+						if( input.gamepads_vec[i].button_down == SDL_CONTROLLER_BUTTON_B ||
+							input.gamepads_vec[i].button_down == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
 						{
 							rigidBody.velocity.y = -speed_factor*player.jump_factor;
 						}
 						
 						//if special power button pressed
-						if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
+						if(input.gamepads_vec[i].button_up_released == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
 						{
 							player.powerButtonPressed = true;
 						}
 						
-						if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_A)
+						if(input.gamepads_vec[i].button_up_released == SDL_CONTROLLER_BUTTON_A)
 						{
 							player.regularAttackButtonPressed = true;
 						}

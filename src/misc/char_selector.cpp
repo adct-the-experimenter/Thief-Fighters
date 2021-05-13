@@ -202,7 +202,7 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 		}
 		
 		//if a button pressed, turn confirm bool on
-		if(input.gamepads_vec[i].button == SDL_CONTROLLER_BUTTON_A)
+		if(input.gamepads_vec[i].button_up_released == SDL_CONTROLLER_BUTTON_A)
 		{
 			//if current slot is confirm slot
 			if(fighter_boxes[i].current_slot == 2)

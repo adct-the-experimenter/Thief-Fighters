@@ -169,6 +169,7 @@ struct Player
 	float speed_factor;
 	float jump_factor;
 	float damage_factor;
+	
 };
 
 enum class InputReactorType : std::uint8_t { NONE=0, PLAYER, CAR};

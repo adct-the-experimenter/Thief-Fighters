@@ -54,7 +54,12 @@ public:
 		int16_t left_y_dir_digital;
 		
 		//includes buttons and dpad
-		SDL_GameControllerButton button;
+		//which button is currently pressed down
+		SDL_GameControllerButton button_down;
+		
+		//which button was recently released
+		SDL_GameControllerButton button_up_released;
+		
 		//0 is null. 1 is pressed, 2 is released.
 		int button_state = 0;
 	};
@@ -71,7 +76,8 @@ public:
 	{
 		for(size_t i = 0; i < gamepads_vec.size(); i++)
 		{
-			gamepads_vec[i].button =  SDL_CONTROLLER_BUTTON_INVALID;
+			gamepads_vec[i].button_down =  SDL_CONTROLLER_BUTTON_INVALID;
+			gamepads_vec[i].button_up_released =  SDL_CONTROLLER_BUTTON_INVALID;
 			gamepads_vec[i].left_x_dir_digital =  0;
 			gamepads_vec[i].left_y_dir_digital =  0;
 			gamepads_vec[i].right_x_dir_digital = 0;
