@@ -12,7 +12,7 @@ static std::array <std::string,5> special_power_choices = {"Sneak","Dash","Shiel
 
 
 static Color LIGHT_BROWN = (Color){202,186,186,255}; 
-static Color LIGHT_GOLD = (Color){190,195,181,255};
+static Color LIGHT_GOLD = (Color){225,195,181,255};
 static Color LIGHT_ORANGE = (Color){202,198,180,255};
 static Color LIGHT_PINK = (Color){202,181,199,255};
 static Color LIGHT_WHITE = (Color){255,255,255,255}; 
@@ -37,10 +37,10 @@ CharacterSelector::CharacterSelector()
 	
 	move_next_state = false;
 	
-	m_num_fighters = 4;
+	m_num_fighters = 5;
 	m_num_special_powers = special_power_choices.size();
 	
-	char_chosen_num_times_array.fill(0);
+	char_chosen_num_times_array.fill(1);
 }
 
 CharacterSelector::~CharacterSelector()

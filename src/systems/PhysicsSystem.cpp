@@ -145,7 +145,7 @@ static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y,
 	}
 	
 	//if go above up bound
-	if(obj_y <= 0)
+	if(obj_y + 2*obj_height <= 0)
 	{
 		//push back player 
 		PushBack(obj_x, obj_y, 

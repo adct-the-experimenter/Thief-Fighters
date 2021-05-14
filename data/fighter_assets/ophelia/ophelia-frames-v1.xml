@@ -27,7 +27,7 @@
 	    
 	  <!--Left Regular attack-->
 	  <Frame x="136" y="60" w="45" h="60" /> 
-	  <Frame x="205" y="60" w="40" h="60" /> 
+	  <Frame x="198" y="60" w="45" h="60" /> 
 		
 	  <!--Left Sneak -->
 	  <Frame x="60" y="120" w="30" h="30" /> 
@@ -51,7 +51,7 @@
 	  
 	  <!--Right Regular attack-->
 	  <Frame x="0" y="60" w="45" h="60" /> 
-	  <Frame x="60" y="60" w="35" h="60" /> 
+	  <Frame x="60" y="60" w="45" h="60" /> 
 		
 	  <!--Right Sneak -->
 	  <Frame x="0" y="120" w="30" h="30" /> 

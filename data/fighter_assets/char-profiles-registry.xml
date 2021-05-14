@@ -5,5 +5,6 @@
 	  <Profile name="Shadow" img_path="shadow/profile.png" />
 	  <Profile name="Sun Man" img_path="sun_man/profile.png" />
 	  <Profile name="Moon Man" img_path="moon_man/profile.png" />
+	  <Profile name="Ophelia" img_path="ophelia/profile.png" />
   </Profiles>    
 </Root>
