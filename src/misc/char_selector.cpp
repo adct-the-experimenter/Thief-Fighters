@@ -12,13 +12,15 @@ static std::array <std::string,5> special_power_choices = {"Sneak","Dash","Shiel
 
 
 static Color LIGHT_BROWN = (Color){202,186,186,255}; 
-static Color LIGHT_GOLD = (Color){202,195,181,255};
+static Color LIGHT_GOLD = (Color){190,195,181,255};
 static Color LIGHT_ORANGE = (Color){202,198,180,255};
 static Color LIGHT_PINK = (Color){202,181,199,255};
 static Color LIGHT_WHITE = (Color){255,255,255,255}; 
 static Color LIGHT_GREEN = (Color){181,202,186,255};
 static Color LIGHT_BLUE = (Color){181,202,201,255};
 static Color LIGHT_PURPLE = (Color){194,181,202,255};
+
+static std::array <uint8_t,8> char_chosen_num_times_array;
 
 static std::array <Color,8> player_colors = { LIGHT_BLUE, //LIGHT Brown
 											  LIGHT_GOLD, //LIGHT Gold
@@ -32,13 +34,13 @@ static std::array <Color,8> player_colors = { LIGHT_BLUE, //LIGHT Brown
 
 CharacterSelector::CharacterSelector()
 {
-	std::array <Color,8> t_colors = {WHITE,BLUE,BEIGE,GRAY,BROWN,RED,GOLD,LIGHTGRAY};
-	colors = t_colors;
 	
 	move_next_state = false;
 	
 	m_num_fighters = 4;
 	m_num_special_powers = special_power_choices.size();
+	
+	char_chosen_num_times_array.fill(0);
 }
 
 CharacterSelector::~CharacterSelector()
@@ -242,14 +244,18 @@ void CharacterSelector::logic()
 				m_req_char.requested_by_player[i] = character_names[fighter_boxes[i].char_choice];
 				m_req_char.char_texture_index_req[i] = fighter_boxes[i].char_choice;
 				
+				//increment the number of times char choice made in array
+				char_chosen_num_times_array[fighter_boxes[i].char_choice] = char_chosen_num_times_array[fighter_boxes[i].char_choice] + 1;
+				
 				//add render component 
 				
+				std::cout << "char chosen num times: " << int(char_chosen_num_times_array[fighter_boxes[i].char_choice]) << std::endl;
 				gCoordinator.AddComponent(
 								*player_entities_vec[i],
 								RenderModelComponent {
 									.char_texture_index = fighter_boxes[i].char_choice,
 									.frame_rect = (Rectangle){0,0,30,60} ,
-									.tint = player_colors[i],
+									.tint = player_colors[char_chosen_num_times_array[fighter_boxes[i].char_choice]],
 									.render = true
 								}
 							);

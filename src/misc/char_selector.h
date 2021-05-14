@@ -66,10 +66,7 @@ private:
 	
 	//vector to hold a character box for each player
 	std::vector <FighterBox> fighter_boxes;
-	
-	//array to hold color choices
-	std::array <Color,8> colors;
-	
+		
 	//vector to hold bools for character creation confirmation for players
 	std::vector <bool> char_confirmations;
 	
