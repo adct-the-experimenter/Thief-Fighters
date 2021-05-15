@@ -1,12 +1,18 @@
 # Thief Fighters
 
+
+Defeat your opponent and steal his power. Switch between different stolen powers. 
+1-8 player multiplayer platform fighting game. 
+
+Fighting game in which the players steal a special power from the others after a kill.
+
+
 This game is a work in progress. 
 
 Entity Component System code adapted from Austin Morlan's ECS code.
 
 Minimal gameplay is established. Needs sound effects and better art.
 
-Fighting game in which the players steal a special power from the others after a kill.
 
 # Required Libraries
 
