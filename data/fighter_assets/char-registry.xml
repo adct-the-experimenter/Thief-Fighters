@@ -8,5 +8,6 @@
 	  <Character name="Ophelia" sheet_path="ophelia/theif-fighters-ophelia.png" frame_path="ophelia/ophelia-frames-v1.xml" stat_path="ophelia/ophelia-stats.xml" />
 	  <Character name="Tina" sheet_path="tina/theif-fighters-tina.png" frame_path="tina/tina-frames-v1.xml" stat_path="tina/tina-stats.xml" />
 	  <Character name="W. Bear" sheet_path="w_bear/theif-fighters-w-bear.png" frame_path="w_bear/w-bear-frames-v1.xml" stat_path="w_bear/w-bear-stats.xml" />
+	  <Character name="Wasp" sheet_path="wasp/theif-fighters-wasp.png" frame_path="wasp/wasp-frames-v1.xml" stat_path="wasp/wasp-stats.xml" />
   </Characters>    
 </Root>
