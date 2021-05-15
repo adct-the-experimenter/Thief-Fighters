@@ -37,7 +37,7 @@ CharacterSelector::CharacterSelector()
 	
 	move_next_state = false;
 	
-	m_num_fighters = 6;
+	m_num_fighters = 7;
 	m_num_special_powers = special_power_choices.size();
 	
 	char_chosen_num_times_array.fill(1);
