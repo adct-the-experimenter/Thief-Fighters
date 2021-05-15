@@ -190,7 +190,7 @@ void PhysicsSystem::Update(float& dt)
 				
 				if(jumpVel < 0)
 				{
-					std::cout << "\nplayer is jumping.\n";
+					//std::cout << "\nplayer is jumping.\n";
 					
 					rigidBody.velocity.y += 3*gravity.force.y * dt;
 				}

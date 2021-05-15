@@ -6,5 +6,6 @@
 	  <Profile name="Sun Man" img_path="sun_man/profile.png" />
 	  <Profile name="Moon Man" img_path="moon_man/profile.png" />
 	  <Profile name="Ophelia" img_path="ophelia/profile.png" />
+	  <Profile name="Tina" img_path="tina/profile.png" />
   </Profiles>    
 </Root>

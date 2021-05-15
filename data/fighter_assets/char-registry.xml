@@ -6,5 +6,6 @@
 	  <Character name="Sun Man" sheet_path="sun_man/theif-fighters-sun-man.png" frame_path="sun_man/sun-man-frames-v1.xml" stat_path="sun_man/sun-man-stats.xml" />
 	  <Character name="Moon Man" sheet_path="moon_man/theif-fighters-moon-man.png" frame_path="moon_man/moon-man-frames-v1.xml" stat_path="moon_man/moon-man-stats.xml" />
 	  <Character name="Ophelia" sheet_path="ophelia/theif-fighters-ophelia.png" frame_path="ophelia/ophelia-frames-v1.xml" stat_path="ophelia/ophelia-stats.xml" />
+	  <Character name="Tina" sheet_path="tina/theif-fighters-tina.png" frame_path="tina/tina-frames-v1.xml" stat_path="tina/tina-stats.xml" />
   </Characters>    
 </Root>
