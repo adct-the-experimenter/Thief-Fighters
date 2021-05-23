@@ -88,7 +88,7 @@ void render(); //draw visual representation of what happens in world to screen
 void sound(); //play sounds of audio representation of what happens in world 
 
 //game state
-enum class GameState : std::uint8_t {TITLE_MENU=0, CHAR_SELECTOR, STAGE_SELECTOR, FIGHT_GAME};
+enum class GameState : std::uint8_t {TITLE_MENU=0, CHAR_SELECTOR, STAGE_SELECTOR, TUTORIAL, FIGHT_GAME};
 GameState m_game_state = GameState::TITLE_MENU;
 
 //camera to follow players.
@@ -181,6 +181,8 @@ void GameLoop()
 	
 }
 
+static bool leave_tutorial = false;
+
 void handle_events()
 {
 	gControllerInputHandler.Update(&gControllerInput);
@@ -203,6 +205,14 @@ void handle_events()
 		case GameState::STAGE_SELECTOR:
 		{
 			gStageSelector.handle_input(gControllerInput,gKeyboardInput);
+			break;
+		}
+		case GameState::TUTORIAL:
+		{
+			if(gControllerInput.gamepads_vec[0].button_up_released == SDL_CONTROLLER_BUTTON_A)
+			{
+				leave_tutorial = true;
+			}
 			break;
 		}
 		case GameState::FIGHT_GAME:
@@ -301,12 +311,22 @@ void logic()
 				
 				if(gStageManager.LoadLevel( gStageSelector.StageSelected() ) )
 				{
-					m_game_state = GameState::FIGHT_GAME;
+					m_game_state = GameState::TUTORIAL;
 				}
 				
 				gStageManager.PlacePlayersInStage(gNumPlayers);
 				attackPowerMechanicSystem->Init(gNumPlayers);
 				playerDeathSystem->Init(gNumPlayers);
+			}
+			
+			break;
+		}
+		case GameState::TUTORIAL:
+		{
+			if(leave_tutorial)
+			{
+				leave_tutorial = false;
+				m_game_state = GameState::FIGHT_GAME;
 			}
 			
 			break;
@@ -386,6 +406,12 @@ void render()
 		{
 			DrawText("In stage selector. Press A to select stage.", 80, 20, 20, BLACK);
 			gStageSelector.render();
+			break;
+		}
+		case GameState::TUTORIAL:
+		{
+			DrawTexture( tutorial_texture,0,0,WHITE ); 
+			DrawText("Tutorial, Player 1 press A to continue to game.",80,15,15, BLACK);
 			break;
 		}
 		case GameState::FIGHT_GAME:

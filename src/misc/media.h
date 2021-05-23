@@ -9,8 +9,7 @@ extern Texture2D title_menu_texture;
 
 extern Texture2D char_select_texture;
 
-extern Texture2D base_fighter_texture;
-
+extern Texture2D tutorial_texture;
 
 struct OneFrameGroup
 {
