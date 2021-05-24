@@ -102,10 +102,6 @@ void InputReactorSystem::Update(ControllerInput& input)
 							{
 								player.requested_power = 6;
 							}
-							else
-							{
-								//player.requested_power = player.current_power;
-							}
 						}
 						
 						

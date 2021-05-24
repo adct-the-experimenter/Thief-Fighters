@@ -119,6 +119,7 @@ struct AttackBox
 	
 };
 
+enum class PlayerState : std::uint8_t { IDLE=0, ATTACKING, HURTING};
 
 struct Player
 {
@@ -173,6 +174,8 @@ struct Player
 	
 	//frame count for hurt animation
 	float hurt_anim_time_count;
+	
+	PlayerState state;
 	
 };
 

@@ -64,7 +64,8 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
 		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
 		
-		if(player.regularAttackButtonPressed && player.alive && !player.taking_damage)
+		//if player pressed attack button and isn't in hurting state and alive.
+		if(player.regularAttackButtonPressed && player.alive && !player.taking_damage && player.state != PlayerState::HURTING)
 		{
 			//if attack box is not active i.e. player is not attacking already
 			if(!player.attack_box.active)
@@ -74,6 +75,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 				//initialize attack box
 				
 				player.attack_box.active = true;
+				player.state = PlayerState::ATTACKING;
 				
 			}
 			
@@ -81,7 +83,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 		}
 		
 		//change and/or activate current power based on input
-		else if(player.powerButtonPressed && player.requested_power < 8 && player.alive && !player.taking_damage)
+		else if(player.powerButtonPressed && player.requested_power < 8 && player.alive && !player.taking_damage && player.state != PlayerState::HURTING)
 		{
 			
 			//std::cout << "Player " << int(player.player_num) << " requested this power: " << int(player.requested_power) << std::endl;
@@ -93,6 +95,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 				if( !player.powers_activated[player.requested_power])
 				{
 					player.current_power = player.requested_power;
+					player.state = PlayerState::ATTACKING;
 					
 				}
 				
@@ -107,6 +110,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 			//activate power if not activated
 			if( !player.powers_activated[player.current_power])
 			{
+				player.state = PlayerState::ATTACKING;
 				animation.attackMode = player.current_power + 1;
 				
 				//std::cout << "current power of player " << int(player.player_num) << ": " << int(player.current_power) << std::endl;
@@ -193,6 +197,8 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 				player.regular_attack_cooldown_timer_val = 0;
 				//reset animation
 				animation.attackMode = -1;
+				
+				player.state = PlayerState::IDLE;
 			}
 		}
 		
@@ -222,6 +228,8 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 							player.sp_attack_cooldown_timer_val_array[i] = 0;
 							//reset animation for attack mode
 							animation.attackMode = -1;
+							
+							player.state = PlayerState::IDLE;
 						}
 						break;
 					}
@@ -239,6 +247,8 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 							player.sp_attack_cooldown_timer_val_array[i] = 0;
 							//reset animation for attack mode
 							animation.attackMode = -1;
+							
+							player.state = PlayerState::IDLE;
 						}
 						
 						
@@ -259,6 +269,8 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 							
 							//reset animation for attack mode
 							animation.attackMode = -1;
+							
+							player.state = PlayerState::IDLE;
 							
 						}
 						
@@ -282,6 +294,8 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 							
 							//reset animation for attack mode
 							animation.attackMode = -1;
+							
+							player.state = PlayerState::IDLE;
 							
 						}
 						
@@ -316,6 +330,8 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 								
 								//reset animation for attack mode
 								animation.attackMode = -1;
+								
+								player.state = PlayerState::IDLE;
 							}
 							
 							
@@ -847,6 +863,8 @@ void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 			
 			player.hurt_anim_time_count = 0;
 			player.hurt_anim_time_count += dt;
+			
+			player.state = PlayerState::HURTING;
 		
 		}
 		else
@@ -858,6 +876,7 @@ void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 			{
 				animation.hurt = false;
 				player.hurt_anim_time_count = 0;
+				player.state = PlayerState::IDLE;
 			}
 			
 		}

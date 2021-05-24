@@ -274,7 +274,8 @@ void CharacterSelector::logic()
 									.player_health = 30,
 									.alive = true,
 									.current_power = fighter_boxes[i].special_power_choice,
-									.taking_damage = false
+									.taking_damage = false,
+									.state = PlayerState::IDLE
 									
 								}
 							);
