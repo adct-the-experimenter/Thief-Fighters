@@ -182,6 +182,7 @@ void AnimationSystem::Update(float& dt)
 								frame_rect_ptr = &character_frame_animations[render_comp.char_texture_index].left_hurt_frames.frames[anim_comp.frame_count];
 							}
 						}
+						
 					}
 					//else if player is not hurt
 					else

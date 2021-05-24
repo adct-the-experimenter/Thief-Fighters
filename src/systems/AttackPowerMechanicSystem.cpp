@@ -844,11 +844,22 @@ void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 			//stop player from moving
 			rigidBody.velocity.x = 0.0f;
 			rigidBody.velocity.y = 0.0f;
+			
+			player.hurt_anim_time_count = 0;
+			player.hurt_anim_time_count += dt;
 		
 		}
 		else
 		{
-			animation.hurt = false;
+			player.hurt_anim_time_count += dt;
+			
+			//if 2 seconds have passed, stop hurt animation
+			if(player.hurt_anim_time_count >= 2)
+			{
+				animation.hurt = false;
+				player.hurt_anim_time_count = 0;
+			}
+			
 		}
 		
 	}

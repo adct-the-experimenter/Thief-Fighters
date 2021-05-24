@@ -96,6 +96,7 @@ struct Animation
 	//bool to indicate if player was hurt and needs to be in hurt animation
 	bool hurt;
 	
+	
 };
 
 
@@ -169,6 +170,9 @@ struct Player
 	float speed_factor;
 	float jump_factor;
 	float damage_factor;
+	
+	//frame count for hurt animation
+	float hurt_anim_time_count;
 	
 };
 
