@@ -20,6 +20,7 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_alive_ptrs[i] = nullptr;
 		player_taking_damage_state_ptrs[i] = nullptr;
 		player_attack_damage_factor_ptrs[i] = nullptr;
+		player_hurt_invincible_ptrs[i] = nullptr;
 	}
 		
 	for (auto const& entity : mEntities)
@@ -38,6 +39,8 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_alive_ptrs[player.player_num - 1] = &player.alive;
 		
 		player_taking_damage_state_ptrs[player.player_num - 1] = &player.taking_damage;
+		
+		player_hurt_invincible_ptrs[player.player_num - 1] = &player.hurt_invincible;
 		
 		player_attack_damage_factor_ptrs[player.player_num - 1] = &player.damage_factor;
 		
@@ -800,8 +803,8 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 	AttackEvent attack_event;
 	attack_event = AttackPowerMechanicSystem::CheckCollisionBetween2Players(player_a_num, player_b_num);
 	
-	//if attack happened, and player is not already in state of taking damage
-	if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] )
+	//if attack happened, and victim is not already in state of taking damage or in hurt invicible state
+	if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] && !*player_hurt_invincible_ptrs[attack_event.player_num_victim - 1] )
 	{
 		//std::cout << "Player " << attack_event.player_num_attacker << "took away 10 HP from player " << attack_event.player_num_victim << std::endl;
 		
@@ -825,12 +828,6 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 		player_position_ptrs[attack_event.player_num_victim - 1]->x += sign*knockback;
 		
 	}
-	//if attack happened and player is already taking damage
-	else if(attack_event.attack && *player_taking_damage_state_ptrs[attack_event.player_num_victim - 1])
-	{
-		*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
-		*player_taking_damage_state_ptrs[attack_event.player_num_attacker - 1] = false;
-	}
 	else
 	{
 		*player_taking_damage_state_ptrs[player_a_num - 1] = false;
@@ -852,6 +849,9 @@ void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 		//activate hurt animation and keep them from moving
 		if(player.taking_damage)
 		{
+			player.taking_damage = false;
+			player.hurt_invincible = true;
+			
 			//reset animation
 			animation.attackMode = -1;
 			animation.frame_count = 0;
@@ -877,6 +877,7 @@ void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 				animation.hurt = false;
 				player.hurt_anim_time_count = 0;
 				player.state = PlayerState::IDLE;
+				player.hurt_invincible = false;
 			}
 			
 		}

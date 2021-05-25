@@ -40,7 +40,7 @@ CharacterSelector::CharacterSelector()
 	m_num_fighters = 8;
 	m_num_special_powers = special_power_choices.size();
 	
-	char_chosen_num_times_array.fill(1);
+	char_chosen_num_times_array.fill(0);
 }
 
 CharacterSelector::~CharacterSelector()
@@ -275,7 +275,8 @@ void CharacterSelector::logic()
 									.alive = true,
 									.current_power = fighter_boxes[i].special_power_choice,
 									.taking_damage = false,
-									.state = PlayerState::IDLE
+									.state = PlayerState::IDLE,
+									.hurt_invincible = false
 									
 								}
 							);
@@ -445,5 +446,5 @@ void CharacterSelector::Reset()
 	char_confirmations.resize(0);
 	
 	move_next_state = false;
-	char_chosen_num_times_array.fill(1);
+	char_chosen_num_times_array.fill(0);
 }

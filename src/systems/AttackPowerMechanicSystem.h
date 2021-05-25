@@ -48,7 +48,7 @@ private:
 	std::array <std::uint8_t*,8> player_last_hit_by_ptrs;
 	std::array <bool*,8> player_alive_ptrs;
 	std::array <bool*,8> player_taking_damage_state_ptrs;
-	std::array <bool*,8> player_hurt_ptrs;
+	std::array <bool*,8> player_hurt_invincible_ptrs;
 	std::array <float*,8> player_attack_damage_factor_ptrs;
 	
 	//collision handling functions to determine if players hit each other

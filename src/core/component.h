@@ -175,7 +175,12 @@ struct Player
 	//frame count for hurt animation
 	float hurt_anim_time_count;
 	
+	//state of player
 	PlayerState state;
+	
+	//bool indicating that player is invincible because in pain right now.
+	//done to prevent losing health during after attack an in pain i.e. Invisibility frames
+	bool hurt_invincible;
 	
 };
 
