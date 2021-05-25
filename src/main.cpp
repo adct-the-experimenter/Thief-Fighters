@@ -134,6 +134,11 @@ int main(int argc, char* args[])
 		
 		InitMainECS();
 		
+		//create entities for all 8 players
+		for(size_t i = 0; i < 8; i++)
+		{
+			entities[i] = gCoordinator.CreateEntity();
+		}
 		
 		
 		// Render texture initialization, used to hold the rendering result so we can easily resize it
@@ -225,7 +230,6 @@ void handle_events()
 			{
 				if(gControllerInput.gamepads_vec[winning_player].button_up_released == SDL_CONTROLLER_BUTTON_START)
 				{
-					std::cout << "Game restart called!\n";
 					restart_game = true;
 				}
 			}
@@ -271,11 +275,6 @@ void logic()
 				gControllerInput.Init(gNumPlayers);
 				gControllerInputHandler.Init(gNumPlayers);				
 				
-				//create entities for players
-				for(size_t i = 0; i < gNumPlayers; i++)
-				{
-					entities[i] = gCoordinator.CreateEntity();
-				}
 				
 				//initialze char selector
 				gCharSelector.Init(&entities,gNumPlayers);
@@ -383,20 +382,32 @@ void logic()
 			}
 			else if(gNumPlayers == 1)
 			{
-				show_restart_game_message = true;
 				winning_player = 0;
 			}
 			
 			if(restart_game)
 			{
-				//remove entities
-				for(std::uint32_t i = 0; i < gNumPlayers; ++i)
+				//remove components of players in game
+				for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
 				{
-					gCoordinator.DestroyEntity(i);
+					gCoordinator.RemoveComponent<InputReact>(entity_it);
+					gCoordinator.RemoveComponent<CollisionBox>(entity_it);
+					gCoordinator.RemoveComponent<Animation>(entity_it);
+					gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
+					gCoordinator.RemoveComponent<Player>(entity_it);
+					gCoordinator.RemoveComponent<Transform2D>(entity_it);
+					gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
+					gCoordinator.RemoveComponent<Gravity2D>(entity_it);
+					gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
 				}
 				
 				//set game state back to title screen
 				m_game_state = GameState::TITLE_MENU;
+				
+				restart_game = false;
+				show_restart_game_message = false;
+				winning_player = -1;
+				playerDeathSystem->Reset();
 			}
 			
 			
@@ -464,9 +475,13 @@ void render()
 			
 			attackPowerMechanicSystem->DebugRender();
 			
-			if(show_restart_game_message)
+			if(gNumPlayers == 1)
 			{
-				DrawText("Winning player press start to return to title screen to restart game.", 80,15,15, GOLD);
+				DrawText("Press start to return to title screen to restart game.", 20,15,15, GOLD);
+			}
+			else if(show_restart_game_message)
+			{
+				DrawText("Winning player press start to return to title screen to restart game.", 20,15,15, GOLD);
 			}
 						
 			break;

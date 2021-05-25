@@ -445,4 +445,5 @@ void CharacterSelector::Reset()
 	char_confirmations.resize(0);
 	
 	move_next_state = false;
+	char_chosen_num_times_array.fill(1);
 }

@@ -20,6 +20,8 @@ public:
 	
 	std::int8_t GetPlayerWhoWon();
 	
+	void Reset();
+	
 private:
 
 	std::bitset <8> players_alive;
