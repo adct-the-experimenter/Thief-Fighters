@@ -435,3 +435,14 @@ void CharacterSelector::sound()
 bool CharacterSelector::MoveToNextStateBool(){return move_next_state;}
 
 RequestedCharacters& CharacterSelector::GetRequestedCharacters(){return m_req_char;}
+
+void CharacterSelector::Reset()
+{
+	fighter_boxes.clear();
+	fighter_boxes.resize(0);
+	
+	char_confirmations.clear();
+	char_confirmations.resize(0);
+	
+	move_next_state = false;
+}

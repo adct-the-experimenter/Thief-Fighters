@@ -59,6 +59,8 @@ public:
 		bool confirm_selection = false;
 	};
 	
+	void Reset();
+	
 private:
 
 	//vector to hold pointers to player entities

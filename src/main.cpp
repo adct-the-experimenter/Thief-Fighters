@@ -182,6 +182,8 @@ void GameLoop()
 }
 
 static bool leave_tutorial = false;
+static bool restart_game = false;
+static int winning_player = -1;
 
 void handle_events()
 {
@@ -218,10 +220,22 @@ void handle_events()
 		case GameState::FIGHT_GAME:
 		{
 			input_ReactSystem->Update(gControllerInput);
+			
+			if(winning_player != -1)
+			{
+				if(gControllerInput.gamepads_vec[winning_player].button_up_released == SDL_CONTROLLER_BUTTON_START)
+				{
+					std::cout << "Game restart called!\n";
+					restart_game = true;
+				}
+			}
+			
 			break;
 		}
 	}
 }
+
+static bool show_restart_game_message = false;
 
 void logic()
 {
@@ -244,6 +258,8 @@ void logic()
 				moveNextState = true;
 				
 				gNumPlayers = gNumPlayerSetter.GetNumberOfPlayers();
+				
+				gNumPlayerSetter.Reset();
 				
 			}
 			
@@ -296,6 +312,8 @@ void logic()
 				gStageSelector.Init(gNumPlayers);
 				
 				m_game_state = GameState::STAGE_SELECTOR;
+				
+				gCharSelector.Reset();
 			}
 			
 			break;
@@ -358,12 +376,28 @@ void logic()
 			//check for dead players, set bool to stop rendering them
 			playerDeathSystem->Update();
 			
-			//if(playerDeathSystem->OnePlayerWon() && gNumPlayers > 1)
-			//{
-				//do something
-			//}
+			if(playerDeathSystem->OnePlayerWon() && gNumPlayers > 1)
+			{
+				show_restart_game_message = true;
+				winning_player = playerDeathSystem->GetPlayerWhoWon();
+			}
+			else if(gNumPlayers == 1)
+			{
+				show_restart_game_message = true;
+				winning_player = 0;
+			}
 			
-			
+			if(restart_game)
+			{
+				//remove entities
+				for(std::uint32_t i = 0; i < gNumPlayers; ++i)
+				{
+					gCoordinator.DestroyEntity(i);
+				}
+				
+				//set game state back to title screen
+				m_game_state = GameState::TITLE_MENU;
+			}
 			
 			
 			break;
@@ -429,6 +463,11 @@ void render()
 			renderSystem->Update();
 			
 			attackPowerMechanicSystem->DebugRender();
+			
+			if(show_restart_game_message)
+			{
+				DrawText("Winning player press start to return to title screen to restart game.", 80,15,15, GOLD);
+			}
 						
 			break;
 		}

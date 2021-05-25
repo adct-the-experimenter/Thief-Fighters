@@ -17,7 +17,7 @@ void PlayerDeathSystem::Init(std::uint8_t num_players)
 {
 	winning_player = -1;
 	
-	players_alive = 0;
+	players_alive.reset();
 	for(std::uint8_t i = 0; i < num_players; i++)
 	{
 		players_alive[i] = 1;
@@ -36,15 +36,26 @@ void PlayerDeathSystem::Update()
 		
 		if(!player.alive && render_comp.render)
 		{
-			players_alive[player.player_num - 1] = 1;
+			players_alive[player.player_num - 1] = 0;
 			render_comp.render = false;
 		}
 	}
 	
 	//check if only 1 player is alive
-	if(players_alive.count() == 1)
+	if(players_alive.count() == 1 && winning_player == -1)
 	{
+		std::cout << "\nOne player won!\n";
+		
 		one_player_won = true;
+		
+		//set winning player
+		for(std::uint8_t i = 0; i < 8; i++)
+		{
+			if(players_alive[i] == 1)
+			{
+				winning_player = i;
+			}
+		}
 	}
 	 
 	

@@ -143,3 +143,9 @@ void NumPlayerSetter::sound()
 bool NumPlayerSetter::MoveToNextStateBool(){return move_next_state;}
 
 std::int8_t NumPlayerSetter::GetNumberOfPlayers(){return m_num_players;}
+
+void NumPlayerSetter::Reset()
+{
+	move_next_state = false;
+	m_confirm_selection = false;
+}

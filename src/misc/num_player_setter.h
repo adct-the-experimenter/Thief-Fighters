@@ -46,6 +46,8 @@ public:
 	
 	std::int8_t GetNumberOfPlayers();
 	
+	void Reset();
+	
 private:
 	
 	//vector to hold a number of players box
