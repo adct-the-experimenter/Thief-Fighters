@@ -110,7 +110,7 @@ void ControllerInputHandler::Update(ControllerInput* input)
 	ControllerInputHandler::SetGamepadInfo(*input);
 }
 
-static const int16_t joystick_border = 32765;
+static const int16_t joystick_border = 32767;
 static const int16_t joystick_border_analog = 10000;
 
 void ControllerInputHandler::SetControllerAxisMotionVariables(ControllerInput::GamepadInfo& gamepad_info, SDL_Event& sdl_event)
@@ -134,12 +134,12 @@ void ControllerInputHandler::SetControllerAxisMotionVariables(ControllerInput::G
 	}
 	
 	//set left digital axis 
-	
-	if(gamepad_info.left_x_axis < -1*joystick_border)
+		
+	if(gamepad_info.left_x_axis <= -1*joystick_border && gamepad_info.left_x_dir_digital == 0)
 	{
 		gamepad_info.left_x_dir_digital = -1;
 	}
-	else if(gamepad_info.left_x_axis > joystick_border)
+	else if(gamepad_info.left_x_axis >= joystick_border  && gamepad_info.left_x_dir_digital == 0)
 	{
 		gamepad_info.left_x_dir_digital = 1;
 	}
@@ -148,11 +148,11 @@ void ControllerInputHandler::SetControllerAxisMotionVariables(ControllerInput::G
 		gamepad_info.left_x_dir_digital = 0;
 	}
 	
-	if(gamepad_info.left_y_axis < -1*joystick_border)
+	if(gamepad_info.left_y_axis <= -1*joystick_border && gamepad_info.left_y_dir_digital == 0)
 	{
 		gamepad_info.left_y_dir_digital = -1;
 	}
-	else if(gamepad_info.left_y_axis > joystick_border)
+	else if(gamepad_info.left_y_axis >= joystick_border && gamepad_info.left_y_dir_digital == 0)
 	{
 		gamepad_info.left_y_dir_digital = 1;
 	}
