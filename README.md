@@ -28,7 +28,7 @@ Minimal gameplay is established. Needs sound effects and better art.
 
 3. cd build
 
-4. cmake -DCMAKE_BUILD_TYPE=Release ..
+4. cmake -DCMAKE_BUILD_TYPE=Release -DDATAPATH=../data ..
 
 5. make
 
@@ -48,7 +48,7 @@ Left Shoulder/Trigger or B = Jump
 Switch current power to a different power from collection of stolen powers with right joystick.
 
 Right Joystick
-
+-----------------
 
 Up = Sneak
 
