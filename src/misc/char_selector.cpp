@@ -270,7 +270,7 @@ void CharacterSelector::logic()
 				gCoordinator.AddComponent(
 								*player_entities_vec[i],
 								Player {
-									.player_num = i + 1,
+									.player_num = static_cast<uint8_t>(i + 1),
 									.player_health = 30,
 									.alive = true,
 									.current_power = fighter_boxes[i].special_power_choice,

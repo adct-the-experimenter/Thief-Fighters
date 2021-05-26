@@ -12,7 +12,7 @@ public:
 	void Init(	std::uint16_t game_res_width,
 				std::uint16_t game_res_height)
 	{
-		camera_rect = {0,0,game_res_width,game_res_height};
+		camera_rect = {0,0,static_cast<float>(game_res_width),static_cast<float>(game_res_height)};
 	}
 	
 	void SetLevelBounds(std::uint16_t level_bound_left_x,

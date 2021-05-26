@@ -31,7 +31,7 @@ void StageSelector::Init(std::uint8_t num_players)
 	//initialize name slot text box locations for each character
 	for(size_t it = 0; it < stage_boxes.size(); it++)
 	{
-		stage_boxes[it].name_slot.textBox = {100*(it+1),20,50,20};
+		stage_boxes[it].name_slot.textBox = {static_cast<float>( 100*(it+1) ),20,50,20};
 	}
 }
 
@@ -111,7 +111,7 @@ void StageSelector::render()
 	//render body part slots
 	for(size_t i = 0; i < stage_boxes.size(); i++)
 	{
-		Vector2 position = {100*(i+1) + i*50,0};
+		Vector2 position = { static_cast<float>( 100*(i+1) + i*50 ),0};
 		
 		//if selection is not confirmed
 		if(stage_confirmation)
