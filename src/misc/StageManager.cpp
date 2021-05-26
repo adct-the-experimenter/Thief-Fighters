@@ -15,7 +15,7 @@ extern Coordinator gCoordinator;
 
 StageManager::StageManager()
 {
-	
+	max_num_rect = 10;
 }
 
 static void ProcessCollisionMap(CollisionRect* crect,uint8_t max_num_rect,const char* filepath)
@@ -110,7 +110,7 @@ bool StageManager::LoadLevel(std::uint16_t level)
 	{
 		main_stage.texture = LoadTexture(textureFilePath.c_str());    // Load map texture
 		
-		uint8_t max_num_rect = 5;
+		
 		ProcessCollisionMap(&main_stage.collision_rect_array[0],max_num_rect,collisionMapFilePath.c_str());
 		
 		uint8_t max_num_players = 8;

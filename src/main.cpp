@@ -148,7 +148,7 @@ int main(int argc, char* args[])
 		
 		//set camera
 		main_camera.Init(gameScreenWidth,gameScreenHeight);
-		main_camera.SetLevelBounds(0,720,0,360);
+		main_camera.SetLevelBounds(0,640,0,360);
 
 		while (!quitGame)
 		{
@@ -461,10 +461,7 @@ void render()
 		}
 		case GameState::FIGHT_GAME:
 		{			
-			//std::cout << "scale before camera system: " << scale << std::endl;
-			
-			cameraSystem->Update(scale);
-			
+						
 			//draw the stage
 			
 			DrawTextureRec(main_stage.texture, *main_camera.GetCameraRectPointer(), Vector2{0,0}, RAYWHITE);
@@ -496,11 +493,9 @@ void render()
 	//			   (Rectangle){ (GetScreenWidth() - ((float)gameScreenWidth*scale))*0.5f, (GetScreenHeight() - ((float)gameScreenHeight*scale))*0.5f,
 	//			   (float)gameScreenWidth*scale, (float)gameScreenHeight*scale }, (Vector2){ 0, 0 }, 0.0f, WHITE);
 	
-	//float rect_x = (float)main_camera.GetCameraRectPointer()->x*scale;
 	float rect_x = 0;
 	if(rect_x <= 0){rect_x = 0;}
 	
-	//float rect_y = (float)main_camera.GetCameraRectPointer()->y*scale;
 	float rect_y = 0;
 	if(rect_y <= 0){rect_y = 0;}
 	

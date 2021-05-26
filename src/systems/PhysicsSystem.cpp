@@ -117,6 +117,11 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 	}
 }
 
+static float level_bound_right_x = 640;
+static float level_bound_left_x = 0;
+static float level_bound_down_y = 360;
+static float level_bound_up_y = 0;
+
 static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y, 
 										float& obj_vx, float& obj_vy, 
 										float& dt, 
@@ -124,45 +129,45 @@ static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y,
 										std::uint32_t& obj_height)
 {
 	//if go to the right of the level bound
-	if(obj_x + obj_width >= 720)
+	if(obj_x + obj_width >= level_bound_right_x)
 	{
 		//push back player 
 		PushBack(obj_x, obj_y, 
 			obj_vx, obj_vy, 
 			dt);
 			
-		obj_x = 720 - obj_width - 1;
+		obj_x = level_bound_right_x - obj_width - 1;
 	}
 	//if go to the left of level bound
-	else if(obj_x <= 0)
+	else if(obj_x <= level_bound_left_x)
 	{
 		//push back player 
 		PushBack(obj_x, obj_y, 
 			obj_vx, obj_vy, 
 			dt);
 		
-		obj_x = 0 + 1;
+		obj_x = level_bound_left_x + 1;
 	}
 	
 	//if go above up bound
-	if(obj_y + 2*obj_height <= 0)
+	if(obj_y + 2*obj_height <= level_bound_up_y)
 	{
 		//push back player 
 		PushBack(obj_x, obj_y, 
 			obj_vx, obj_vy, 
 			dt);
-		obj_y = 0 + 1;
+		obj_y = level_bound_left_x + 1;
 	}
 	
 	//if go below down bound
-	else if(obj_y + obj_height >= 360)
+	else if(obj_y + obj_height >= level_bound_down_y)
 	{
 		//push back player 
 		PushBack(obj_x, obj_y, 
 			obj_vx, obj_vy, 
 			dt);
 		
-		obj_y = 360 - obj_height - 1;
+		obj_y = level_bound_down_y - obj_height - 1;
 	}
 }
 

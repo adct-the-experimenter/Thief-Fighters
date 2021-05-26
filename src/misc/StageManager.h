@@ -18,7 +18,7 @@ public:
 	
 private:
 	
-	
+	uint8_t max_num_rect;
 	
 	
 };
