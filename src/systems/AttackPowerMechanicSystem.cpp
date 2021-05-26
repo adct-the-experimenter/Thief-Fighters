@@ -806,7 +806,7 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 	//if attack happened, and victim is not already in state of taking damage or in hurt invicible state
 	if(attack_event.attack && !*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] && !*player_hurt_invincible_ptrs[attack_event.player_num_victim - 1] )
 	{
-		//std::cout << "Player " << attack_event.player_num_attacker << "took away 10 HP from player " << attack_event.player_num_victim << std::endl;
+		//std::cout << "Player " << int(attack_event.player_num_attacker) << " took away 10 HP from player " << int(attack_event.player_num_victim) << std::endl;
 		
 		//decrease health of victim player
 		*player_health_ptrs[attack_event.player_num_victim - 1] -= 10*(*player_attack_damage_factor_ptrs[attack_event.player_num_attacker - 1]);
@@ -828,11 +828,7 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 		player_position_ptrs[attack_event.player_num_victim - 1]->x += sign*knockback;
 		
 	}
-	else
-	{
-		*player_taking_damage_state_ptrs[player_a_num - 1] = false;
-		*player_taking_damage_state_ptrs[player_b_num - 1] = false;
-	}
+
 }
 
 void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
