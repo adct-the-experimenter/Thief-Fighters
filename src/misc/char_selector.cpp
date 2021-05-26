@@ -249,15 +249,17 @@ void CharacterSelector::logic()
 				
 				//add render component 
 				
-				std::cout << "char chosen num times: " << int(char_chosen_num_times_array[fighter_boxes[i].char_choice]) << std::endl;
+				//std::cout << "char chosen num times: " < int(char_chosen_num_times_array[fighter_boxes[i].char_choice]) << std::endl;
+				
+				RenderModelComponent render_model = {};
+				render_model.char_texture_index = fighter_boxes[i].char_choice;
+				render_model.frame_rect = (Rectangle){0,0,30,60};
+				render_model.tint = player_colors[char_chosen_num_times_array[fighter_boxes[i].char_choice]];
+				render_model.render = true;
+				
 				gCoordinator.AddComponent(
 								*player_entities_vec[i],
-								RenderModelComponent {
-									.char_texture_index = fighter_boxes[i].char_choice,
-									.frame_rect = (Rectangle){0,0,30,60} ,
-									.tint = player_colors[char_chosen_num_times_array[fighter_boxes[i].char_choice]],
-									.render = true
-								}
+								render_model
 							);
 				
 				
@@ -267,18 +269,18 @@ void CharacterSelector::logic()
 				std::bitset <8> collected_powers;
 				collected_powers[fighter_boxes[i].special_power_choice] = 1;
 				
+				Player player_comp = {};
+				player_comp.player_num = static_cast<uint8_t>(i + 1),
+				player_comp.player_health = 30;
+				player_comp.alive = true;
+				player_comp.current_power = fighter_boxes[i].special_power_choice;
+				player_comp.taking_damage = false;
+				player_comp.state = PlayerState::IDLE;
+				player_comp.hurt_invincible = false;
+									
 				gCoordinator.AddComponent(
 								*player_entities_vec[i],
-								Player {
-									.player_num = static_cast<uint8_t>(i + 1),
-									.player_health = 30,
-									.alive = true,
-									.current_power = fighter_boxes[i].special_power_choice,
-									.taking_damage = false,
-									.state = PlayerState::IDLE,
-									.hurt_invincible = false
-									
-								}
+								player_comp
 							);
 														
 				//add input react component
