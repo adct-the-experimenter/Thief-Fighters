@@ -443,20 +443,20 @@ void render()
 		}
 		case GameState::CHAR_SELECTOR:
 		{
-			DrawText("In character selector. Move joystick to change to desired choice. Press A/B to confirm choice.", 80, 20, 20, BLACK);
+			DrawText("In character selector. Move joystick to change to desired choice. Press A/B to confirm choice.", 20, 20, 12, BLACK);
 			gCharSelector.render();
 			break;
 		}
 		case GameState::STAGE_SELECTOR:
 		{
-			DrawText("In stage selector. Press A to select stage.", 80, 20, 20, BLACK);
+			DrawText("In stage selector. Press A to select stage.", 20, 20, 12, BLACK);
 			gStageSelector.render();
 			break;
 		}
 		case GameState::TUTORIAL:
 		{
 			DrawTexture( tutorial_texture,0,0,WHITE ); 
-			DrawText("Tutorial, Player 1 press A to continue to game.",80,15,15, BLACK);
+			DrawText("Tutorial, Player 1 press A to continue to game.",80,15,12, BLACK);
 			break;
 		}
 		case GameState::FIGHT_GAME:
@@ -474,11 +474,11 @@ void render()
 			
 			if(gNumPlayers == 1)
 			{
-				DrawText("Press start to return to title screen to restart game.", 20,15,15, GOLD);
+				DrawText("Press start to return to title screen to restart game.", 20,15,12, GOLD);
 			}
 			else if(show_restart_game_message)
 			{
-				DrawText("Winning player press start to return to title screen to restart game.", 20,15,15, GOLD);
+				DrawText("Winning player press start to return to title screen to restart game.", 20,15,12, GOLD);
 			}
 						
 			break;
@@ -494,10 +494,8 @@ void render()
 	//			   (float)gameScreenWidth*scale, (float)gameScreenHeight*scale }, (Vector2){ 0, 0 }, 0.0f, WHITE);
 	
 	float rect_x = 0;
-	if(rect_x <= 0){rect_x = 0;}
 	
 	float rect_y = 0;
-	if(rect_y <= 0){rect_y = 0;}
 	
 	float rect_width = (float)main_camera.GetCameraRectPointer()->width*scale;
 	float rect_height = (float)main_camera.GetCameraRectPointer()->height*scale;
@@ -640,10 +638,11 @@ void InitMainECS()
 void InitRaylibSystem()
 {
 	// Window configuration flags
-	// Set MSAA 4X hint before windows creation
+	// Set MSAA 4X hint before windows creation, multi-sample anti aliasing
 	// set v sync
 	//set resizeable window
-	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT | FLAG_MSAA_4X_HINT);  
+	//set to high DPI for very high resolutions
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT | FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI); 
     
 	
     InitWindow(screenWidth, screenHeight, "Thief Fighters");
