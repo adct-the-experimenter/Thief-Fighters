@@ -11,7 +11,7 @@
 #include "core/KeyboardInput.h"
 #include "core/entity.h"
 
-
+#include "misc/StageManager.h"
 
 	
 struct NameSlot

@@ -526,7 +526,12 @@ bool loadMedia()
 		return false;
 	}
 	
-	else if(!gCharAssetManager.LoadCharacterProfilesFromXML())
+	if(!gCharAssetManager.LoadCharacterProfilesFromXML())
+	{
+		return false;
+	}
+	
+	if(!gStageManager.LoadStageInfoFromXML())
 	{
 		return false;
 	}

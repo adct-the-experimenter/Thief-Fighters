@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<Root>
+  <Stages>
+	  <Stage name="City" collision_path="city-sky-scrapper/city_sky_collisions.txt" start_path="city-sky-scrapper/city_sky_start.txt" img_path="city-sky-scrapper/city_sky_image.png" />
+	  <Stage name="Training" collision_path="training_stage/training_map_collisions.txt" start_path="training_stage/training_map_start.txt" img_path="training_stage/training_map_image.png" />
+  </Stages>    
+</Root>
