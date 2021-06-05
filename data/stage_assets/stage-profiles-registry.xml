@@ -3,5 +3,6 @@
   <Profiles>
 	  <Profile name="City" img_path="randy/profile.png" />
 	  <Profile name="Training" img_path="shadow/profile.png" />
+	  <Profile name="Outer Space" img_path="shadow/profile.png" />
   </Profiles>    
 </Root>

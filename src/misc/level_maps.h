@@ -29,6 +29,12 @@ struct Stage
 	std::array <CollisionRect,10> collision_rect_array;
 	//holds positions for 8 players
 	std::array <PlayerStart,8> player_start_array;
+	
+	//background texture scrolling
+	//indicates if stage uses scrolling background
+	bool scrolling_bg = false;
+	Texture2D scroll_bg_texture;
+	int scrollSpeed = 0;
 };
 
 //only load and free 1 stage since only 1 stage is played at a time

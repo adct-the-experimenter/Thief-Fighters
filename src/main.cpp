@@ -417,6 +417,7 @@ void logic()
 }
 
 Vector3 mapPosition = { -16.0f, 0.0f, -8.0f };  // Set model position
+static float scrollingBack = 0.0f;
 
 void render()
 {
@@ -464,9 +465,20 @@ void render()
 						
 			//draw the stage
 			
-			DrawTextureRec(main_stage.texture, *main_camera.GetCameraRectPointer(), Vector2{0,0}, RAYWHITE);
-			//DrawTexture(main_stage.texture, 0,0, RAYWHITE);
+			if(main_stage.scrolling_bg)
+			{
+				scrollingBack -= (main_stage.scrollSpeed / 100);
+				
+				//draw scroll background
+				if (scrollingBack <= -main_stage.scroll_bg_texture.width*2){scrollingBack = 0;}
+				
+				DrawTextureEx(main_stage.scroll_bg_texture, (Vector2){ scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
+				DrawTextureEx(main_stage.scroll_bg_texture, (Vector2){ main_stage.scroll_bg_texture.width*2 + scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
+
+			}
 			
+			DrawTextureRec(main_stage.texture, *main_camera.GetCameraRectPointer(), Vector2{0,0}, WHITE);
+						
 		    //render any entity that has render component
 			renderSystem->Update();
 			

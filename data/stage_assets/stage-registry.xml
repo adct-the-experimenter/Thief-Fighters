@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <Root>
   <Stages>
-	  <Stage name="City" collision_path="city-sky-scrapper/city_sky_collisions.txt" start_path="city-sky-scrapper/city_sky_start.txt" img_path="city-sky-scrapper/city_sky_image.png" />
-	  <Stage name="Training" collision_path="training_stage/training_map_collisions.txt" start_path="training_stage/training_map_start.txt" img_path="training_stage/training_map_image.png" />
+	  <Stage name="City" collision_path="city-sky-scrapper/city_sky_collisions.txt" start_path="city-sky-scrapper/city_sky_start.txt" img_path="city-sky-scrapper/city_sky_image.png" scrolling="no"/>
+	  <Stage name="Training" collision_path="training_stage/training_map_collisions.txt" start_path="training_stage/training_map_start.txt" img_path="training_stage/training_map_image.png" scrolling="no"/>
+	  <Stage name="Outer Space" collision_path="outer-space/outer_space_collisions.txt" start_path="outer-space/outer_space_start.txt" img_path="outer-space/outer_space_image.png" scrolling="yes" scroll_bg_path="outer-space-bg-scrolling.png" scroll_speed="0.1"/>
+	  
   </Stages>    
 </Root>

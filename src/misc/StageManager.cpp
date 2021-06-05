@@ -256,6 +256,30 @@ bool StageManager::LoadStageGamePlayInfo()
 		
 		stages_info[iterator].textureFilePath = filePathTextureFull;
 		
+		//determine if stage has scrolling background, initialize other variables if so
+		std::string scrolling_status = stage_node.attribute("scrolling").value();
+		
+		if(scrolling_status == "yes")
+		{
+			stages_info[iterator].scrolling = true;
+			
+			//load filepath to background texture
+			std::string filepath_bg_texture = stage_node.attribute("scroll_bg_path").value();
+			
+			std::string filePathTextureBGFull = DATADIR_STR + "/stage_assets/" + filepath_bg_texture;
+			
+			stages_info[iterator].scrollingBGTextureFilePath = filePathTextureBGFull;
+			
+			//get scroll speed
+			std::string scroll_speed_str = stage_node.attribute("scroll_speed").value();
+			stages_info[iterator].scrollSpeed = atof(scroll_speed_str.c_str());
+		}
+		else
+		{
+			stages_info[iterator].scrolling = false;
+		}
+		
+		
 				
 		stages_info[iterator].initialized = true;
 	}

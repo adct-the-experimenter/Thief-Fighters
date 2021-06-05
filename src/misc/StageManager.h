@@ -18,6 +18,10 @@ struct StageInfo
 	
 	bool initialized = false;
 	
+	//scrolling background info
+	bool scrolling = false;
+	std::string scrollingBGTextureFilePath;
+	float scrollSpeed = 0;
 };
 
 
