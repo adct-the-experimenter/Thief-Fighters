@@ -95,6 +95,12 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 	//for each rectangle platform in mains stage
 	for(size_t i = 0; i < main_stage.collision_rect_array.size(); i++)
 	{
+		if(!main_stage.collision_rect_array[i].initialized)
+		{
+			//break out of loop
+			break;
+		}
+		
 		//if player(obj) collides with a platforms
 		if(CollisionWithPlatformDetected(main_stage.collision_rect_array[i].rect,
 						   obj_x, obj_y, obj_width, obj_height)
@@ -111,6 +117,18 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 				PushBack(obj_x, obj_y, 
 					obj_vx, obj_vy, 
 					dt);
+				
+				//if player is left of platform	
+				if(obj_x + obj_width - 1 <= main_stage.collision_rect_array[i].rect.x)
+				{
+					obj_x = main_stage.collision_rect_array[i].rect.x - obj_width - 1;
+				}
+				//else if player is right of platform
+				else if(obj_x + obj_width - 1 >= main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width)
+				{
+					obj_x = main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width + 1;
+				}
+				
 			}
 			
 		}
