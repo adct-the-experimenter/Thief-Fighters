@@ -12,7 +12,7 @@ extern Coordinator gCoordinator;
 
 #include "misc/level_maps.h"
 
-#include <misc/media.h>
+#include "misc/char_media.h"
 
 void RenderSystem::Init(CustomCamera* camera)
 {

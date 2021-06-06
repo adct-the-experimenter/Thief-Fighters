@@ -31,7 +31,7 @@ public:
 	
 	StageManager();
 	
-	bool LoadLevel(std::uint16_t level);
+	bool LoadLevel(int level);
 	void FreeCurrentLoadedLevel();
 	
 	void PlacePlayersInStage(std::int8_t num_players);
@@ -39,6 +39,8 @@ public:
 	bool LoadStageInfoFromXML();
 	
 	bool GetStagesInfoLoadedBool();
+	
+	int GetNumberOfStagesInitialized();
 	
 private:
 	
@@ -53,6 +55,8 @@ private:
 	
 	bool LoadStageProfiles();
 	bool LoadStageGamePlayInfo();
+	
+	int num_stages_initialized;
 	
 };
 

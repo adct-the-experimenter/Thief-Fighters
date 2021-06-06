@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include "misc/media.h"
+#include "misc/char_media.h"
 
 extern Coordinator gCoordinator;
 

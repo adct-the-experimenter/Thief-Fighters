@@ -15,10 +15,14 @@ Stage main_stage;
 
 extern Coordinator gCoordinator;
 
+std::array <Texture2D,8> stage_profile_textures;
+
 StageManager::StageManager()
 {
 	max_num_rect = 10;
 	stages_info_loaded = false;
+	
+	num_stages_initialized = 0;
 }
 
 
@@ -91,30 +95,31 @@ static void ProcessPlayerStartInfo(PlayerStart* pstart, uint8_t max_players, con
 	}
 }
 
-bool StageManager::LoadLevel(std::uint16_t level)
+bool StageManager::LoadLevel(int level)
 {
 	//load map
 	std::string collisionMapFilePath = "";
 	std::string textureFilePath = "";
 	std::string playerStartFilePath = "";
 	
-	//set file paths
-	switch(level)
-	{
-		case 0:
-		{  
-			collisionMapFilePath = DATADIR_STR + "/stage_assets/city-sky-scrapper/city_sky_collisions.txt";
-			textureFilePath = DATADIR_STR + "/stage_assets/city-sky-scrapper/city_sky_image.png";
-			playerStartFilePath = DATADIR_STR + "/stage_assets/city-sky-scrapper/city_sky_start.txt";
-			break;
-		}
-	}
+	
+	collisionMapFilePath = stages_info[level].collisionMapFilePath;
+	textureFilePath = stages_info[level].textureFilePath;
+	playerStartFilePath = stages_info[level].playerStartFilePath;
+	
 	
 	//load level based on file paths
 	if(collisionMapFilePath != "" && textureFilePath != "" && playerStartFilePath != "")
 	{
 		main_stage.texture = LoadTexture(textureFilePath.c_str());    // Load map texture
 		
+		//if it is a scrolling level
+		if(stages_info[level].scrolling)
+		{
+			main_stage.scrolling_bg = true;
+			main_stage.scroll_bg_texture = LoadTexture(stages_info[level].scrollingBGTextureFilePath.c_str());
+			main_stage.scrollSpeed = stages_info[level].scrollSpeed;
+		}
 		
 		ProcessCollisionMap(&main_stage.collision_rect_array[0],max_num_rect,collisionMapFilePath.c_str());
 		
@@ -192,6 +197,8 @@ bool StageManager::LoadStageProfiles()
 		std::string filePathTextureFull = DATADIR_STR + "/stage_assets/" + filepath_texture;
 		stages_info[iterator].profileImageFilePath = filePathTextureFull;
 		
+		stage_profile_textures[iterator] = LoadTexture(stages_info[iterator].profileImageFilePath.c_str());
+		
 		iterator++;
 	}
 	
@@ -225,7 +232,7 @@ bool StageManager::LoadStageGamePlayInfo()
     pugi::xml_node root = doc.child("Root");
     
     //set up tile selector based on data
-    pugi::xml_node stageRoot = root.child("Stagess");
+    pugi::xml_node stageRoot = root.child("Stages");
     
     size_t iterator = 0;
     
@@ -236,7 +243,7 @@ bool StageManager::LoadStageGamePlayInfo()
 		std::string nameString = stage_node.attribute("name").value();
 		
 		//load filepath to collisions text
-		std::string filepath_collisions = stage_node.attribute("collisions_path").value();
+		std::string filepath_collisions = stage_node.attribute("collision_path").value();
 			
 		std::string filePathCollisionsFull = DATADIR_STR + "/stage_assets/" + filepath_collisions;
 		
@@ -282,6 +289,9 @@ bool StageManager::LoadStageGamePlayInfo()
 		
 				
 		stages_info[iterator].initialized = true;
+		num_stages_initialized++;
+		
+		iterator++;
 	}
 		
 	return true;
@@ -307,3 +317,5 @@ bool StageManager::LoadStageInfoFromXML()
 }
 
 bool StageManager::GetStagesInfoLoadedBool(){return stages_info_loaded;}
+
+int StageManager::GetNumberOfStagesInitialized(){return num_stages_initialized;}

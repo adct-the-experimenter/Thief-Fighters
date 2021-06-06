@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <Root>
   <Profiles>
-	  <Profile name="City" img_path="randy/profile.png" />
-	  <Profile name="Training" img_path="shadow/profile.png" />
-	  <Profile name="Outer Space" img_path="shadow/profile.png" />
+	  <Profile name="City" img_path="city-sky-scrapper/city_skyscrapper_map_profile.png" />
+	  <Profile name="Training" img_path="training_stage/training_map_profile.png" />
+	  <Profile name="Outer Space" img_path="outer-space/outer_space_profile.png" />
   </Profiles>    
 </Root>

@@ -308,7 +308,7 @@ void logic()
 				}
 				
 				//initialize stage selector
-				gStageSelector.Init(gNumPlayers);
+				gStageSelector.Init(gStageManager.GetNumberOfStagesInitialized());
 				
 				m_game_state = GameState::STAGE_SELECTOR;
 				
@@ -329,11 +329,18 @@ void logic()
 				if(gStageManager.LoadLevel( gStageSelector.StageSelected() ) )
 				{
 					m_game_state = GameState::TUTORIAL;
+					
+					gStageManager.PlacePlayersInStage(gNumPlayers);
+					attackPowerMechanicSystem->Init(gNumPlayers);
+					playerDeathSystem->Init(gNumPlayers);
+				}
+				else
+				{
+					std::cout << "\nFailed to load level!\n";
+					quitGame = true;
 				}
 				
-				gStageManager.PlacePlayersInStage(gNumPlayers);
-				attackPowerMechanicSystem->Init(gNumPlayers);
-				playerDeathSystem->Init(gNumPlayers);
+				
 			}
 			
 			break;
@@ -467,13 +474,13 @@ void render()
 			
 			if(main_stage.scrolling_bg)
 			{
-				scrollingBack -= (main_stage.scrollSpeed / 100);
-				
+				scrollingBack -= main_stage.scrollSpeed;
+								
 				//draw scroll background
-				if (scrollingBack <= -main_stage.scroll_bg_texture.width*2){scrollingBack = 0;}
+				if (scrollingBack <= -main_stage.scroll_bg_texture.width){scrollingBack = 0;}
 				
-				DrawTextureEx(main_stage.scroll_bg_texture, (Vector2){ scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
-				DrawTextureEx(main_stage.scroll_bg_texture, (Vector2){ main_stage.scroll_bg_texture.width*2 + scrollingBack, 20 }, 0.0f, 2.0f, WHITE);
+				DrawTextureEx(main_stage.scroll_bg_texture, (Vector2){ scrollingBack, 0 }, 0.0f, 1.0f, WHITE);
+				DrawTextureEx(main_stage.scroll_bg_texture, (Vector2){ main_stage.scroll_bg_texture.width + scrollingBack, 0 }, 0.0f, 1.0f, WHITE);
 
 			}
 			

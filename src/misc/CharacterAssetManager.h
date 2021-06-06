@@ -4,7 +4,7 @@
 #include "raylib.h"
 #include <array>
 
-#include "misc/media.h"
+#include "misc/char_media.h"
 
 class CharacterAssetManager
 {

@@ -1,6 +1,7 @@
 #include "MediaLoader.h"
 
 #include "globalvariables.h"
+#include "char_media.h"
 
 Texture2D title_menu_texture;
 Texture2D char_select_texture;

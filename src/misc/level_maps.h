@@ -34,10 +34,12 @@ struct Stage
 	//indicates if stage uses scrolling background
 	bool scrolling_bg = false;
 	Texture2D scroll_bg_texture;
-	int scrollSpeed = 0;
+	float scrollSpeed = 0;
 };
 
 //only load and free 1 stage since only 1 stage is played at a time
 extern Stage main_stage;
+
+extern std::array <Texture2D,8> stage_profile_textures;
 
 #endif

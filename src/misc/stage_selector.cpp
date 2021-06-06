@@ -3,7 +3,7 @@
 #include "core/system.h"
 #include "core/coordinator.h"
 
-#include "misc/media.h" //for texture
+#include "misc/level_maps.h" //for texture
 
 extern Coordinator gCoordinator;
 
@@ -15,7 +15,8 @@ StageSelector::StageSelector()
 	
 	move_next_state = false;
 	
-	m_num_stages = 2;
+	m_num_stages = 3;
+		
 }
 
 StageSelector::~StageSelector()
@@ -23,8 +24,10 @@ StageSelector::~StageSelector()
 	
 }
 
-void StageSelector::Init(std::uint8_t num_players)
+void StageSelector::Init(std::uint8_t num_stages)
 {
+	
+	m_num_stages = num_stages;
 	
 	stage_boxes.resize(m_num_stages);
 	
@@ -51,25 +54,31 @@ void StageSelector::handle_controller_input(ControllerInput& input)
 	for(size_t i = 0; i < input.gamepads_vec.size();i++)
 	{
 		//if joystick moved up, go up a slot
-		if(input.gamepads_vec[i].left_y_dir_axis< -joystick_border)
+		if(input.gamepads_vec[i].left_y_dir_digital == -1)
 		{
-			
+			if(m_stage_selected > 4)
+			{
+				m_stage_selected = m_stage_selected - 4;
+			}
 		}
 		//else if joystick moved down, go down a slot
-		else if(input.gamepads_vec[i].left_y_dir_axis> joystick_border)
+		else if(input.gamepads_vec[i].left_y_dir_digital == 1)
 		{
-			
+			if(m_stage_selected < m_num_stages - 4)
+			{
+				m_stage_selected = m_stage_selected + 4;
+			}
 		}
 			
 		//if joystick moved left, go left on color choice
-		if(input.gamepads_vec[i].left_x_dir_axis< -joystick_border)
+		if(input.gamepads_vec[i].left_x_dir_digital == -1)
 		{
-			
+			if(m_stage_selected > 0){m_stage_selected--;}
 		}
 		//if joystick moved right, go right on color choice
-		else if(input.gamepads_vec[i].left_x_dir_axis> joystick_border)
+		else if(input.gamepads_vec[i].left_x_dir_digital == 1)
 		{
-			
+			if(m_stage_selected < m_num_stages - 1){m_stage_selected++;}
 		}
 		
 		//if a button pressed, turn confirm bool on
@@ -90,15 +99,14 @@ void StageSelector::logic()
 {
 	int width = 30;
 	
-	for(size_t i = 0; i < stage_boxes.size(); i++)
-	{  	
+	for(int i = 0; i < stage_boxes.size(); i++)
+	{
 		
 		//if selection confirmed
 		if(stage_confirmation)
 		{
-			m_stage_selected = 0;
 			move_next_state = true;
-			
+			break;
 		}
 		
 	}
@@ -113,11 +121,21 @@ void StageSelector::render()
 	{
 		Vector2 position = { static_cast<float>( 100*(i+1) + i*50 ),0};
 		
+		Color renderColor = WHITE;
+		if(m_stage_selected == i){renderColor = (Color){100,100,20,255};}
+		
 		//if selection is not confirmed
-		if(stage_confirmation)
+		if(!stage_confirmation)
 		{
 			//draw textures of each slot
+			int row = trunc(i / 4);
+			int col = i - ( trunc( i / 4 ) * 4);
 			
+			float x = 20 + col*150;
+			float y = 50 + row*20;
+						
+			//render texture of profile
+			DrawTexture(stage_profile_textures[i],x, y,renderColor);
 			
 			//render text box for typing slot
 			

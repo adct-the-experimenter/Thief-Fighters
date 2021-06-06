@@ -11,7 +11,7 @@
 #include "core/KeyboardInput.h"
 #include "core/entity.h"
 
-#include "misc/media.h" //for texture
+#include "misc/char_media.h" //for texture
 
 class CharacterSelector
 {
