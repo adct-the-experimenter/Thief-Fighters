@@ -139,6 +139,10 @@ void StageManager::FreeCurrentLoadedLevel()
 {
 	UnloadTexture(main_stage.texture);
 	
+	if(main_stage.scrolling_bg)
+	{
+		UnloadTexture(main_stage.scroll_bg_texture);
+	}
 }
 
 void StageManager::PlacePlayersInStage(std::int8_t num_players)
