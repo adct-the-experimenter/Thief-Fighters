@@ -7,9 +7,19 @@ project (${PROJECT_NAME} LANGUAGES C CXX)
 
 option(DATAPATH "Path to data Directory" ON)
 
+#emscripten specific cmake flags to add.
+if (EMSCRIPTEN)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s USE_SDL=2 -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2  -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY")
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif ()
+
+
 #-DCMAKE_BUILD_TYPE=Release
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Wall -DDATADIR=${DATAPATH} -fPIE")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O2 -Wall -DDATADIR=${DATAPATH} -fPIE")
+
+
 
 #SDL2 specific stuff and its add on libraries
 INCLUDE(FindPkgConfig)
@@ -19,21 +29,49 @@ INCLUDE(FindPkgConfig)
 # Let CMake search for a raylib-config.cmake
 find_package(raylib 3.5 QUIET) 
 
+if(!EMSCRIPTEN)
 #Pugi XML parsing
 find_path(pugixml_INCLUDE_DIRS pugixml.hpp)
 find_library(pugixml_LIBRARIES NAMES pugixml)
+set ( PROJECT_LINK_LIBS  raylib ${SDL2_LIBRARIES} ${pugixml_LIBRARIES})
+
+else()
+
+set ( PROJECT_LINK_LIBS  raylib ${SDL2_LIBRARIES} libpugixml.a )
+
+endif()
 
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 
 #For the shared library:
-set ( PROJECT_LINK_LIBS  raylib ${SDL2_LIBRARIES} ${pugixml_LIBRARIES})
-#where to find library files .so 
-link_directories( /usr/lib /usr/local/lib ) 
 
-set ( PROJECT_INCLUDE_DIR  ${SDL2_INCLUDE_DIRS})
+
+#where to find library files .so
+if (EMSCRIPTEN)
+
+link_directories( /usr/lib /usr/local/lib ../web_compile_resources/lib)
+
+else ()
+
+link_directories( /usr/lib /usr/local/lib)
+
+endif()
+ 
+ 
+
+set ( PROJECT_INCLUDE_DIR  ${SDL2_INCLUDE_DIRS} ./src )
 
 #for where to find header files for source and library
-include_directories(/usr/include /usr/local/include ./src ${PROJECT_INCLUDE_DIR})
+if (EMSCRIPTEN)
+
+include_directories(  ${PROJECT_INCLUDE_DIR} ../web_compile_resources/include)
+
+else ()
+
+include_directories(/usr/include /usr/local/include ${PROJECT_INCLUDE_DIR})
+
+endif()
+
 
 if (MINGW)
     # need to link with mingw32 before SDL2
@@ -43,6 +81,8 @@ endif ()
 if(WIN32)
 	set ( PROJECT_LINK_LIBS  ${PROJECT_LINK_LIBS} opengl32 gdi32 winmm)
 endif()
+
+
 
 set(SOURCES 
 src/main.cpp
