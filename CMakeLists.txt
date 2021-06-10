@@ -49,7 +49,7 @@ PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 #where to find library files .so
 if (EMSCRIPTEN)
 
-link_directories( /usr/lib /usr/local/lib ../web_compile_resources/lib)
+link_directories( ../web_compile_resources/lib)
 
 else ()
 
