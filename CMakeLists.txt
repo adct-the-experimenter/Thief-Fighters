@@ -29,15 +29,17 @@ INCLUDE(FindPkgConfig)
 # Let CMake search for a raylib-config.cmake
 find_package(raylib 3.5 QUIET) 
 
-if(!EMSCRIPTEN)
+if(EMSCRIPTEN)
+
+set ( PROJECT_LINK_LIBS  raylib ${SDL2_LIBRARIES} libpugixml.a )
+
+
+else()
+
 #Pugi XML parsing
 find_path(pugixml_INCLUDE_DIRS pugixml.hpp)
 find_library(pugixml_LIBRARIES NAMES pugixml)
 set ( PROJECT_LINK_LIBS  raylib ${SDL2_LIBRARIES} ${pugixml_LIBRARIES})
-
-else()
-
-set ( PROJECT_LINK_LIBS  raylib ${SDL2_LIBRARIES} libpugixml.a )
 
 endif()
 
@@ -47,7 +49,7 @@ PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 
 
 #where to find library files .so
-if (EMSCRIPTEN)
+if (DEFINED EMSCRIPTEN)
 
 link_directories( ../web_compile_resources/lib)
 
