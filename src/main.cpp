@@ -451,7 +451,7 @@ void render()
 		}
 		case GameState::CHAR_SELECTOR:
 		{
-			DrawText("In character selector. Move joystick to change to desired choice. Press A/B to confirm choice.", 20, 20, 12, BLACK);
+			DrawText("In character selector. A = confirm choice. B = reset choice", 20, 20, 12, BLACK);
 			gCharSelector.render();
 			break;
 		}

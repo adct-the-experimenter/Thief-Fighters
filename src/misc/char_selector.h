@@ -35,6 +35,14 @@ public:
 	
 	RequestedCharacters& GetRequestedCharacters();
 	
+	struct CharacterProfileWall
+	{
+		std::array <Texture2D,8> char_profiles_textures;
+		std::array <Rectangle,8> char_profiles_rects;
+		std::array <uint8_t,8> player_selection;
+		
+	};
+	
 	struct FighterBox
 	{
 		Rectangle background_box;
@@ -42,7 +50,7 @@ public:
 		std::string player_num_string;
 		Rectangle player_num_rect;
 		
-		//slots: 0 = character, 1 = special_power, 2 = confirm
+		//slots: 0 = character, 1 = special_power
 		
 		//current slot
 		std::uint8_t current_slot = 0;
@@ -54,9 +62,8 @@ public:
 		
 		Rectangle special_power_slot_rect;
 		
-		Rectangle confirm_selection_rect;
-		
-		bool confirm_selection = false;
+		bool confirm_char_choice = false;		
+		bool confirm_power_choice = false;
 	};
 	
 	void Reset();
@@ -83,6 +90,10 @@ private:
 	std::uint8_t m_num_special_powers;
 	
 	RequestedCharacters m_req_char;
+	
+	//wall of character profiles
+	CharacterProfileWall char_profile_wall;
+	
 };
 
 #endif

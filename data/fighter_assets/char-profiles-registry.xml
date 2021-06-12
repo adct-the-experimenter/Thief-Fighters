@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <Root>
   <Profiles>
-	  <Profile name="Randy" img_path="randy/profile.png" />
-	  <Profile name="Shadow" img_path="shadow/profile.png" />
-	  <Profile name="Sun Man" img_path="sun_man/profile.png" />
-	  <Profile name="Moon Man" img_path="moon_man/profile.png" />
-	  <Profile name="Ophelia" img_path="ophelia/profile.png" />
-	  <Profile name="Tina" img_path="tina/profile.png" />
-	  <Profile name="W. Bear" img_path="w_bear/profile.png" />
-	  <Profile name="Wasp" img_path="wasp/profile.png" />
+	  <Profile name="Randy" img_path="randy/randy-profile.png" />
+	  <Profile name="Shadow" img_path="shadow/shadow-profile.png" />
+	  <Profile name="Sun Man" img_path="sun_man/sun-man-profile.png" />
+	  <Profile name="Moon Man" img_path="moon_man/moon-man-profile.png" />
+	  <Profile name="Ophelia" img_path="ophelia/ophelia-profile.png" />
+	  <Profile name="Tina" img_path="tina/tina-profile.png" />
+	  <Profile name="W. Bear" img_path="w_bear/w-bear-profile.png" />
+	  <Profile name="Wasp" img_path="wasp/wasp-profile.png" />
   </Profiles>    
 </Root>

@@ -58,7 +58,11 @@ bool CharacterAssetManager::LoadCharacterProfilesFromXML()
 		
 		std::string filePathTextureFull = DATADIR_STR + "/fighter_assets/" + filepath_texture;
 		
+		character_profile_textures[iterator] = LoadTexture(filePathTextureFull.c_str());
+		
 		iterator++;
+		
+		if(iterator > 7){break;}
 	}
 	
 	return true;
