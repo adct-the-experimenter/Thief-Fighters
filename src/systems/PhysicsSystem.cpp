@@ -90,7 +90,8 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 										float& obj_vx, float& obj_vy, 
 										float& dt, 
 										std::uint32_t& obj_width,
-										std::uint32_t& obj_height)
+										std::uint32_t& obj_height,
+										bool& jump)
 {
 	//for each rectangle platform in mains stage
 	for(size_t i = 0; i < main_stage.collision_rect_array.size(); i++)
@@ -106,30 +107,39 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 						   obj_x, obj_y, obj_width, obj_height)
 			)
 		{
-			//if player is on top of object
-			if(obj_y + obj_height - 1 <= main_stage.collision_rect_array[i].rect.y)
+			//if not jumping
+			if(!jump)
 			{
-				obj_vy = 0;
+				//if player is on top of object
+				if(obj_y + obj_height - 1 <= main_stage.collision_rect_array[i].rect.y)
+				{
+					obj_vy = 0;
+				}
+				else
+				{
+			
+					//push back player 
+					PushBack(obj_x, obj_y, 
+						obj_vx, obj_vy, 
+						dt);
+					
+				}
 			}
+			//else if jumping
 			else
 			{
-				//push back player 
-				PushBack(obj_x, obj_y, 
-					obj_vx, obj_vy, 
-					dt);
-				
-				//if player is left of platform	
-				if(obj_x + obj_width - 1 <= main_stage.collision_rect_array[i].rect.x)
+				//if player is not on top of object
+				if(obj_y + obj_height - 1 >= main_stage.collision_rect_array[i].rect.y)
 				{
-					obj_x = main_stage.collision_rect_array[i].rect.x - obj_width - 1;
-				}
-				//else if player is right of platform
-				else if(obj_x + obj_width - 1 >= main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width)
-				{
-					obj_x = main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width + 1;
+					//push back player 
+					PushBack(obj_x, obj_y, 
+						obj_vx, obj_vy, 
+						dt);
 				}
 				
 			}
+			
+
 			
 		}
 	}
@@ -211,21 +221,22 @@ void PhysicsSystem::Update(float& dt)
 				
 				float jumpVel = rigidBody.velocity.y*3;
 				
-				if(jumpVel < 0)
-				{
-					//std::cout << "\nplayer is jumping.\n";
-					
-					rigidBody.velocity.y += 3*gravity.force.y * dt;
-				}
-				else
-				{
-					rigidBody.velocity.y += 3*gravity.force.y * dt;
+				bool jump = false;
 				
-					CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
-														  rigidBody.velocity.x, rigidBody.velocity.y,
-														  dt,
-														  collisionBox.width, collisionBox.height);
+				if(jumpVel < 0)
+				{					
+					jump = true;
 				}
+				
+				
+				rigidBody.velocity.y += 3*gravity.force.y * dt;
+				
+				CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
+											rigidBody.velocity.x, rigidBody.velocity.y,
+											dt,
+											collisionBox.width, collisionBox.height,
+											jump);
+				
 				
 				
 				CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,

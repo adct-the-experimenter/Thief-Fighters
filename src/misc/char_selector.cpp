@@ -192,7 +192,7 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 		{
 			
 			//move player selection up if not in first row
-			if(char_profile_wall.player_selection[i] > 4)
+			if(char_profile_wall.player_selection[i] >= 4)
 			{
 				char_profile_wall.player_selection[i] -= 4;
 			}
@@ -203,7 +203,7 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 		{
 			
 			//move player selection down if not in last row
-			if(char_profile_wall.player_selection[i] < 4)
+			if(char_profile_wall.player_selection[i] <= 3)
 			{
 				char_profile_wall.player_selection[i] += 4;
 			}
