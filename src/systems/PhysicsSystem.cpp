@@ -114,6 +114,7 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 				if(obj_y + obj_height - 1 <= main_stage.collision_rect_array[i].rect.y)
 				{
 					obj_vy = 0;
+					obj_y = main_stage.collision_rect_array[i].rect.y - obj_height;
 				}
 				else
 				{
@@ -129,7 +130,7 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 			else
 			{
 				//if player is not on top of object
-				if(obj_y + obj_height - 1 >= main_stage.collision_rect_array[i].rect.y)
+				if(obj_y + obj_height >= main_stage.collision_rect_array[i].rect.y)
 				{
 					//push back player 
 					PushBack(obj_x, obj_y, 
@@ -184,7 +185,7 @@ static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y,
 		PushBack(obj_x, obj_y, 
 			obj_vx, obj_vy, 
 			dt);
-		obj_y = level_bound_left_x + 1;
+		obj_y = level_bound_up_y + 1;
 	}
 	
 	//if go below down bound
@@ -229,7 +230,12 @@ void PhysicsSystem::Update(float& dt)
 				}
 				
 				
-				rigidBody.velocity.y += 3*gravity.force.y * dt;
+				rigidBody.velocity.y += (3*gravity.force.y * dt);
+				
+				//move transform component by velocity of rigid body multiplied by time
+				//std::cout << "In physics system, player rigid body velocity: " << rigidBody.velocity.x << std::endl;
+				transform.position.x += 3*rigidBody.velocity.x * dt;
+				transform.position.y += (rigidBody.velocity.y + jumpVel) * dt;
 				
 				CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
 											rigidBody.velocity.x, rigidBody.velocity.y,
@@ -244,12 +250,6 @@ void PhysicsSystem::Update(float& dt)
 														  dt,
 														  collisionBox.width, collisionBox.height);
 				
-				
-				
-				//move transform component by velocity of rigid body multiplied by time
-				//std::cout << "In physics system, player rigid body velocity: " << rigidBody.velocity.x << std::endl;
-				transform.position.x += 3*rigidBody.velocity.x * dt;
-				transform.position.y += (rigidBody.velocity.y + jumpVel) * dt;
 				
 				break;
 			}

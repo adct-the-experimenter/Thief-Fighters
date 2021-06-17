@@ -45,6 +45,7 @@ struct RigidBody2D
 {
 	Vector2 velocity;
 	Vector2 acceleration;
+	std::uint8_t jump_count;
 };
 
 
@@ -154,7 +155,7 @@ struct Player
 	std::uint8_t current_power; //0-7
 	
 	//power requested by player input
-	std::int8_t requested_power; //-1,0-7
+	std::int8_t requested_power; // -1, 0-7
 	
 	//indicate which player last hit this player
 	std::uint8_t last_hit_by_player_num;

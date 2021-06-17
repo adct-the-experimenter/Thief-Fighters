@@ -395,7 +395,8 @@ void CharacterSelector::logic()
 			gCoordinator.AddComponent(
 						*player_entities_vec.at(i),
 						RigidBody2D{
-							.velocity = initV
+							.velocity = initV,
+							.jump_count = std::uint8_t(0)
 						}
 					);
 					
@@ -410,10 +411,11 @@ void CharacterSelector::logic()
 					
 			//add physics type
 			PhysicsType pType = PhysicsType::PLATFORMER;
+			std::uint8_t jump_count = 0;
 			gCoordinator.AddComponent(
 						*player_entities_vec.at(i),
 						PhysicsTypeComponent{
-							.phy_type = pType 
+							.phy_type = pType
 						}
 					);
 					
@@ -423,7 +425,7 @@ void CharacterSelector::logic()
 						*player_entities_vec.at(i),
 						CollisionBox{
 							.width = (std::uint32_t){30},
-							.height = (std::uint32_t){60}
+							.height = (std::uint32_t){58}
 						}
 					);
 			

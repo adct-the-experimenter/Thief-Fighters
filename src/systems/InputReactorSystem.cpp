@@ -110,6 +110,7 @@ void InputReactorSystem::Update(ControllerInput& input)
 							input.gamepads_vec[i].button_down == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
 						{
 							rigidBody.velocity.y = -speed_factor*player.jump_factor;
+							rigidBody.jump_count++;
 						}
 						
 						//if special power button pressed
