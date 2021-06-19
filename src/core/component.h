@@ -197,6 +197,7 @@ enum class PhysicsType : std::uint8_t {LIFE_RPG=0, PLATFORMER, FIGHTING_GAME};
 struct PhysicsTypeComponent
 {
 	PhysicsType phy_type;
+	bool grounded; //indicates if entity is grounded
 };
 
 enum class EnemyType : std::uint8_t {NONE=0, SKELETON};

@@ -42,6 +42,54 @@ static void PushBack(float& posX, float& posY, float& velX, float& velY, float& 
     velY = 0;
 }
 
+static void PushUp(float& posY, float& velY, float& dt)
+{
+    float pushBackDist = 2.0f;
+    
+    float newPosY = 0;
+    newPosY = posY - abs(velY * dt) - pushBackDist;
+
+    
+    posY = newPosY;
+    //velY = 0;
+}
+
+static void PushDown(float& posY, float& velY, float& dt)
+{
+    float pushBackDist = 1.0f;
+    
+    float newPosY = 0;
+    newPosY = posY + abs(velY * dt) + pushBackDist;
+
+    
+    posY = newPosY;
+    velY = 0;
+}
+
+static void PushLeft(float& posX, float& velX, float& dt)
+{
+    float pushBackDist = 1.0f;
+    
+    float newPosX;
+    newPosX = posX - abs(velX * dt) - pushBackDist;
+    
+	posX = newPosX;
+    velX = 0;
+    
+}
+
+static void PushRight(float& posX, float& velX, float& dt)
+{
+    float pushBackDist = 1.0f;
+    
+    float newPosX;
+    newPosX = posX + abs(velX * dt) + pushBackDist;
+    
+	posX = newPosX;
+    velX = 0;
+    
+}
+
 static bool CollisionWithPlatformDetected(Rectangle& platform,
 						   float& obj_x, float& obj_y, std::uint32_t obj_width, std::uint32_t& obj_height)
 {
@@ -86,12 +134,13 @@ static bool CollisionWithPlatformDetected(Rectangle& platform,
 	return true;
 }
 
+
 static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y, 
 										float& obj_vx, float& obj_vy, 
 										float& dt, 
 										std::uint32_t& obj_width,
 										std::uint32_t& obj_height,
-										bool& jump)
+										bool& grounded)
 {
 	//for each rectangle platform in mains stage
 	for(size_t i = 0; i < main_stage.collision_rect_array.size(); i++)
@@ -107,36 +156,96 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 						   obj_x, obj_y, obj_width, obj_height)
 			)
 		{
-			//if not jumping
-			if(!jump)
+			//if player is not grounded and on top of a platform
+			if(!grounded && (obj_y + obj_height - 1 <= main_stage.collision_rect_array[i].rect.y))
 			{
-				//if player is on top of object
+				obj_vy = 0;
+				obj_y = main_stage.collision_rect_array[i].rect.y - obj_height;
+				grounded = true;
+			}
+				
+			//if on the ground
+			if(grounded)
+			{
+				//if player is on top of platform
 				if(obj_y + obj_height - 1 <= main_stage.collision_rect_array[i].rect.y)
 				{
 					obj_vy = 0;
 					obj_y = main_stage.collision_rect_array[i].rect.y - obj_height;
+					
 				}
 				else
 				{
-			
-					//push back player 
-					PushBack(obj_x, obj_y, 
+					
+					//if player is to the left of platform 
+					if(obj_x + obj_width - 1 <= main_stage.collision_rect_array[i].rect.x)
+					{
+						PushLeft(obj_x,obj_vx,dt);						
+					}
+					//else if player is to the right of platform
+					else if(obj_x + 1 >= main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width)
+					{
+						PushRight(obj_x,obj_vx,dt);
+					}
+					else
+					{
+						//push back player 
+						PushBack(obj_x, obj_y, 
 						obj_vx, obj_vy, 
 						dt);
-					
+						
+					}
+											
 				}
 			}
-			//else if jumping
+			//else if not grounded
 			else
 			{
-				//if player is not on top of object
-				if(obj_y + obj_height >= main_stage.collision_rect_array[i].rect.y)
+				
+				//std::cout << "\nin air.\n";
+				
+				/*
+				std::cout << "player right: " << obj_x + obj_width - 1 << std::endl;
+				std::cout << "player left: " << obj_x + 1 << std::endl;
+				
+				std::cout << "platform left:" << main_stage.collision_rect_array[i].rect.x << std::endl;
+				std::cout << "platform right:" << main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width << std::endl;
+				std::cout << "platform up:" << main_stage.collision_rect_array[i].rect.y  << std::endl;
+				std::cout << "platform down:" << main_stage.collision_rect_array[i].rect.y + main_stage.collision_rect_array[i].rect.height << std::endl;
+				*/
+				
+				//if player is to the left of platform 
+				if(obj_x + obj_width - 1 <= main_stage.collision_rect_array[i].rect.x + 20)
 				{
-					//push back player 
-					PushBack(obj_x, obj_y, 
-						obj_vx, obj_vy, 
-						dt);
+					//std::cout << "\nplayer below platform to the left. Push left.\n";
+					//PushLeft(obj_x,obj_vx,dt);
+					obj_vx = 0;
+					obj_x = main_stage.collision_rect_array[i].rect.x - obj_width;
 				}
+				//else if player is to the right of platform
+				else if(obj_x + 1 >= main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width - 20)
+				{
+					//std::cout << "\nplayer below platform to the right. Push right.\n";
+					//PushRight(obj_x,obj_vx,dt);
+					obj_vx = 0;
+					obj_x = main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width;
+				}
+				
+				//if player is on top of platform
+				if(obj_y + obj_height - 2 <= main_stage.collision_rect_array[i].rect.y + 10)
+				{
+					//std::cout << "\nplayer above platform. Push up.\n";
+					//PushUp(obj_y,obj_vy,dt);
+					obj_vy = 0;
+					obj_y = main_stage.collision_rect_array[i].rect.y - obj_height;
+					grounded = true;
+				}
+				else
+				{
+					//std::cout << "\nplayer below platform. Push down.\n";
+					PushDown(obj_y,obj_vy,dt);
+				}
+					
 				
 			}
 			
@@ -160,20 +269,11 @@ static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y,
 	//if go to the right of the level bound
 	if(obj_x + obj_width >= level_bound_right_x)
 	{
-		//push back player 
-		PushBack(obj_x, obj_y, 
-			obj_vx, obj_vy, 
-			dt);
-			
 		obj_x = level_bound_right_x - obj_width - 1;
 	}
 	//if go to the left of level bound
 	else if(obj_x <= level_bound_left_x)
 	{
-		//push back player 
-		PushBack(obj_x, obj_y, 
-			obj_vx, obj_vy, 
-			dt);
 		
 		obj_x = level_bound_left_x + 1;
 	}
@@ -218,7 +318,6 @@ void PhysicsSystem::Update(float& dt)
 			case PhysicsType::PLATFORMER:
 			{
 				//account for acceleration due to gravity to rigid body velocity
-				//rigidBody.velocity.x += gravity.force.x * dt;
 				
 				float jumpVel = rigidBody.velocity.y*3;
 				
@@ -227,8 +326,12 @@ void PhysicsSystem::Update(float& dt)
 				if(jumpVel < 0)
 				{					
 					jump = true;
+					physics_type_comp.grounded = false;
 				}
-				
+				else if(jumpVel > 0)
+				{
+					physics_type_comp.grounded = false;
+				}
 				
 				rigidBody.velocity.y += (3*gravity.force.y * dt);
 				
@@ -241,14 +344,14 @@ void PhysicsSystem::Update(float& dt)
 											rigidBody.velocity.x, rigidBody.velocity.y,
 											dt,
 											collisionBox.width, collisionBox.height,
-											jump);
+											physics_type_comp.grounded);
 				
 				
 				
 				CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,
-														  rigidBody.velocity.x, rigidBody.velocity.y,
-														  dt,
-														  collisionBox.width, collisionBox.height);
+											  rigidBody.velocity.x, rigidBody.velocity.y,
+											  dt,
+											  collisionBox.width, collisionBox.height);
 				
 				
 				break;
