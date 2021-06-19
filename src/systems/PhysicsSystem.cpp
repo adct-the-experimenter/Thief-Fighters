@@ -300,6 +300,8 @@ static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y,
 	}
 }
 
+static float jump_factor = 80.0f;
+
 void PhysicsSystem::Update(float& dt)
 {
 	
@@ -319,26 +321,35 @@ void PhysicsSystem::Update(float& dt)
 			{
 				//account for acceleration due to gravity to rigid body velocity
 				
-				float jumpVel = rigidBody.velocity.y*3;
+				float jumpVel = rigidBody.jump_speed*jump_factor;
 				
 				bool jump = false;
+				
+				if(physics_type_comp.jump_count >= physics_type_comp.jump_count_limit)
+				{
+					jumpVel = 0;
+				}
 				
 				if(jumpVel < 0)
 				{					
 					jump = true;
 					physics_type_comp.grounded = false;
+					physics_type_comp.jump_count++;
+					rigidBody.velocity.y += jumpVel;
 				}
 				else if(jumpVel > 0)
 				{
 					physics_type_comp.grounded = false;
 				}
 				
-				rigidBody.velocity.y += (3*gravity.force.y * dt);
+				
+				
+				rigidBody.velocity.y += (4*gravity.force.y * dt);
 				
 				//move transform component by velocity of rigid body multiplied by time
 				//std::cout << "In physics system, player rigid body velocity: " << rigidBody.velocity.x << std::endl;
 				transform.position.x += 3*rigidBody.velocity.x * dt;
-				transform.position.y += (rigidBody.velocity.y + jumpVel) * dt;
+				transform.position.y += (rigidBody.velocity.y) * dt;
 				
 				CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
 											rigidBody.velocity.x, rigidBody.velocity.y,
@@ -347,6 +358,10 @@ void PhysicsSystem::Update(float& dt)
 											physics_type_comp.grounded);
 				
 				
+				if(physics_type_comp.grounded)
+				{
+					physics_type_comp.jump_count = 0;
+				}
 				
 				CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,
 											  rigidBody.velocity.x, rigidBody.velocity.y,

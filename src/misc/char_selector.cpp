@@ -396,7 +396,7 @@ void CharacterSelector::logic()
 						*player_entities_vec.at(i),
 						RigidBody2D{
 							.velocity = initV,
-							.jump_count = std::uint8_t(0)
+							.jump_speed = float(0)
 						}
 					);
 					
@@ -415,7 +415,10 @@ void CharacterSelector::logic()
 			gCoordinator.AddComponent(
 						*player_entities_vec.at(i),
 						PhysicsTypeComponent{
-							.phy_type = pType
+							.phy_type = pType,
+							.grounded = true,
+							.jump_count = 0,
+							.jump_count_limit = 2
 						}
 					);
 					

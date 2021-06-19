@@ -45,7 +45,7 @@ struct RigidBody2D
 {
 	Vector2 velocity;
 	Vector2 acceleration;
-	std::uint8_t jump_count;
+	float jump_speed;
 };
 
 
@@ -198,6 +198,8 @@ struct PhysicsTypeComponent
 {
 	PhysicsType phy_type;
 	bool grounded; //indicates if entity is grounded
+	std::uint8_t jump_count;
+	std::uint8_t jump_count_limit;
 };
 
 enum class EnemyType : std::uint8_t {NONE=0, SKELETON};
