@@ -335,7 +335,7 @@ void PhysicsSystem::Update(float& dt)
 					jump = true;
 					physics_type_comp.grounded = false;
 					physics_type_comp.jump_count++;
-					rigidBody.velocity.y += jumpVel;
+					rigidBody.velocity.y += jumpVel*( (2.1f) / (physics_type_comp.jump_count + 1) );
 				}
 				else if(jumpVel > 0)
 				{
