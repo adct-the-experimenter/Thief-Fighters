@@ -178,21 +178,27 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 				{
 					
 					//if player is to the left of platform 
-					if(obj_x + obj_width - 1 <= main_stage.collision_rect_array[i].rect.x)
+					if(obj_x + obj_width - 1 <= main_stage.collision_rect_array[i].rect.x + 20)
 					{
-						PushLeft(obj_x,obj_vx,dt);						
+						//PushLeft(obj_x,obj_vx,dt);
+						obj_vx = 0;
+						obj_x = main_stage.collision_rect_array[i].rect.x - obj_width;
 					}
 					//else if player is to the right of platform
-					else if(obj_x + 1 >= main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width)
+					else if(obj_x + 1 >= main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width - 20)
 					{
-						PushRight(obj_x,obj_vx,dt);
+						//PushRight(obj_x,obj_vx,dt);
+						obj_vx = 0;
+						obj_x = main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width;
 					}
 					else
 					{
 						//push back player 
-						PushBack(obj_x, obj_y, 
-						obj_vx, obj_vy, 
-						dt);
+						//PushBack(obj_x, obj_y, 
+						//obj_vx, obj_vy, 
+						//dt);
+						
+						PushUp(obj_y,obj_vy,dt);
 						
 					}
 											
