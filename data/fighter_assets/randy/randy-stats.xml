@@ -3,5 +3,5 @@
 <Root>
 <!-- all factors should be between 0.5 and 1.5 for a balanced game-->
 <!-- attackbox_offset, c_box_width, and c_box_height are in pixels based on a 640x360 resolution-->
-<Stats c_box_width="30" c_box_height="60" attackbox_offset="10" health_factor="1.0" speed_factor="1.0" jump_factor="1.0" damage_factor="1.0"/>
+<Stats c_box_width="30" c_box_height="60" attackbox_offset="10" health_factor="1.0" speed_factor="1.0" jump_factor="1.5" damage_factor="1.0"/>
 </Root>
