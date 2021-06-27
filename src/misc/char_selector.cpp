@@ -401,7 +401,7 @@ void CharacterSelector::logic()
 					);
 					
 			//add gravity component for later use
-			Vector2 grav = {0.0f,20.0f};
+			Vector2 grav = {0.0f,200.0f};
 			gCoordinator.AddComponent(
 						*player_entities_vec.at(i),
 						Gravity2D{

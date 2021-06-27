@@ -350,12 +350,12 @@ void PhysicsSystem::Update(float& dt)
 				
 				
 				
-				rigidBody.velocity.y += (4*gravity.force.y * dt);
+				rigidBody.velocity.y += (gravity.force.y * dt);
 				
 				//move transform component by velocity of rigid body multiplied by time
 				//std::cout << "In physics system, player rigid body velocity: " << rigidBody.velocity.x << std::endl;
 				transform.position.x += 3*rigidBody.velocity.x * dt;
-				transform.position.y += (rigidBody.velocity.y) * dt;
+				transform.position.y += rigidBody.velocity.y * dt;
 				
 				CheckCollisionWithPlatforms(transform.position.x, transform.position.y,
 											rigidBody.velocity.x, rigidBody.velocity.y,

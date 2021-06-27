@@ -10,7 +10,7 @@
 
 #script:
 
-VERSION=1.0
+VERSION=3.0
 
 if [ -d "build" ]; then
 	echo "build directory exists."
@@ -64,4 +64,4 @@ fi
 cp Thief*.AppImage thief-fighters-$VERSION
 cp -r ../../data ./thief-fighters-$VERSION/thief-fighters-data
 cp ../app_image_resources/INSTALL ./thief-fighters-$VERSION
-tar -czvf thief-fighters-$VERSION.tar.gz ./thief-fighters-$VERSION
+tar -czvf thief-fighters-$VERSION-Linux-AppImage-x86_64.tar.gz ./thief-fighters-$VERSION
