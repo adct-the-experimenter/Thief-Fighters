@@ -63,7 +63,7 @@ endif()
  
  
 
-set ( PROJECT_INCLUDE_DIR  ${SDL2_INCLUDE_DIRS} ./src )
+set ( PROJECT_INCLUDE_DIR  ${SDL2_INCLUDE_DIRS} ./src ../src)
 
 #for where to find header files for source and library
 if (EMSCRIPTEN)
@@ -105,7 +105,7 @@ src/main.cpp
 ../src/systems/RenderSystem.cpp
 ../src/systems/InputReactorSystem.cpp
 ../src/systems/EnemySystem.cpp
-../src/core/ControllerInputHandler.cpp src/core/KeyboardTypingInputHandler.cpp
+../src/core/ControllerInputHandler.cpp ../src/core/KeyboardTypingInputHandler.cpp
 			 )
 
 #get_cmake_property(_variableNames VARIABLES)
