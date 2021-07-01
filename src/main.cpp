@@ -324,6 +324,7 @@ void logic()
 			
 			if(gStageSelector.MoveToNextStateBool())
 			{
+				
 				//initialize fight game state
 				
 				if(gStageManager.LoadLevel( gStageSelector.StageSelected() ) )
@@ -333,9 +334,12 @@ void logic()
 					gStageManager.PlacePlayersInStage(gNumPlayers);
 					attackPowerMechanicSystem->Init(gNumPlayers);
 					playerDeathSystem->Init(gNumPlayers);
+					
+					gStageSelector.Reset();
 				}
 				else
 				{
+					gStageSelector.Reset();
 					std::cout << "\nFailed to load level!\n";
 					quitGame = true;
 				}

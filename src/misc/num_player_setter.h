@@ -16,10 +16,8 @@
 
 struct NumbersBox
 {	
-	
 	Rectangle render_rect;
 	std::string text;
-	
 };
 
 class NumPlayerSetter

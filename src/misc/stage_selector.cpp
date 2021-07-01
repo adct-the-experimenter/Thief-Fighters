@@ -153,3 +153,10 @@ void StageSelector::sound()
 bool StageSelector::MoveToNextStateBool(){return move_next_state;}
 
 std::uint8_t StageSelector::StageSelected(){return m_stage_selected;}
+
+void StageSelector::Reset()
+{
+	stage_confirmation = false;
+	m_stage_selected = 0;
+	move_next_state = false;
+}

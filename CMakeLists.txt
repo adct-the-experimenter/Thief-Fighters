@@ -93,7 +93,7 @@ src/main.cpp
 src/misc/StageManager.cpp
 src/misc/globalvariables.cpp
 src/misc/MediaLoader.cpp
-src/misc/num_player_setter.cpp
+src/misc/game_mode_selector.cpp src/misc/num_player_setter.cpp
 src/misc/char_selector.cpp
 src/misc/CharacterAssetManager.cpp
 src/misc/stage_selector.cpp

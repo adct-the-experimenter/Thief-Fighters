@@ -26,7 +26,7 @@
 #include "misc/char_selector.h" //for CharacterSelector class
 #include "misc/stage_selector.h" //for StageSelector class
 #include "misc/num_player_setter.h" //for NumPlayerSetter class
-
+#include "misc/game_mode_selector.h" //for GameModeSelector class
 
 
 #include <string>
@@ -50,6 +50,7 @@ KeyboardInput gKeyboardInput;
 KeyboardTypingInputHandler gKeyboardTypingInputHandler;
 
 NumPlayerSetter gNumPlayerSetter;
+GameModeSelector gGameModeSelector;
 
 std::vector <Entity> entities(MAX_ENTITIES);
 
@@ -131,6 +132,7 @@ int main(int argc, char* args[])
 		gControllerInputHandler.Init(gNumPlayers);
 		
 		gNumPlayerSetter.Init();
+		gGameModeSelector.Init();
 		
 		InitMainECS();
 		
@@ -200,12 +202,19 @@ void handle_events()
 	{
 		case GameState::TITLE_MENU:
 		{
-			gNumPlayerSetter.handle_input(gControllerInput,gKeyboardInput);
+			if(!gGameModeSelector.MoveToNextStateBool())
+			{
+				gGameModeSelector.handle_input(gControllerInput,gKeyboardInput);
+			}
+			else
+			{
+				gNumPlayerSetter.handle_input(gControllerInput,gKeyboardInput);
+			}
+			
 			break;
 		}
 		case GameState::CHAR_SELECTOR:
 		{
-			//run logic for character creator system here
 			gCharSelector.handle_input(gControllerInput,gKeyboardInput);
 			break;
 		}
@@ -236,10 +245,16 @@ void handle_events()
 			
 			break;
 		}
+		case GameState::METROIDVANIA_GAME:
+		{
+			break;
+		}
 	}
 }
 
 static bool show_restart_game_message = false;
+
+static std::uint8_t game_mode_selected = 0;
 
 void logic()
 {
@@ -254,12 +269,16 @@ void logic()
 		{
 			bool moveNextState = false;
 			
-			//logic for game mode setter 
-			
-			
+			//logic for game mode setter 	
 			//logic for num player setter
-			
-			gNumPlayerSetter.logic();
+			if(!gGameModeSelector.MoveToNextStateBool())
+			{
+				gGameModeSelector.logic();
+			}
+			else
+			{
+				gNumPlayerSetter.logic();
+			}
 			
 			//if need to move to next state
 			if(gNumPlayerSetter.MoveToNextStateBool())
@@ -268,7 +287,10 @@ void logic()
 				
 				gNumPlayers = gNumPlayerSetter.GetNumberOfPlayers();
 				
+				game_mode_selected = gGameModeSelector.GetModeSelected();
+				
 				gNumPlayerSetter.Reset();
+				gGameModeSelector.Reset();
 				
 			}
 			
@@ -312,10 +334,16 @@ void logic()
 					quitGame = true;
 				}
 				
+				switch(game_mode_selected)
+				{
+					//versus fight game mode
+					case 0:{ m_game_state = GameState::STAGE_SELECTOR;  break;}
+					//metroidvania mode
+					case 1:{ m_game_state = GameState::METROIDVANIA_GAME; break;}
+				}
+				
 				//initialize stage selector
 				gStageSelector.Init(gStageManager.GetNumberOfStagesInitialized());
-				
-				m_game_state = GameState::STAGE_SELECTOR;
 				
 				gCharSelector.Reset();
 			}
@@ -338,9 +366,13 @@ void logic()
 					gStageManager.PlacePlayersInStage(gNumPlayers);
 					attackPowerMechanicSystem->Init(gNumPlayers);
 					playerDeathSystem->Init(gNumPlayers);
+					
+					gStageSelector.Reset();
 				}
 				else
 				{
+					gStageSelector.Reset();
+					
 					std::cout << "\nFailed to load level!\n";
 					quitGame = true;
 				}
@@ -427,7 +459,24 @@ void logic()
 		}
 		case GameState::METROIDVANIA_GAME:
 		{
+			//for now remove components from player and go back to title menu
+			
+			//remove components of players in game
+			for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
+			{
+				gCoordinator.RemoveComponent<InputReact>(entity_it);
+				gCoordinator.RemoveComponent<CollisionBox>(entity_it);
+				gCoordinator.RemoveComponent<Animation>(entity_it);
+				gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
+				gCoordinator.RemoveComponent<Player>(entity_it);
+				gCoordinator.RemoveComponent<Transform2D>(entity_it);
+				gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
+				gCoordinator.RemoveComponent<Gravity2D>(entity_it);
+				gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
+			}
+				
 			m_game_state = GameState::TITLE_MENU;
+			
 			break;
 		}
 	}
@@ -455,8 +504,15 @@ void render()
 		{
 			DrawTexture(title_menu_texture, 0, 0, WHITE);
 			
-			gNumPlayerSetter.render();
-			
+			if(!gGameModeSelector.MoveToNextStateBool())
+			{
+				gGameModeSelector.render();
+			}
+			else
+			{
+				gNumPlayerSetter.render();
+			}
+						
 			break;
 		}
 		case GameState::CHAR_SELECTOR:
@@ -510,6 +566,11 @@ void render()
 				DrawText("Winning player press start to return to title screen to restart game.", 20,15,12, GOLD);
 			}
 						
+			break;
+		}
+		case GameState::METROIDVANIA_GAME:
+		{
+			
 			break;
 		}
 	}

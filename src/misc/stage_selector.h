@@ -64,6 +64,8 @@ public:
 	
 	std::uint8_t StageSelected();	
 	
+	void Reset();
+	
 private:
 
 	//vector to hold pointers to player entities

@@ -115,7 +115,7 @@ void NumPlayerSetter::logic()
 void NumPlayerSetter::render()
 {
 	
-	//render body part slots
+	//render  slots
 	for(size_t i = 0; i < num_players_boxes.size(); i++)
 	{
 		

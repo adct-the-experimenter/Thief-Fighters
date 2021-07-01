@@ -10,7 +10,7 @@
 
 #script:
 
-VERSION=3.0
+VERSION=3.1
 
 if [ -d "build" ]; then
 	echo "build directory exists."
