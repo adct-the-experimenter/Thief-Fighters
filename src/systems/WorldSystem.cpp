@@ -7,7 +7,11 @@
 #include <iostream>
 #include <cmath>
 
+#include "misc/level_maps.h"
+
 extern Coordinator gCoordinator;
+
+World world_one;
 
 void WorldSystem::Init()
 {
@@ -18,31 +22,32 @@ void WorldSystem::Init()
 
 void WorldSystem::logic(float& dt)
 {
-	
-	auto& player = gCoordinator.GetComponent<Player>(entity)
-	auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
-	auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
-	
-	//for all players
+	for (auto const& entity : mEntities)
+	{
+		auto& player = gCoordinator.GetComponent<Player>(entity);
+		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
+		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
 		
-		//get world that player is in
-		//get player location in world
-		
-		
-		
-		
-		//if player collides with transportation
-			//handle transportation of players
+		//for all players
 			
-			//prevent non-camera lead player from inhabiting world alone
+			//get world that player is in
+			//get player location in world
 			
-			//if world is not already in active use, load the tiles for it
 			
-			//change world that player is in
-			//change player location in world
 			
-			//set which camera player is in
-	
+			
+			//if player collides with transportation
+				//handle transportation of players
+				
+				//prevent non-camera lead player from inhabiting world alone
+				
+				//if world is not already in active use, load the tiles for it
+				
+				//change world that player is in
+				//change player location in world
+				
+				//set which camera player is in
+	}
 			
 }
 

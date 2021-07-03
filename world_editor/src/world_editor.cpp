@@ -4,7 +4,7 @@
 
 #include <cmath>
 
-World world_edited;
+World world_one;
 
 WorldEditor::WorldEditor()
 {
@@ -91,36 +91,69 @@ void WorldEditor::logic()
 		
 		Rectangle* camera_ptr = m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer();
 		
-		size_t num_tile_horizontal = 220;
+		size_t num_tiles_horizontal = 220;
+		
+		//render 9 rows of tiles
+	
+		size_t start_tiles[9];
+		size_t end_tiles[9];
+		
+		//get index based on top left corner of camera
 		size_t horiz_index = trunc(camera_ptr->x / 30 );
-		size_t vert_index = trunc( (camera_ptr->y + 30) / 30 ) * num_tile_horizontal;
+		size_t vert_index = trunc( camera_ptr->y / 30 ) * num_tiles_horizontal;
 		
-		size_t start_tile = horiz_index + vert_index;
-		
-		horiz_index = trunc( (camera_ptr->x + camera_ptr->width) / 30 );
-		vert_index = trunc( ( (camera_ptr->y + camera_ptr->height) + 30) / 30 ) * num_tile_horizontal;
-		
-		size_t end_tile = horiz_index + vert_index;
-		
-		for(size_t i = start_tile; i < end_tile; i++)
+		//initialize start tiles
+		for(size_t i = 0; i < 9; i++)
 		{
-			
-			Rectangle box = {world_edited.tiles_vector[i].x - camera_ptr->x,
-							world_edited.tiles_vector[i].y - camera_ptr->y,
-							30,30};
-							
-			//set tile type in array
-			if(MouseInBox(m_mouseX,m_mouseY,box))
-			{
-				if(m_tile_selector.current_tile)
-				{
-					world_edited.tiles_vector[i].frame_clip_ptr = &m_tile_selector.current_tile->frame_clip;
-					world_edited.tiles_vector[i].type = m_tile_selector.current_tile->type;
-					world_edited.tiles_vector[i].tile_id = m_tile_selector.current_tile->tile_number;
-				}
-				
-			}
+			start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
+			if(start_tiles[i] > world_one.tiles_vector.size()){start_tiles[i] = world_one.tiles_vector.size() - 1;}
 		}
+		
+		//get index based on top right corner of camera
+		horiz_index = trunc( (camera_ptr->x + camera_ptr->width) / 30 );
+		vert_index = trunc( ( camera_ptr->y + 30) / 30 ) * num_tiles_horizontal;
+		
+		//initialize end tiles
+		for(size_t i = 0; i < 9; i++)
+		{
+			end_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
+			if(end_tiles[i] > world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
+		}
+		
+		
+		for(size_t i = 0; i < 9; i++)
+		{
+			for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
+			{
+				//std::cout << "tile_index: " << tile_index << std::endl;
+				
+				Rectangle box = {world_one.tiles_vector[i].x ,
+							world_one.tiles_vector[i].y ,
+							30,30};
+				
+				//std::cout << "\nmouse : " << mouse_x << " , " << mouse_y << std::endl;
+				//std::cout << "\nbox : " << box.x << " , " << box.y << std::endl;
+				
+				float editor_mouse_x  = mouse_x + camera_ptr->x;
+				float editor_mouse_y  = mouse_y + camera_ptr->y;
+				
+				//set tile type in array
+				if(MouseInBox(editor_mouse_x,editor_mouse_y,box))
+				{
+					std::cout << "Tile clicked on!\n";
+					if(m_tile_selector.current_tile)
+					{
+						world_one.tiles_vector[i].frame_clip_ptr = &m_tile_selector.current_tile->frame_clip;
+						world_one.tiles_vector[i].type = m_tile_selector.current_tile->type;
+						world_one.tiles_vector[i].tile_id = m_tile_selector.current_tile->tile_number;
+					}
+					
+				}
+			}
+			
+			
+		}
+		
 				
 		//if mouse click on the save button
 		if(MouseInBox(m_mouseX,m_mouseY,m_save_button_rect))
@@ -197,11 +230,11 @@ void WorldEditor::render()
 	//{
 	//	if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
 	//	{
-	//		RenderLevelMapRelativeToCamera(&world_edited,*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer());
+	//		RenderLevelMapRelativeToCamera(&world_one,*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer());
 	//	}
 		
 	//}
-	RenderLevelMapRelativeToCamera(&world_edited,*m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer());
+	RenderLevelMapRelativeToCamera(&world_one,*m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer());
 	
 	
 	//render tile box 
@@ -211,7 +244,7 @@ void WorldEditor::render()
 						m_tile_selector.select_tiles[i].select_box.y};
 		
 		//render texture
-		DrawTextureRec(world_edited.tilesheet_texture, 
+		DrawTextureRec(world_one.tilesheet_texture, 
 						   m_tile_selector.select_tiles[i].frame_clip, 
 						   pos, 
 						   WHITE);
@@ -264,7 +297,7 @@ bool WorldEditor::LoadDataBasedOnTilesheetDescription(std::string filepath)
     
     
     //load tile sheet
-    world_edited.tilesheet_texture = LoadTexture(tilesheet_path.c_str());
+    world_one.tilesheet_texture = LoadTexture(tilesheet_path.c_str());
         
     //set up tile selector based on data
     pugi::xml_node tileRoot = root.child("Tiles");
@@ -406,7 +439,7 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 			tile.frame_clip_ptr = &frame_clip_map[tile.tile_id];
 			
 			//assign to vector
-			world_edited.tiles_vector[iterator] = tile;
+			world_one.tiles_vector[iterator] = tile;
 			
 			iterator++;
 		}
@@ -422,7 +455,7 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 		size_t tile_width = 30;
 		
 		//initialize tile position
-		for(size_t i = 0; i < world_edited.tiles_vector.size(); i++)
+		for(size_t i = 0; i < world_one.tiles_vector.size(); i++)
 		{
 			if(i % num_tiles_horiz == 0)
 			{
@@ -430,8 +463,8 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 				y_offset += tile_height;
 			}
 			
-			world_edited.tiles_vector[i].x = x_offset;
-			world_edited.tiles_vector[i].y = y_offset;
+			world_one.tiles_vector[i].x = x_offset;
+			world_one.tiles_vector[i].y = y_offset;
 			
 			x_offset += tile_width;
 		}
@@ -448,7 +481,7 @@ bool WorldEditor::LoadLevel()
 	size_t num_tiles_horiz = 220;
 	size_t square_area = num_tiles_horiz * num_tiles_horiz;
 	
-	world_edited.tiles_vector.resize(square_area);
+	world_one.tiles_vector.resize(square_area);
 	
 	//load the xml file containing info on tile level positions and tile types
 	
@@ -475,45 +508,45 @@ bool WorldEditor::MakeLevel()
 		return false;
 	}
 	
-	world_edited.in_active_use = true;
+	world_one.in_active_use = true;
 	
 	size_t num_tiles_horiz = 220;
 	size_t square_area = num_tiles_horiz * num_tiles_horiz;
 	
-	world_edited.tiles_vector.resize(square_area);
+	world_one.tiles_vector.resize(square_area);
 	
 	//number of horizontal tiles
 	//10 sections * 640 pixels/section / 30 pixels/tile ~= 220
 	size_t tile_height = 30;
 	size_t tile_width = 30;
 	
-	bool row_platforms_bool = false;
 	
 	size_t x_offset = 0;
 	size_t y_offset = 0;
 	
+	size_t flat_platform_tile = world_one.tiles_vector.size() - num_tiles_horiz - 1;
+	
 	//initialize tile position and tile type
-	for(size_t i = 0; i < world_edited.tiles_vector.size(); i++)
+	for(size_t i = 0; i < world_one.tiles_vector.size(); i++)
 	{
 		if(i % num_tiles_horiz == 0)
 		{
 			x_offset = 0;
 			y_offset += tile_height;
-			row_platforms_bool = !row_platforms_bool;
 		}
 		
-		world_edited.tiles_vector[i].x = x_offset;
-		world_edited.tiles_vector[i].y = y_offset;
+		world_one.tiles_vector[i].x = x_offset;
+		world_one.tiles_vector[i].y = y_offset;
 		
-		world_edited.tiles_vector[i].tile_id = 0;
-		world_edited.tiles_vector[i].type = TileType::BACKGROUND;
-		if(row_platforms_bool)
+		world_one.tiles_vector[i].tile_id = 0;
+		world_one.tiles_vector[i].type = TileType::BACKGROUND;
+		if(i > flat_platform_tile)
 		{
-			world_edited.tiles_vector[i].tile_id = 1;
-			world_edited.tiles_vector[i].type = TileType::PUSH_BACK;
+			world_one.tiles_vector[i].tile_id = 1;
+			world_one.tiles_vector[i].type = TileType::PUSH_BACK;
 		}
 		
-		world_edited.tiles_vector[i].frame_clip_ptr = &frame_clip_map[world_edited.tiles_vector[i].tile_id];
+		world_one.tiles_vector[i].frame_clip_ptr = &frame_clip_map[world_one.tiles_vector[i].tile_id];
 		
 		x_offset += tile_width;
 	}
@@ -543,7 +576,7 @@ void WorldEditor::SaveDataToXMLFile(std::string filepath)
     //tilesheetNode.append_attribute("path").set_value( m_tilesheet_path.c_str() );
     
     //save number of tiles in level
-	//std::cout << "Number of tiles: " << world_edited.size() << std::endl;
+	//std::cout << "Number of tiles: " << world_one.size() << std::endl;
 	
 	//pugi::xml_node numTilesNode = root.append_child("NumberOfTiles");
 	//numTilesNode.append_attribute("num").set_value( std::to_string(m_tiles_vec.size()).c_str() );
@@ -566,19 +599,19 @@ void WorldEditor::SaveDataToXMLFile(std::string filepath)
     
     //save tile type
 		
-	for(size_t i = 0; i < world_edited.tiles_vector.size(); i++)
+	for(size_t i = 0; i < world_one.tiles_vector.size(); i++)
 	{
 		 // Add child based on tile type
 		pugi::xml_node nodeChild = tilesNode.append_child("Tile");
 		
-		switch(world_edited.tiles_vector[i].type)
+		switch(world_one.tiles_vector[i].type)
 		{
 			case TileType::PUSH_BACK:{ nodeChild.append_attribute("type").set_value("PUSHBACK"); break;}
 			case TileType::BACKGROUND:{ nodeChild.append_attribute("type").set_value("BACKGROUND"); break;}
 			default:{nodeChild.append_attribute("type").set_value("NONE"); std::cout << "Tile type not handled! Placing None.\n"; break;}
 		}
 		
-		nodeChild.append_attribute("id").set_value( std::to_string(world_edited.tiles_vector[i].tile_id).c_str() );
+		nodeChild.append_attribute("id").set_value( std::to_string(world_one.tiles_vector[i].tile_id).c_str() );
 		
 	}
 
@@ -608,7 +641,7 @@ void WorldEditor::SaveLevel()
 
 void WorldEditor::FreeLevel()
 {
-	UnloadTexture(world_edited.tilesheet_texture);
+	UnloadTexture(world_one.tilesheet_texture);
 }
 
 void WorldEditor::SetPointerToCameraManager(CameraManager* cam_manager_ptr){m_camera_manager_ptr = cam_manager_ptr;}

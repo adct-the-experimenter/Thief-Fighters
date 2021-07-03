@@ -91,12 +91,14 @@ struct World
 
 //The 4 worlds that players can inhabit simultaneously
 //not actually world names
+
+//by default world one is edited by world editor
+
 extern World world_one;
 extern World world_two;
 extern World world_three;
 extern World world_four;
 
-//the world that is being edited in world editor
-extern World world_edited;
+
 
 #endif

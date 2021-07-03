@@ -658,7 +658,7 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				transform.position.x += 3*rigidBody.velocity.x * dt;
 				transform.position.y += rigidBody.velocity.y * dt;
 				
-				if(world_edited.in_active_use)
+				if(world_one.in_active_use)
 				{
 					if(collisionBox.world_id == 0)
 					{
@@ -668,7 +668,7 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 											dt,
 											collisionBox.width, collisionBox.height,
 											physics_type_comp.grounded,
-											&world_edited);
+											&world_one);
 					}
 					
 				}

@@ -90,7 +90,7 @@ endif()
 
 set(SOURCES 
 src/main.cpp
-src/misc/StageManager.cpp
+src/misc/StageManager.cpp src/systems/WorldSystem.cpp
 src/misc/globalvariables.cpp
 src/misc/MediaLoader.cpp
 src/misc/game_mode_selector.cpp src/misc/num_player_setter.cpp
