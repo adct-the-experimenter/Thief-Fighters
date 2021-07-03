@@ -106,18 +106,17 @@ void WorldEditor::logic()
 		for(size_t i = 0; i < 9; i++)
 		{
 			start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
-			if(start_tiles[i] > world_one.tiles_vector.size()){start_tiles[i] = world_one.tiles_vector.size() - 1;}
+			if(start_tiles[i] >= world_one.tiles_vector.size()){start_tiles[i] = world_one.tiles_vector.size() - 2;}
 		}
 		
-		//get index based on top right corner of camera
-		horiz_index = trunc( (camera_ptr->x + camera_ptr->width) / 30 );
-		vert_index = trunc( ( camera_ptr->y + 30) / 30 ) * num_tiles_horizontal;
+		//get camera width offset
+		size_t camera_offset_width = trunc( camera_ptr->width / 30 );
 		
 		//initialize end tiles
 		for(size_t i = 0; i < 9; i++)
 		{
-			end_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
-			if(end_tiles[i] > world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
+			end_tiles[i] = start_tiles[i] + camera_offset_width;
+			if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
 		}
 		
 		
@@ -127,25 +126,29 @@ void WorldEditor::logic()
 			{
 				//std::cout << "tile_index: " << tile_index << std::endl;
 				
-				Rectangle box = {world_one.tiles_vector[i].x ,
-							world_one.tiles_vector[i].y ,
+				Rectangle box = {world_one.tiles_vector[tile_index].x ,
+							world_one.tiles_vector[tile_index].y ,
 							30,30};
 				
 				//std::cout << "\nmouse : " << mouse_x << " , " << mouse_y << std::endl;
 				//std::cout << "\nbox : " << box.x << " , " << box.y << std::endl;
 				
 				float editor_mouse_x  = mouse_x + camera_ptr->x;
-				float editor_mouse_y  = mouse_y + camera_ptr->y;
+				float editor_mouse_y  =  camera_ptr->y - mouse_y;
+				
+				//std::cout << "\neditor mouse : " << editor_mouse_x << " , " << editor_mouse_y << std::endl;
 				
 				//set tile type in array
 				if(MouseInBox(editor_mouse_x,editor_mouse_y,box))
 				{
 					std::cout << "Tile clicked on!\n";
+					std::cout << "\nmouse : " << mouse_x << " , " << mouse_y << std::endl;
+					std::cout << "\nbox : " << box.x << " , " << box.y << std::endl;
 					if(m_tile_selector.current_tile)
 					{
-						world_one.tiles_vector[i].frame_clip_ptr = &m_tile_selector.current_tile->frame_clip;
-						world_one.tiles_vector[i].type = m_tile_selector.current_tile->type;
-						world_one.tiles_vector[i].tile_id = m_tile_selector.current_tile->tile_number;
+						world_one.tiles_vector[tile_index].frame_clip_ptr = &m_tile_selector.current_tile->frame_clip;
+						world_one.tiles_vector[tile_index].type = m_tile_selector.current_tile->type;
+						world_one.tiles_vector[tile_index].tile_id = m_tile_selector.current_tile->tile_number;
 					}
 					
 				}
@@ -188,15 +191,15 @@ static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
 		if(start_tiles[i] > world_ptr->tiles_vector.size()){start_tiles[i] = world_ptr->tiles_vector.size() - 1;}
 	}
 	
-	//get index based on top right corner of camera
-	horiz_index = trunc( (camera.x + camera.width) / 30 );
-	vert_index = trunc( ( camera.y + 30) / 30 ) * num_tiles_horizontal;
+	//get camera width offset
+	//added 2 tiles to prevent tearing when player is walking
+	size_t camera_offset_width = trunc( camera.width / 30 ) + 2;
 	
 	//initialize end tiles
 	for(size_t i = 0; i < 9; i++)
 	{
-		end_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
-		if(end_tiles[i] > world_ptr->tiles_vector.size()){end_tiles[i] = world_ptr->tiles_vector.size() - 1;}
+		end_tiles[i] = start_tiles[i] + camera_offset_width;
+		if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
 	}
 	
 	
@@ -204,7 +207,6 @@ static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
 	{
 		for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
 		{
-			//std::cout << "tile_index: " << tile_index << std::endl;
 			
 			Vector2 pos = {world_ptr->tiles_vector.at(tile_index).x - camera.x,world_ptr->tiles_vector.at(tile_index).y - camera.y};
 			//std::cout << "pos : " << pos.x << " , " << pos.y << std::endl;
