@@ -2,6 +2,8 @@
 
 #include "pugixml.hpp"
 
+#include <cmath>
+
 World world_edited;
 
 WorldEditor::WorldEditor()
@@ -25,56 +27,141 @@ WorldEditor::~WorldEditor()
 	
 }
 
+void WorldEditor::handle_input_mouse()
+{
+	mouse_click_bool = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+			
+	if(mouse_click_bool)
+	{
+		mouse_x = GetMousePosition().x;
+		mouse_y = GetMousePosition().y;
+	}
+}
+
+static bool MouseInBox(float mouseX, float mouseY, Rectangle box)	
+{
+	if( mouseX < box.x)
+	{
+		return false;
+	}
+	else if(mouseX > box.x + box.width)
+	{
+		return false;
+	}
+	
+	if(mouseY < box.y)
+	{
+		return false;
+	}
+	else if(mouseY > box.y + box.height)
+	{
+		return false;
+	}
+	
+	return true;
+}
 
 void WorldEditor::logic()
 {
 	// if mouse click
-		
+	if(mouse_click_bool)
+	{
 		//if mouse click on the tile selection relative to camera
 		//change tile selection relative to camera
+		for(size_t i = 0; i < m_tile_selector.select_tiles.size(); i++)
+		{
+			Rectangle box = {m_tile_selector.select_tiles[i].select_box.x,
+							m_tile_selector.select_tiles[i].select_box.y,
+							30,30};
+							
+			//set tile type in array
+			if(MouseInBox(mouse_x,mouse_y,box))
+			{
+				//set current tile to the one that was clicked on. use index of vector to set pointer
+				m_tile_selector.current_tile = &m_tile_selector.select_tiles[i];
+				m_tile_selector.current_tile_index = i;
+			}
+			
+		}
 		
 		//else 
 		//if mouse click on map relative to camera
 		//place tile relative to camera
+		//if area for placing tiles was clicked on
 		
+		Rectangle* camera_ptr = m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer();
+		
+		size_t num_tile_horizontal = 220;
+		size_t horiz_index = trunc(camera_ptr->x / 30 );
+		size_t vert_index = trunc( (camera_ptr->y + 30) / 30 ) * num_tile_horizontal;
+		
+		size_t start_tile = horiz_index + vert_index;
+		
+		horiz_index = trunc( (camera_ptr->x + camera_ptr->width) / 30 );
+		vert_index = trunc( ( (camera_ptr->y + camera_ptr->height) + 30) / 30 ) * num_tile_horizontal;
+		
+		size_t end_tile = horiz_index + vert_index;
+		
+		for(size_t i = start_tile; i < end_tile; i++)
+		{
+			
+			Rectangle box = {world_edited.tiles_vector[i].x - camera_ptr->x,
+							world_edited.tiles_vector[i].y - camera_ptr->y,
+							30,30};
+							
+			//set tile type in array
+			if(MouseInBox(m_mouseX,m_mouseY,box))
+			{
+				if(m_tile_selector.current_tile)
+				{
+					world_edited.tiles_vector[i].frame_clip_ptr = &m_tile_selector.current_tile->frame_clip;
+					world_edited.tiles_vector[i].type = m_tile_selector.current_tile->type;
+					world_edited.tiles_vector[i].tile_id = m_tile_selector.current_tile->tile_number;
+				}
+				
+			}
+		}
+				
 		//if mouse click on the save button
+		if(MouseInBox(m_mouseX,m_mouseY,m_save_button_rect))
+		{
+			//Save file 
+			WorldEditor::SaveDataToXMLFile(m_tiles_placement_xml_file_path);
+		}
+	}
+		
 	
 }
 
 static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
 {
-	bool render = true;
 	
+		
+	size_t num_tile_horizontal = 220;
+	size_t horiz_index = trunc(camera.x / 30 );
+	size_t vert_index = trunc( (camera.y + 30) / 30 ) * num_tile_horizontal;
 	
-	if(render)
+	size_t start_tile = horiz_index + vert_index;
+	
+	horiz_index = trunc( (camera.x + camera.width) / 30 );
+	vert_index = trunc( ( (camera.y + camera.height) + 30) / 30 ) * num_tile_horizontal;
+	
+	size_t end_tile = horiz_index + vert_index;
+		
+	for(size_t i = start_tile; i < end_tile; i++)
 	{
-		for(size_t i = 0; i < world_ptr->tiles_vector.size(); i++)
+			
+		Vector2 pos = {world_ptr->tiles_vector.at(i).x - camera.x,world_ptr->tiles_vector.at(i).y - camera.y};
+		if(world_ptr->tiles_vector.at(i).frame_clip_ptr)
 		{
-			bool renderTile = false;
-			
-			if( (world_ptr->tiles_vector.at(i).x >= camera.x) && 
-				(world_ptr->tiles_vector.at(i).x <= camera.x + camera.width) &&
-				(world_ptr->tiles_vector.at(i).y >= camera.y) &&
-				(world_ptr->tiles_vector.at(i).y <= camera.y + camera.height))
-			{
-				renderTile = true;
-			}
-			
-			if( renderTile )
-			{
-				
-				Vector2 pos = {world_ptr->tiles_vector.at(i).x - camera.x,world_ptr->tiles_vector.at(i).y - camera.y};
-				if(world_ptr->tiles_vector.at(i).frame_clip_ptr)
-				{
-					DrawTextureRec(world_ptr->tilesheet_texture, 
-							   *world_ptr->tiles_vector.at(i).frame_clip_ptr, 
-							   pos, 
-							   WHITE);
-				}
-			}
-			
+			DrawTextureRec(world_ptr->tilesheet_texture, 
+					   *world_ptr->tiles_vector.at(i).frame_clip_ptr, 
+					   pos, 
+					   WHITE);
 		}
+		
 	}
+	
 }
 
 void WorldEditor::render()

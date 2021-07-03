@@ -44,6 +44,8 @@ public:
 	~WorldEditor();
 
 //game loop
+	void handle_input_mouse();
+	
 	void logic();
 	
 	void render();
@@ -91,6 +93,10 @@ private:
 	
 	//map to keep track of the tile number of a tile from tile sheet.
 	std::map <std::uint32_t, Rectangle> frame_clip_map;
+	
+	bool mouse_click_bool;
+	std::uint32_t mouse_x;
+	std::uint32_t mouse_y;
 
 //XML file info handling
 

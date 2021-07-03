@@ -285,6 +285,8 @@ void handle_events()
 		}
 		case GameState::METROIDVANIA_GAME:
 		{
+			gWorldEditor.handle_input_mouse();
+			
 			input_ReactSystem->Update(gControllerInput);
 			
 			break;
@@ -521,6 +523,7 @@ void logic()
 		}
 		case GameState::METROIDVANIA_GAME:
 		{
+			gWorldEditor.logic();
 			
 			//handle activating powers based on input
 			attackPowerMechanicSystem->HandlePowerActivation(dt);

@@ -359,7 +359,18 @@ void CharacterSelector::logic()
 			player_comp.taking_damage = false;
 			player_comp.state = PlayerState::IDLE;
 			player_comp.hurt_invincible = false;
-								
+			
+			switch(i)
+			{
+				case 0:
+				{
+					player_comp.camera_lead = true;
+					player_comp.camera_num_leader = 0;
+					break;
+				}
+			}
+			
+			
 			gCoordinator.AddComponent(
 							*player_entities_vec[i],
 							player_comp

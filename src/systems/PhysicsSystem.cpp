@@ -351,6 +351,7 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 	}
 	
 	tiles_around_object[4] = object_tile_index;
+	
 	tiles_around_object[5] = object_tile_index + 1;
 	
 	if(object_tile_index < num_tile_horizontal*219)
@@ -361,20 +362,18 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 	}
 	else
 	{
-		tiles_around_object[6] = num_tile_horizontal*220 - 1;
-		tiles_around_object[7] = num_tile_horizontal*220 - 1;
+		tiles_around_object[6] = num_tile_horizontal*220 - 3;
+		tiles_around_object[7] = num_tile_horizontal*220 - 2;
 		tiles_around_object[8] = num_tile_horizontal*220 - 1;
 	}
 	
 	
-	std::cout << "\nobject tile index: " << object_tile_index << std::endl;
 	
 	//for tiles
 	for(size_t i = 0; i < tiles_around_object.size(); i++)
 	{
 		size_t& tile_index = tiles_around_object[i];
 		
-		std::cout << "\n tile index: " << tile_index << std::endl;
 		
 		if(world_ptr->tiles_vector[tile_index].type == TileType::PUSH_BACK)
 		{
