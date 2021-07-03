@@ -18,6 +18,8 @@ public:
 	
 	void Init_MetroidVaniaMode(CameraManager* camera_manager_ptr);
 	void Update_MetroidVaniaMode();
+	
+	void Update_MetroidVaniaMode_Editor();
 		
 private:
 

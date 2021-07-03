@@ -95,9 +95,13 @@ private:
 	std::map <std::uint32_t, Rectangle> frame_clip_map;
 	
 	bool mouse_click_bool;
-	std::uint32_t mouse_x;
-	std::uint32_t mouse_y;
-
+	float mouse_x;
+	float mouse_y;
+	
+	//for pushing the rest of the map to right to select tiles
+	float m_tiles_startx;
+	float m_tiles_starty;
+	
 //XML file info handling
 
 	bool LoadDataBasedOnTilesheetDescription(std::string filepath);
@@ -108,6 +112,9 @@ private:
 
 //camera
 	CameraManager* m_camera_manager_ptr;
+	
+	void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera);
+	
 };
 
 

@@ -122,3 +122,42 @@ void RenderSystem::Update_MetroidVaniaMode()
 		}
 	}
 }
+
+void RenderSystem::Update_MetroidVaniaMode_Editor()
+{
+	if(m_camera_manager_ptr)
+	{
+		//for every entity
+		for (auto const& entity : mEntities)
+		{
+			auto& render_comp = gCoordinator.GetComponent<RenderModelComponent>(entity);
+			auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
+			
+			for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
+			{
+				
+				//if renderable object is within camera bounds.
+				if(render_comp.render)
+				{
+					
+					if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
+					{
+						Rectangle* camera_ptr = m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer();
+						
+						//adjust render position relative to camera position
+						Vector2 adjusted_pos;
+						
+						adjusted_pos.x = transform.position.x - camera_ptr->x + 200;
+						adjusted_pos.y = transform.position.y - camera_ptr->y;
+						
+						//render texuture according to frame, adjusted camera composition, tint
+						DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
+					}
+					
+				}
+			}
+			
+			
+		}
+	}
+}

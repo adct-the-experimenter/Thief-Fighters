@@ -689,7 +689,7 @@ void render()
 			gWorldEditor.render();
 			
 			//render any entity that has render component
-			renderSystem->Update_MetroidVaniaMode();
+			renderSystem->Update_MetroidVaniaMode_Editor();
 			
 			break;
 		}

@@ -20,6 +20,10 @@ WorldEditor::WorldEditor()
 	m_tile_selector.y = 100;
 	
 	m_save_button_rect = {130,50,60,30};
+	
+	//tile placement area
+	m_tiles_startx = 250;
+	m_tiles_starty = 200;
 }
 
 WorldEditor::~WorldEditor()
@@ -126,15 +130,16 @@ void WorldEditor::logic()
 			{
 				//std::cout << "tile_index: " << tile_index << std::endl;
 				
-				Rectangle box = {world_one.tiles_vector[tile_index].x ,
-							world_one.tiles_vector[tile_index].y ,
+				Rectangle box = {world_one.tiles_vector[tile_index].x,
+							world_one.tiles_vector[tile_index].y,
 							30,30};
-				
+							
+				box.x += m_tiles_startx;
 				//std::cout << "\nmouse : " << mouse_x << " , " << mouse_y << std::endl;
 				//std::cout << "\nbox : " << box.x << " , " << box.y << std::endl;
 				
 				float editor_mouse_x  = mouse_x + camera_ptr->x;
-				float editor_mouse_y  =  camera_ptr->y - mouse_y;
+				float editor_mouse_y  = mouse_y + camera_ptr->y;
 				
 				//std::cout << "\neditor mouse : " << editor_mouse_x << " , " << editor_mouse_y << std::endl;
 				
@@ -169,7 +174,7 @@ void WorldEditor::logic()
 	
 }
 
-static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
+void WorldEditor::RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
 {
 	
 	//number of tiles in a row
@@ -208,7 +213,9 @@ static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
 		for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
 		{
 			
-			Vector2 pos = {world_ptr->tiles_vector.at(tile_index).x - camera.x,world_ptr->tiles_vector.at(tile_index).y - camera.y};
+			Vector2 pos = {world_ptr->tiles_vector.at(tile_index).x - camera.x ,world_ptr->tiles_vector.at(tile_index).y - camera.y };
+			pos.x += m_tiles_startx;
+			
 			//std::cout << "pos : " << pos.x << " , " << pos.y << std::endl;
 			if(world_ptr->tiles_vector.at(tile_index).frame_clip_ptr)
 			{
