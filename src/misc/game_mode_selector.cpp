@@ -1,7 +1,7 @@
 #include "game_mode_selector.h"
 
 
-static std::string game_mode_choices [2] = {"Versus","Story"};
+static std::string game_mode_choices [2] = {"Versus","Story - Alpha"};
 
 GameModeSelector::GameModeSelector()
 {

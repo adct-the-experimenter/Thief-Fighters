@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!--Num must be ordered sequentially for the TileManager and editor to pick it up well.-->
+<TileDescriptionXML>
+	<Tilesheet path="main-world-tilesheet.png"/>
+	<Tiles>
+		<Tile type="BACKGROUND" x="0" y="0" id="0"/>
+		<Tile type="BACKGROUND" x="30" y="0" id="1"/>
+		<Tile type="BACKGROUND" x="60" y="0" id="2"/>
+		<Tile type="BACKGROUND" x="0" y="30" id="3"/>
+		<Tile type="BACKGROUND" x="30" y="30" id="4"/>
+		<Tile type="BACKGROUND" x="60" y="30" id="5"/>
+		<Tile type="PUSHBACK" x="0" y="60" id="6"/>
+	</Tiles>
+</TileDescriptionXML>

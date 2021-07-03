@@ -19,10 +19,20 @@ void CameraSystem::Init(CustomCamera* camera, std::uint8_t num_players)
 
 }
 
-void CameraSystem::Update(float& scale)
+void CameraSystem::Update()
 {
+	//for metroidvania game mode
 	
-
+	//for 4 or less players
+	//number of rectangle clips of world = number of players
+	//follow camera leads
+	
+	
+	//for 5 or more players, handle only 4 rectangle clips of world
+	//follow camera leads
+	//implement bound check on player to prevent non-camera lead player from moving out of
+	//camera bounds
+	
 }
 
 void CameraSystem::update_timer(float& dt){zoom_time_counter += dt;}

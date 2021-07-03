@@ -110,6 +110,9 @@ struct RenderModelComponent
 	Rectangle frame_rect;
 	Color tint;
 	bool render;
+	
+	//camera that entity is in
+	
 };
 
 struct AttackBox

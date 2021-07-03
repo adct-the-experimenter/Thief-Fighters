@@ -14,7 +14,7 @@ public:
 	void Init(CustomCamera* camera_ptr, std::uint8_t num_players);
 	
 	//updates scale according to calculations
-	void Update(float& scale);
+	void Update();
 	
 	void update_timer(float& dt);
 	

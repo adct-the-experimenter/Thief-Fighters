@@ -28,12 +28,15 @@
 #include "misc/num_player_setter.h" //for NumPlayerSetter class
 #include "misc/game_mode_selector.h" //for GameModeSelector class
 
+#include "world_editor.h"
 
 #include <string>
 #include <chrono>
 #include <memory>
 #include <iostream>
 #include <array>
+
+#include <fstream>
 
 //main
 
@@ -108,15 +111,42 @@ StageManager gStageManager;
 
 StageSelector gStageSelector;
 
+
+//world editor variables
+WorldEditor gWorldEditor;
+
+bool createNewMapFile = true; //bool to indicate if new map file will be created
+std::string tilesheet_descr_xml;
+std::string level_file_xml;
+
 bool quitGame = false;
 
 //using render texture of resolution 640x360 to scale it up better by integers.
 RenderTexture2D target;
 int gameScreenWidth = 640;
 int gameScreenHeight = 360;
+
+//function to check console arguments
+int CheckConsoleArgs(int argc, char* argv[]);
 		
 int main(int argc, char* args[])
 {
+	if( CheckConsoleArgs(argc,args) == 0)
+	{
+		return 0;
+	};
+	
+	if(level_file_xml == "" || tilesheet_descr_xml == "")
+	{
+		std::cout << "\nPlease input file path for level file and tilesheet description. \
+					\nUse this command for help. ./thief-fighters-world-editor --help \n";
+		return 0;
+	}
+	else
+	{
+		gWorldEditor.SetLevelFilesToEdit(level_file_xml,tilesheet_descr_xml);
+	}
+	
 	InitRaylibSystem();
 	
 	
@@ -337,15 +367,35 @@ void logic()
 				switch(game_mode_selected)
 				{
 					//versus fight game mode
-					case 0:{ m_game_state = GameState::STAGE_SELECTOR;  break;}
+					case 0:
+					{ 
+						m_game_state = GameState::STAGE_SELECTOR; 
+						
+						//initialize stage selector
+						gStageSelector.Init(gStageManager.GetNumberOfStagesInitialized());
+						
+						gCharSelector.Reset(); 
+						break;
+					}
 					//metroidvania mode
-					case 1:{ m_game_state = GameState::METROIDVANIA_GAME; break;}
+					case 1:
+					{
+						//load the stage to edit
+						 
+						m_game_state = GameState::METROIDVANIA_GAME;
+						
+						//if make level is not sucessful, quit game
+						if(!gWorldEditor.MakeLevel())
+						{
+							std::cout << "\nUnable to successfully make level!\n";
+							quitGame = true;
+						}
+						
+						break;
+					}
 				}
 				
-				//initialize stage selector
-				gStageSelector.Init(gStageManager.GetNumberOfStagesInitialized());
 				
-				gCharSelector.Reset();
 			}
 			
 			break;
@@ -398,7 +448,7 @@ void logic()
 			attackPowerMechanicSystem->HandlePowerActivation(dt);
 			
 			//move players and other entities
-			physicsSystem->Update(dt);
+			physicsSystem->Update_VersusMode(dt);
 			
 			//move attack boxes with players
 			attackPowerMechanicSystem->MoveAttackBoxesWithPlayer(dt);
@@ -461,21 +511,66 @@ void logic()
 		{
 			//for now remove components from player and go back to title menu
 			
-			//remove components of players in game
-			for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
-			{
-				gCoordinator.RemoveComponent<InputReact>(entity_it);
-				gCoordinator.RemoveComponent<CollisionBox>(entity_it);
-				gCoordinator.RemoveComponent<Animation>(entity_it);
-				gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
-				gCoordinator.RemoveComponent<Player>(entity_it);
-				gCoordinator.RemoveComponent<Transform2D>(entity_it);
-				gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
-				gCoordinator.RemoveComponent<Gravity2D>(entity_it);
-				gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
-			}
+			
+				//handle activating powers based on input
+				attackPowerMechanicSystem->HandlePowerActivation(dt);
 				
-			m_game_state = GameState::TITLE_MENU;
+				//move players and other entities
+				physicsSystem->Update_MetroidVaniaMode(dt);
+				
+				//move attack boxes with players
+				attackPowerMechanicSystem->MoveAttackBoxesWithPlayer(dt);
+				
+				//check collisions between players
+				attackPowerMechanicSystem->CollisionDetectionBetweenPlayers();
+				
+				//react to collisions
+				attackPowerMechanicSystem->ReactToCollisions(dt);
+				
+				//perform power transactions if needed so that players can
+				//receive their slain opponent's power
+				attackPowerMechanicSystem->PerformNeededPowerTransactions();
+				
+				//set up frame for render
+				animationSystem->Update(dt);
+				
+				//check for dead players, set bool to stop rendering them
+				playerDeathSystem->Update();
+				
+				if(playerDeathSystem->OnePlayerWon() && gNumPlayers > 1)
+				{
+					show_restart_game_message = true;
+					winning_player = playerDeathSystem->GetPlayerWhoWon();
+				}
+				else if(gNumPlayers == 1)
+				{
+					winning_player = 0;
+				}
+				
+				if(restart_game)
+				{
+					//remove components of players in game
+					for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
+					{
+						gCoordinator.RemoveComponent<InputReact>(entity_it);
+						gCoordinator.RemoveComponent<CollisionBox>(entity_it);
+						gCoordinator.RemoveComponent<Animation>(entity_it);
+						gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
+						gCoordinator.RemoveComponent<Player>(entity_it);
+						gCoordinator.RemoveComponent<Transform2D>(entity_it);
+						gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
+						gCoordinator.RemoveComponent<Gravity2D>(entity_it);
+						gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
+					}
+					
+					//set game state back to title screen
+					m_game_state = GameState::TITLE_MENU;
+					
+					restart_game = false;
+					show_restart_game_message = false;
+					winning_player = -1;
+					playerDeathSystem->Reset();
+				}
 			
 			break;
 		}
@@ -570,6 +665,11 @@ void render()
 		}
 		case GameState::METROIDVANIA_GAME:
 		{
+			//render tiles with cameras
+			
+			cameraSystem->Update();
+			
+			gWorldEditor.render();
 			
 			break;
 		}
@@ -765,3 +865,73 @@ void CloseRaylibSystem()
     SDL_Quit();
 }
 
+int CheckConsoleArgs(int argc, char* argv[])
+{
+	for (size_t i = 1; i < argc; ++i) 
+	{
+		//if path to tile sheet description is given
+		if(std::string(argv[i]) == "--tsd")
+		{
+			if (i + 1 < argc) 
+			{ 
+				// Make sure we aren't at the end of argv!
+				tilesheet_descr_xml = std::string(argv[i+1]); // Increment 'i' so we don't get the argument as the next argv[i].
+				
+				if(tilesheet_descr_xml == "")
+				{
+					std::cout << "Put in an xml file describing layout of frames tile sheet.\
+					\n Example: ./tile-editor --tsd something.xml";
+				}
+					
+				std::ifstream ifile(tilesheet_descr_xml);
+				if((bool)ifile)
+				{
+					std::cout << "Using " << tilesheet_descr_xml << std::endl;
+				}
+				else
+				{
+					std::cout << "Failed to find file " << tilesheet_descr_xml << ". It does not exist!\n";
+					return 0;
+				}
+
+			}
+		}
+		//if path to already created xml file is given
+		else if(std::string(argv[i]) == "--level_file")
+		{
+			if (i + 1 < argc) 
+			{ 
+				// Make sure we aren't at the end of argv!
+				level_file_xml = std::string(argv[i+1]); // Increment 'i' so we don't get the argument as the next argv[i].
+				
+				if(level_file_xml == "")
+				{
+					std::cout << "Put in a level file describing layout of tiles.\
+					\n Example: ./tile-editor --map_file something.xml";
+				}
+					
+				std::ifstream ifile(level_file_xml);
+				if((bool)ifile)
+				{
+					std::cout << "Using " << level_file_xml << std::endl;
+					createNewMapFile = false;;
+				}
+				else
+				{
+					std::cout << "Failed to find file " << level_file_xml << ". It does not exist!\n";
+					std::cout << "Creating new file " << level_file_xml << std::endl;
+					createNewMapFile = true;
+				}
+
+			}
+		}
+		//else if help is called
+		else if(std::string(argv[i]) == "--help")
+		{
+			std::cout << "\nHelp for World Editor\n\n\tflag file \tdescription\n\t--tsd tsd.xml \tSet tilesheet description\n\t--level_file map.xml \tSet file to load and/or save from.\n";
+			return 0;
+		}
+	}
+	
+	return 1;
+}

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1.1)
 
 set (CMAKE_CXX_STANDARD 11)
 
-set(PROJECT_NAME thief-fighters)
+set(PROJECT_NAME thief-fighters-world-editor)
 project (${PROJECT_NAME} LANGUAGES C CXX)
 
 option(DATAPATH "Path to data Directory" ON)
@@ -88,8 +88,9 @@ endif()
 
 
 
-set(SOURCES 
+set( SOURCES 
 src/main.cpp
+src/world_editor.cpp
 ../src/misc/StageManager.cpp
 ../src/misc/globalvariables.cpp
 ../src/misc/MediaLoader.cpp
@@ -120,4 +121,4 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${PROJECT_LINK_LIBS})
 
 #make install ops
-install(TARGETS thief-fighters DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)

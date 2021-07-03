@@ -49,6 +49,7 @@ static bool IsObjectInCameraView(float& posX, float& posY, Rectangle& camera_rec
 
 void RenderSystem::Update()
 {
+	//render player only if in camera. determined by world system
 			
 	if(this->m_camera_ptr)
 	{			
@@ -63,7 +64,7 @@ void RenderSystem::Update()
 			//if renderable object is within camera bounds.
 			if(render_comp.render)
 			{
-				//adjust render position of relative to camera position
+				//adjust render position relative to camera position
 				Vector2 adjusted_pos;
 				adjusted_pos.x = transform.position.x - m_camera_ptr->GetCameraRectPointer()->x;
 				adjusted_pos.y = transform.position.y - m_camera_ptr->GetCameraRectPointer()->y;

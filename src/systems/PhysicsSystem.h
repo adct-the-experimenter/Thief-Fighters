@@ -9,7 +9,9 @@ class PhysicsSystem : public System
 public:
 	void Init();
 
-	void Update(float& dt);
+	void Update_VersusMode(float& dt);
+	
+	void Update_MetroidVaniaMode(float& dt);
 
 private:
 	

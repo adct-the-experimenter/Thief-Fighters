@@ -88,7 +88,7 @@ void render(); //draw visual representation of what happens in world to screen
 void sound(); //play sounds of audio representation of what happens in world 
 
 //game state
-enum class GameState : std::uint8_t {TITLE_MENU=0, CHAR_SELECTOR, STAGE_SELECTOR, TUTORIAL, FIGHT_GAME};
+enum class GameState : std::uint8_t {TITLE_MENU=0, CHAR_SELECTOR, STAGE_SELECTOR, TUTORIAL, FIGHT_GAME, METROIDVANIA_GAME};
 GameState m_game_state = GameState::TITLE_MENU;
 
 //camera to follow players.
@@ -365,7 +365,7 @@ void logic()
 			attackPowerMechanicSystem->HandlePowerActivation(dt);
 			
 			//move players and other entities
-			physicsSystem->Update(dt);
+			physicsSystem->Update_VersusMode(dt);
 			
 			//move attack boxes with players
 			attackPowerMechanicSystem->MoveAttackBoxesWithPlayer(dt);
@@ -421,6 +421,11 @@ void logic()
 				playerDeathSystem->Reset();
 			}
 			
+			
+			break;
+		}
+		case GameState::METROIDVANIA_GAME:
+		{
 			
 			break;
 		}
