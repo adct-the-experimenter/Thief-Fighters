@@ -428,7 +428,8 @@ void CharacterSelector::logic()
 						*player_entities_vec.at(i),
 						CollisionBox{
 							.width = (std::uint32_t){30},
-							.height = (std::uint32_t){58}
+							.height = (std::uint32_t){58},
+							.world_id = (std::uint8_t){0}
 						}
 					);
 			

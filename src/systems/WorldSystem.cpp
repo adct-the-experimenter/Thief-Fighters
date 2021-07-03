@@ -1,5 +1,13 @@
 #include "WorldSystem.h"
 
+#include "core/system.h"
+
+#include "core/coordinator.h"
+
+#include <iostream>
+#include <cmath>
+
+extern Coordinator gCoordinator;
 
 void WorldSystem::Init()
 {
@@ -10,6 +18,10 @@ void WorldSystem::Init()
 
 void WorldSystem::logic(float& dt)
 {
+	
+	auto& player = gCoordinator.GetComponent<Player>(entity)
+	auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
+	auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
 	
 	//for all players
 		

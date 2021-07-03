@@ -15,11 +15,14 @@ public:
 	void Init(CustomCamera* camera);
 
 	void Update();
+	
+	void Init_MetroidVaniaMode(CameraManager* camera_manager_ptr);
+	void Update_MetroidVaniaMode();
 		
 private:
 
 	CustomCamera* m_camera_ptr;
-	
+	CameraManager* m_camera_manager_ptr;
 };
 
 #endif

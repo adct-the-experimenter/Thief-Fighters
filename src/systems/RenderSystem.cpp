@@ -20,6 +20,11 @@ void RenderSystem::Init(CustomCamera* camera)
         
 }
 
+void RenderSystem::Init_MetroidVaniaMode(CameraManager* camera_manager_ptr)
+{
+	m_camera_manager_ptr = camera_manager_ptr;
+}
+
 static bool IsObjectInCameraView(float& posX, float& posY, Rectangle& camera_rect)
 {
 	//half the width and height because the camera is centered on a player.
@@ -73,11 +78,38 @@ void RenderSystem::Update()
 				DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
 			}
 		}
-		
-		
 					
 	}
 		
 	
 }
 
+void RenderSystem::Update_MetroidVaniaMode()
+{
+	if(m_camera_manager_ptr)
+	{
+		//for every entity
+		for (auto const& entity : mEntities)
+		{
+			auto& render_comp = gCoordinator.GetComponent<RenderModelComponent>(entity);
+			auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
+			
+			for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
+			{
+				//if renderable object is within camera bounds.
+				if(render_comp.render)
+				{
+					//adjust render position relative to camera position
+					Vector2 adjusted_pos;
+					adjusted_pos.x = transform.position.x - m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer()->x;
+					adjusted_pos.y = transform.position.y - m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer()->y;
+					
+					//render texuture according to frame, adjusted camera composition, tint
+					DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
+				}
+			}
+			
+			
+		}
+	}
+}

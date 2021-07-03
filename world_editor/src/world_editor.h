@@ -14,6 +14,8 @@
 
 #include <map>
 
+#include "misc/camera.h"
+
 struct SelectableTile
 {
 	std::uint32_t tile_number;
@@ -63,7 +65,10 @@ public:
 	//function to free level edited
 	void FreeLevel();
 	
+	void SetPointerToCameraManager(CameraManager* cam_manager_ptr);
+	
 private:
+
 	
 	//file path to tile placement info xml file
 	std::string m_tiles_placement_xml_file_path;
@@ -94,6 +99,9 @@ private:
 	bool LoadDataFromXMLFile(std::string mapFilePath, std::string tilesheetDescriptionFilePath);
 	
 	void SaveDataToXMLFile(std::string filepath);
+
+//camera
+	CameraManager* m_camera_manager_ptr;
 };
 
 

@@ -61,6 +61,8 @@ struct CollisionBox
 {
 	std::uint32_t width;
 	std::uint32_t height;
+	
+	std::uint8_t world_id;
 };
 
 enum class AnimatedActorType : std::int8_t {NONE=0,PLAYER,ENEMY};
@@ -112,7 +114,7 @@ struct RenderModelComponent
 	bool render;
 	
 	//camera that entity is in
-	
+	std::bitset <4> camera_bitset;
 };
 
 struct AttackBox
@@ -186,6 +188,11 @@ struct Player
 	//done to prevent losing health during after attack an in pain i.e. Invisibility frames
 	bool hurt_invincible;
 	
+	//world id
+	std::uint8_t world_id;
+	
+	bool camera_lead; //indicates if player is camera leader
+	std::uint8_t camera_num_leader; //indicate which camera player is leading
 };
 
 enum class InputReactorType : std::uint8_t { NONE=0, PLAYER, CAR};

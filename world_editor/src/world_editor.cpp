@@ -81,7 +81,15 @@ void WorldEditor::render()
 {
 	
 	//render tiles
-	//RenderLevelMapRelativeToCamera(&world_edited,Rectangle& camera);
+	for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
+	{
+		if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
+		{
+			RenderLevelMapRelativeToCamera(&world_edited,*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer());
+		}
+		
+	}
+	
 	
 	//render tile box 
 	for(size_t i = 0; i < m_tile_selector.select_tiles.size(); i++)
@@ -106,6 +114,7 @@ void WorldEditor::render()
 	
 	DrawRectangleRec(m_save_button_rect, GRAY);
 	DrawText("Save",m_save_button_rect.x,m_save_button_rect.y,12, BLACK);
+	
 }
 
 void WorldEditor::SetLevelFilesToEdit(std::string tiles_placement_xml_file_path,std::string tilesheet_xml_file_path)
@@ -353,6 +362,8 @@ bool WorldEditor::MakeLevel()
 		return false;
 	}
 	
+	world_edited.in_active_use = true;
+	
 	size_t num_tiles_horiz = 220;
 	size_t square_area = num_tiles_horiz * num_tiles_horiz;
 	
@@ -486,3 +497,5 @@ void WorldEditor::FreeLevel()
 {
 	UnloadTexture(world_edited.tilesheet_texture);
 }
+
+void WorldEditor::SetPointerToCameraManager(CameraManager* cam_manager_ptr){m_camera_manager_ptr = cam_manager_ptr;}

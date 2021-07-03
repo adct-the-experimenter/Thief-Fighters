@@ -14,7 +14,8 @@ public:
 	
 	void Init(CustomCamera* camera_ptr, std::uint8_t num_players);
 	
-	void Init_MetroidVaniaMode(CameraManager* camera_ptr, std::uint8_t num_players);
+	void Init_MetroidVaniaMode(CameraManager* camera_ptr, std::uint8_t num_players,
+								std::uint32_t gameScreenWidth, std::uint32_t gameScreenHeight);
 	
 	//updates scale according to calculations
 	void Update_MetroidVaniaMode();

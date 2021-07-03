@@ -61,6 +61,16 @@ public:
 		return m_camera_lead_player_num;
 	}
 	
+	void SetCameraActiveStatus(bool state)
+	{
+		in_active_use = state;
+	}
+	
+	bool GetCameraActiveStatus()
+	{
+		return in_active_use;
+	}
+	
 private:
 
 	Rectangle camera_rect;
@@ -72,12 +82,17 @@ private:
 	//camera lead
 	//the player number who is camera lead i.e. player 1-8
 	std::uint8_t m_camera_lead_player_num;
+	
+	//bool to indicate if camera is in active use
+	bool in_active_use;
 };
 
 //class to manager 4 cameras
 class CameraManager
 {
+public:
 	std::array <CustomCamera,4> lead_cameras;
+	
 };
 
 #endif

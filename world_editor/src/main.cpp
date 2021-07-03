@@ -99,6 +99,10 @@ GameState m_game_state = GameState::TITLE_MENU;
 std::shared_ptr <CameraSystem> cameraSystem;
 CustomCamera main_camera;
 
+//camera manager for metroidvania mode. Has 4 cameras. Manages 4 cameras.
+CameraManager main_camera_manager;
+
+
 CharacterAssetManager gCharAssetManager;
 
 CharacterSelector gCharSelector;
@@ -181,7 +185,9 @@ int main(int argc, char* args[])
 		//set camera
 		main_camera.Init(gameScreenWidth,gameScreenHeight);
 		main_camera.SetLevelBounds(0,640,0,360);
-
+		
+		gWorldEditor.SetPointerToCameraManager(&main_camera_manager);
+		
 		while (!quitGame)
 		{
 			// Detect window close button or ESC key
@@ -395,6 +401,8 @@ void logic()
 							quitGame = true;
 						}
 						
+						cameraSystem->Init_MetroidVaniaMode(&main_camera_manager,gNumPlayers, gameScreenWidth, gameScreenHeight);
+						
 						break;
 					}
 				}
@@ -513,68 +521,66 @@ void logic()
 		}
 		case GameState::METROIDVANIA_GAME:
 		{
-			//for now remove components from player and go back to title menu
 			
+			//handle activating powers based on input
+			attackPowerMechanicSystem->HandlePowerActivation(dt);
 			
-				//handle activating powers based on input
-				attackPowerMechanicSystem->HandlePowerActivation(dt);
-				
-				//move players and other entities
-				physicsSystem->Update_MetroidVaniaMode(dt);
-				
-				//move attack boxes with players
-				attackPowerMechanicSystem->MoveAttackBoxesWithPlayer(dt);
-				
-				//check collisions between players
-				attackPowerMechanicSystem->CollisionDetectionBetweenPlayers();
-				
-				//react to collisions
-				attackPowerMechanicSystem->ReactToCollisions(dt);
-				
-				//perform power transactions if needed so that players can
-				//receive their slain opponent's power
-				attackPowerMechanicSystem->PerformNeededPowerTransactions();
-				
-				//set up frame for render
-				animationSystem->Update(dt);
-				
-				//check for dead players, set bool to stop rendering them
-				playerDeathSystem->Update();
-				
-				if(playerDeathSystem->OnePlayerWon() && gNumPlayers > 1)
+			//move players and other entities
+			physicsSystem->Update_MetroidVaniaMode(dt);
+			
+			//move attack boxes with players
+			attackPowerMechanicSystem->MoveAttackBoxesWithPlayer(dt);
+			
+			//check collisions between players
+			attackPowerMechanicSystem->CollisionDetectionBetweenPlayers();
+			
+			//react to collisions
+			attackPowerMechanicSystem->ReactToCollisions(dt);
+			
+			//perform power transactions if needed so that players can
+			//receive their slain opponent's power
+			attackPowerMechanicSystem->PerformNeededPowerTransactions();
+			
+			//set up frame for render
+			animationSystem->Update(dt);
+			
+			//check for dead players, set bool to stop rendering them
+			playerDeathSystem->Update();
+			
+			if(playerDeathSystem->OnePlayerWon() && gNumPlayers > 1)
+			{
+				show_restart_game_message = true;
+				winning_player = playerDeathSystem->GetPlayerWhoWon();
+			}
+			else if(gNumPlayers == 1)
+			{
+				winning_player = 0;
+			}
+			
+			if(restart_game)
+			{
+				//remove components of players in game
+				for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
 				{
-					show_restart_game_message = true;
-					winning_player = playerDeathSystem->GetPlayerWhoWon();
-				}
-				else if(gNumPlayers == 1)
-				{
-					winning_player = 0;
+					gCoordinator.RemoveComponent<InputReact>(entity_it);
+					gCoordinator.RemoveComponent<CollisionBox>(entity_it);
+					gCoordinator.RemoveComponent<Animation>(entity_it);
+					gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
+					gCoordinator.RemoveComponent<Player>(entity_it);
+					gCoordinator.RemoveComponent<Transform2D>(entity_it);
+					gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
+					gCoordinator.RemoveComponent<Gravity2D>(entity_it);
+					gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
 				}
 				
-				if(restart_game)
-				{
-					//remove components of players in game
-					for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
-					{
-						gCoordinator.RemoveComponent<InputReact>(entity_it);
-						gCoordinator.RemoveComponent<CollisionBox>(entity_it);
-						gCoordinator.RemoveComponent<Animation>(entity_it);
-						gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
-						gCoordinator.RemoveComponent<Player>(entity_it);
-						gCoordinator.RemoveComponent<Transform2D>(entity_it);
-						gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
-						gCoordinator.RemoveComponent<Gravity2D>(entity_it);
-						gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
-					}
-					
-					//set game state back to title screen
-					m_game_state = GameState::TITLE_MENU;
-					
-					restart_game = false;
-					show_restart_game_message = false;
-					winning_player = -1;
-					playerDeathSystem->Reset();
-				}
+				//set game state back to title screen
+				m_game_state = GameState::TITLE_MENU;
+				
+				restart_game = false;
+				show_restart_game_message = false;
+				winning_player = -1;
+				playerDeathSystem->Reset();
+			}
 			
 			break;
 		}
