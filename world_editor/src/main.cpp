@@ -352,9 +352,6 @@ void logic()
 				
 				cameraSystem->Init(&main_camera,gNumPlayers);
 				
-				//initialize render system
-				renderSystem->Init(&main_camera);
-				
 				//move to next state
 				m_game_state = GameState::CHAR_SELECTOR;
 				
@@ -386,7 +383,11 @@ void logic()
 						//initialize stage selector
 						gStageSelector.Init(gStageManager.GetNumberOfStagesInitialized());
 						
-						gCharSelector.Reset(); 
+						gCharSelector.Reset();
+						
+						//initialize render system
+						renderSystem->Init(&main_camera); 
+						
 						break;
 					}
 					//metroidvania mode
@@ -404,6 +405,9 @@ void logic()
 						}
 						
 						cameraSystem->Init_MetroidVaniaMode(&main_camera_manager,gNumPlayers, gameScreenWidth, gameScreenHeight);
+						
+						//initialize render system
+						renderSystem->Init_MetroidVaniaMode(&main_camera_manager);
 						
 						break;
 					}
@@ -685,7 +689,7 @@ void render()
 			gWorldEditor.render();
 			
 			//render any entity that has render component
-			renderSystem->Update();
+			renderSystem->Update_MetroidVaniaMode();
 			
 			break;
 		}

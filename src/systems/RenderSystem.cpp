@@ -96,16 +96,29 @@ void RenderSystem::Update_MetroidVaniaMode()
 			
 			for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
 			{
+				
 				//if renderable object is within camera bounds.
 				if(render_comp.render)
 				{
-					//adjust render position relative to camera position
-					Vector2 adjusted_pos;
-					adjusted_pos.x = transform.position.x - m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer()->x;
-					adjusted_pos.y = transform.position.y - m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer()->y;
 					
-					//render texuture according to frame, adjusted camera composition, tint
-					DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
+					if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
+					{
+						Rectangle* camera_ptr = m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer();
+						
+						//adjust render position relative to camera position
+						Vector2 adjusted_pos;
+						
+						std::cout << "camera: " << camera_ptr->x << " " << camera_ptr->y << std::endl;
+						
+						adjusted_pos.x = transform.position.x - camera_ptr->x;
+						adjusted_pos.y = transform.position.y - camera_ptr->y;
+						
+						std::cout << "adj pos: " << adjusted_pos.x << " " << adjusted_pos.y << std::endl;
+						
+						//render texuture according to frame, adjusted camera composition, tint
+						DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
+					}
+					
 				}
 			}
 			

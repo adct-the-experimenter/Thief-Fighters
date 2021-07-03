@@ -100,8 +100,15 @@ void CameraSystem::Update_MetroidVaniaMode()
 		if(player.camera_lead)
 		{
 			Rectangle* camera_rect = m_camera_manager_ptr->lead_cameras[ player.camera_num_leader ].GetCameraRectPointer();
+			
+			//center camera to player
 			camera_rect->x = transform.position.x - (camera_rect->width / 2);
 			camera_rect->y = transform.position.y - (camera_rect->height / 2);
+			
+			//level bounds
+			if(camera_rect->x < 0){camera_rect->x = 0;}
+			if(camera_rect->y < 0){camera_rect->y = 0;}
+			
 		}
 	}
 }

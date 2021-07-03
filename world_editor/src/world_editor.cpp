@@ -136,29 +136,54 @@ void WorldEditor::logic()
 static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
 {
 	
-		
-	size_t num_tile_horizontal = 220;
+	//number of tiles in a row
+	size_t num_tiles_horizontal = 220;
+	
+	//render 9 rows of tiles
+	
+	size_t start_tiles[9];
+	size_t end_tiles[9];
+	
+	//get index based on top left corner of camera
 	size_t horiz_index = trunc(camera.x / 30 );
-	size_t vert_index = trunc( (camera.y + 30) / 30 ) * num_tile_horizontal;
+	size_t vert_index = trunc( camera.y / 30 ) * num_tiles_horizontal;
 	
-	size_t start_tile = horiz_index + vert_index;
-	
-	horiz_index = trunc( (camera.x + camera.width) / 30 );
-	vert_index = trunc( ( (camera.y + camera.height) + 30) / 30 ) * num_tile_horizontal;
-	
-	size_t end_tile = horiz_index + vert_index;
-		
-	for(size_t i = start_tile; i < end_tile; i++)
+	//initialize start tiles
+	for(size_t i = 0; i < 9; i++)
 	{
-			
-		Vector2 pos = {world_ptr->tiles_vector.at(i).x - camera.x,world_ptr->tiles_vector.at(i).y - camera.y};
-		if(world_ptr->tiles_vector.at(i).frame_clip_ptr)
+		start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
+		if(start_tiles[i] > world_ptr->tiles_vector.size()){start_tiles[i] = world_ptr->tiles_vector.size() - 1;}
+	}
+	
+	//get index based on top right corner of camera
+	horiz_index = trunc( (camera.x + camera.width) / 30 );
+	vert_index = trunc( ( camera.y + 30) / 30 ) * num_tiles_horizontal;
+	
+	//initialize end tiles
+	for(size_t i = 0; i < 9; i++)
+	{
+		end_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
+		if(end_tiles[i] > world_ptr->tiles_vector.size()){end_tiles[i] = world_ptr->tiles_vector.size() - 1;}
+	}
+	
+	
+	for(size_t i = 0; i < 9; i++)
+	{
+		for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
 		{
-			DrawTextureRec(world_ptr->tilesheet_texture, 
-					   *world_ptr->tiles_vector.at(i).frame_clip_ptr, 
-					   pos, 
-					   WHITE);
+			//std::cout << "tile_index: " << tile_index << std::endl;
+			
+			Vector2 pos = {world_ptr->tiles_vector.at(tile_index).x - camera.x,world_ptr->tiles_vector.at(tile_index).y - camera.y};
+			//std::cout << "pos : " << pos.x << " , " << pos.y << std::endl;
+			if(world_ptr->tiles_vector.at(tile_index).frame_clip_ptr)
+			{
+				DrawTextureRec(world_ptr->tilesheet_texture, 
+						   *world_ptr->tiles_vector.at(tile_index).frame_clip_ptr, 
+						   pos, 
+						   WHITE);
+			}
 		}
+		
 		
 	}
 	
@@ -168,14 +193,15 @@ void WorldEditor::render()
 {
 	
 	//render tiles
-	for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
-	{
-		if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
-		{
-			RenderLevelMapRelativeToCamera(&world_edited,*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer());
-		}
+	//for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
+	//{
+	//	if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
+	//	{
+	//		RenderLevelMapRelativeToCamera(&world_edited,*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer());
+	//	}
 		
-	}
+	//}
+	RenderLevelMapRelativeToCamera(&world_edited,*m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer());
 	
 	
 	//render tile box 
