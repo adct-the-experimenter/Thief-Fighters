@@ -200,6 +200,8 @@ int main(int argc, char* args[])
 	gMediaLoader.freeMedia();
 	gStageManager.FreeCurrentLoadedLevel();
     
+    gWorldEditor.FreeLevel();
+    
 	CloseRaylibSystem();
 	
 	return 0;
@@ -277,6 +279,8 @@ void handle_events()
 		}
 		case GameState::METROIDVANIA_GAME:
 		{
+			input_ReactSystem->Update(gControllerInput);
+			
 			break;
 		}
 	}
@@ -667,9 +671,12 @@ void render()
 		{
 			//render tiles with cameras
 			
-			cameraSystem->Update();
+			cameraSystem->Update_MetroidVaniaMode();
 			
 			gWorldEditor.render();
+			
+			//render any entity that has render component
+			renderSystem->Update();
 			
 			break;
 		}

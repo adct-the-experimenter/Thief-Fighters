@@ -11,10 +11,13 @@
 class CameraSystem : public System
 {
 public:
+	
 	void Init(CustomCamera* camera_ptr, std::uint8_t num_players);
 	
+	void Init_MetroidVaniaMode(CameraManager* camera_ptr, std::uint8_t num_players);
+	
 	//updates scale according to calculations
-	void Update();
+	void Update_MetroidVaniaMode();
 	
 	void update_timer(float& dt);
 	
@@ -25,6 +28,7 @@ protected:
 	
 	float zoom_time_counter;
 	
+	CameraManager* m_camera_manager_ptr;
 };
 
 #endif

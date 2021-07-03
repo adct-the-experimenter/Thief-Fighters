@@ -51,6 +51,16 @@ public:
 		return &camera_rect;
 	}
 	
+	void SetCameraLeadPlayerNumber(std::uint8_t player_num)
+	{
+		m_camera_lead_player_num = player_num;
+	}
+	
+	std::uint8_t GetCameraLeadPlayerNumber()
+	{
+		return m_camera_lead_player_num;
+	}
+	
 private:
 
 	Rectangle camera_rect;
@@ -59,7 +69,15 @@ private:
 	std::uint16_t m_level_bound_up_y;
 	std::uint16_t m_level_bound_down_y;
 	
+	//camera lead
+	//the player number who is camera lead i.e. player 1-8
+	std::uint8_t m_camera_lead_player_num;
 };
 
+//class to manager 4 cameras
+class CameraManager
+{
+	std::array <CustomCamera,4> lead_cameras;
+};
 
 #endif

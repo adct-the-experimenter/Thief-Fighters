@@ -80,6 +80,9 @@ static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
 void WorldEditor::render()
 {
 	
+	//render tiles
+	//RenderLevelMapRelativeToCamera(&world_edited,Rectangle& camera);
+	
 	//render tile box 
 	for(size_t i = 0; i < m_tile_selector.select_tiles.size(); i++)
 	{
@@ -385,6 +388,8 @@ bool WorldEditor::MakeLevel()
 			world_edited.tiles_vector[i].tile_id = 1;
 			world_edited.tiles_vector[i].type = TileType::PUSH_BACK;
 		}
+		
+		world_edited.tiles_vector[i].frame_clip_ptr = &frame_clip_map[world_edited.tiles_vector[i].tile_id];
 		
 		x_offset += tile_width;
 	}

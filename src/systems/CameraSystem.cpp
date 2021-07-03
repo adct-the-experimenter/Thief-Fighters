@@ -19,7 +19,13 @@ void CameraSystem::Init(CustomCamera* camera, std::uint8_t num_players)
 
 }
 
-void CameraSystem::Update()
+void CameraSystem::Init_MetroidVaniaMode(CameraManager* camera_m_ptr, std::uint8_t num_players)
+{
+	m_camera_manager_ptr = camera_m_ptr;
+	m_num_players = num_players;
+}
+
+void CameraSystem::Update_MetroidVaniaMode()
 {
 	//for metroidvania game mode
 	
