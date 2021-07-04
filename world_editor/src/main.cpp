@@ -398,10 +398,22 @@ void logic()
 						m_game_state = GameState::METROIDVANIA_GAME;
 						
 						//if make level is not sucessful, quit game
-						if(!gWorldEditor.MakeLevel())
+						if(createNewMapFile)
 						{
-							std::cout << "\nUnable to successfully make level!\n";
-							quitGame = true;
+							if(!gWorldEditor.MakeLevel())
+							{
+								std::cout << "\nUnable to successfully make level!\n";
+								quitGame = true;
+							}
+							
+						}
+						else
+						{
+							if(!gWorldEditor.LoadLevel())
+							{
+								std::cout << "\nUnable to successfully load level!\n";
+								quitGame = true;
+							}
 						}
 						
 						cameraSystem->Init_MetroidVaniaMode(&main_camera_manager,gNumPlayers, gameScreenWidth, gameScreenHeight);

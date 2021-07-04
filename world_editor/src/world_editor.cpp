@@ -164,7 +164,7 @@ void WorldEditor::logic()
 		
 				
 		//if mouse click on the save button
-		if(MouseInBox(m_mouseX,m_mouseY,m_save_button_rect))
+		if(MouseInBox(mouse_x,mouse_y,m_save_button_rect))
 		{
 			//Save file 
 			WorldEditor::SaveDataToXMLFile(m_tiles_placement_xml_file_path);
@@ -466,7 +466,7 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 		//initialize tile position
 		for(size_t i = 0; i < world_one.tiles_vector.size(); i++)
 		{
-			if(i % num_tiles_horiz == 0)
+			if(i % num_tiles_horiz == 0 && i != 0)
 			{
 				x_offset = 0;
 				y_offset += tile_height;
@@ -492,6 +492,8 @@ bool WorldEditor::LoadLevel()
 	
 	world_one.tiles_vector.resize(square_area);
 	
+	world_one.in_active_use = true;
+	
 	//load the xml file containing info on tile level positions and tile types
 	
 	
@@ -506,6 +508,7 @@ bool WorldEditor::LoadLevel()
 		return false;
 	}
 	
+	return true;
 }
 
 bool WorldEditor::MakeLevel()
@@ -538,7 +541,7 @@ bool WorldEditor::MakeLevel()
 	//initialize tile position and tile type
 	for(size_t i = 0; i < world_one.tiles_vector.size(); i++)
 	{
-		if(i % num_tiles_horiz == 0)
+		if(i % num_tiles_horiz == 0 && i != 0)
 		{
 			x_offset = 0;
 			y_offset += tile_height;
@@ -578,29 +581,6 @@ void WorldEditor::SaveDataToXMLFile(std::string filepath)
     
     // A valid XML doc must contain a single root node of any name
     auto root = doc.append_child("RootMap");
-    
-    //save path to tile sheet
-    //pugi::xml_node tilesheetNode = root.append_child("Tilesheet");
-    
-    //tilesheetNode.append_attribute("path").set_value( m_tilesheet_path.c_str() );
-    
-    //save number of tiles in level
-	//std::cout << "Number of tiles: " << world_one.size() << std::endl;
-	
-	//pugi::xml_node numTilesNode = root.append_child("NumberOfTiles");
-	//numTilesNode.append_attribute("num").set_value( std::to_string(m_tiles_vec.size()).c_str() );
-	
-	//save level dimensions
-    //pugi::xml_node dimensionsNode = root.append_child("Dimensions");
-    
-    //dimensionsNode.append_attribute("width").set_value( std::to_string(int(m_levelWidth)).c_str() );
-    //dimensionsNode.append_attribute("height").set_value( std::to_string(int(m_levelHeight)).c_str() );
-    
-    //save tile width tile height
-    //pugi::xml_node tile_dimensionsNode = root.append_child("TileDimensions");
-    
-    //tile_dimensionsNode.append_attribute("width").set_value( std::to_string(int(m_tile_width)).c_str() );
-    //tile_dimensionsNode.append_attribute("height").set_value( std::to_string(int(m_tile_height)).c_str() );
     
     
     //create tiles node

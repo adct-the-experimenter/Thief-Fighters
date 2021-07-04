@@ -4,7 +4,7 @@
 	<Tilesheet path="main-world-tilesheet.png"/>
 	<Tiles>
 		<Tile type="BACKGROUND" x="0" y="0" id="0"/>
-		<Tile type="BACKGROUND" x="30" y="0" id="1"/>
+		<Tile type="PUSHBACK" x="30" y="0" id="1"/>
 		<Tile type="BACKGROUND" x="60" y="0" id="2"/>
 		<Tile type="BACKGROUND" x="0" y="30" id="3"/>
 		<Tile type="BACKGROUND" x="30" y="30" id="4"/>

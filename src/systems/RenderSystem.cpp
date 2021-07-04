@@ -147,7 +147,7 @@ void RenderSystem::Update_MetroidVaniaMode_Editor()
 						//adjust render position relative to camera position
 						Vector2 adjusted_pos;
 						
-						adjusted_pos.x = transform.position.x - camera_ptr->x + 200;
+						adjusted_pos.x = transform.position.x - camera_ptr->x + 250;
 						adjusted_pos.y = transform.position.y - camera_ptr->y;
 						
 						//render texuture according to frame, adjusted camera composition, tint
