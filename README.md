@@ -63,3 +63,11 @@ Down Right = Chunks
 
 
 Down = Big
+
+## Experimental Story Mode
+
+Story mode is in an experimental state. The gameplay in the story mode will be in Metroidvania style.
+
+It will be updated until it is finished. 
+
+Have fun exploring the world and seeing its progress through the updates!

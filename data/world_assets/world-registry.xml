@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<Root>
+  <Worlds>
+	  <World name="Main Castle" tsd_path="main_world/main-world-tilesheet-description.xml" level_path="main_world/main-world-level.xml" />
+	  <World name="Dinosaur Utopia" tsd_path="" level_path="" />
+	  <World name="Ice Fortress" tsd_path="" level_path="" />
+	  <World name="Space Colony" tsd_path="" level_path="" />
+  </Worlds>    
+</Root>

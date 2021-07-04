@@ -63,6 +63,9 @@ struct Tile
 
 struct World
 {
+	//name of the world
+	std::string name;
+	
 	//holds entire 2d texture of tilesheet for world
 	Texture2D tilesheet_texture;
 	
@@ -87,12 +90,16 @@ struct World
 	
 	//bool to indicate if world is in active use i.e. inhabited by a player
 	bool in_active_use;
+	
+	//holds frames from tilesheet
+	std::vector <Rectangle> frame_clip_map;
 };
 
 //The 4 worlds that players can inhabit simultaneously
 //not actually world names
 
 //by default world one is edited by world editor
+
 
 extern World world_one;
 extern World world_two;
