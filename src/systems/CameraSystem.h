@@ -22,7 +22,7 @@ public:
 	
 	void update_timer(float& dt);
 	
-protected:
+private:
 
 	CustomCamera* m_camera_ptr;
 	std::uint8_t m_num_players;

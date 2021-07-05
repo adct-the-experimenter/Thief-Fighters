@@ -54,6 +54,8 @@ private:
 	
 	//function to free level
 	void FreeWorldLevel(World* world_ptr);
+	
+	std::uint8_t m_num_players;
 };
 
 #endif

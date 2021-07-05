@@ -20,7 +20,7 @@ World world_three;
 World world_four;
 
 bool WorldSystem::Init()
-{
+{	
 	//load file paths
 	if( !WorldSystem::LoadWorldFilepaths() )
 	{
@@ -49,6 +49,15 @@ bool WorldSystem::Init()
 		
 		player.world_id = 0;
 		collisionBox.world_id = 0;
+		
+		//first 4 players are camera leads
+		if(player.player_num < 5)
+		{
+			player.camera_lead = true;
+			player.camera_num_leader = player.player_num - 1;
+		}
+		
+		
 	}
 	
 	//set all cameras to main world by default
@@ -385,7 +394,7 @@ void WorldSystem::logic(float& dt)
 			
 }
 
-static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
+static void RenderLevelMapRelativeToCameraAndScreen(World* world_ptr,Rectangle& camera,Rectangle& screen)
 {
 	
 	//number of tiles in a row
@@ -424,7 +433,7 @@ static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
 		for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
 		{
 			
-			Vector2 pos = {world_ptr->tiles_vector.at(tile_index).x - camera.x ,world_ptr->tiles_vector.at(tile_index).y - camera.y };
+			Vector2 pos = {world_ptr->tiles_vector.at(tile_index).x - camera.x + screen.x,world_ptr->tiles_vector.at(tile_index).y - camera.y + screen.y};
 			
 			//std::cout << "pos : " << pos.x << " , " << pos.y << std::endl;
 			if(world_ptr->tiles_vector.at(tile_index).frame_clip_ptr)
@@ -455,9 +464,12 @@ void WorldSystem::render()
 		{
 			//if camera is active and has the same id as the world
 			if( world_one.world_id == m_camera_manager_ptr->lead_cameras[i].GetWorldID() &&
-				m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
+				m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus() &&
+				m_camera_manager_ptr->screens[i].in_active_use )
 			{
-				RenderLevelMapRelativeToCamera(&world_one,*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer());
+				RenderLevelMapRelativeToCameraAndScreen(&world_one,
+														*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer(),
+														m_camera_manager_ptr->screens[i].screen_rect);
 			}
 		}
 		
