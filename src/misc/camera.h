@@ -119,9 +119,12 @@ public:
 	//screens that show the cameras
 	std::array <Screen,4> screens;
 	
+	float game_screen_width;
+	float game_screen_height;
 	
 	//functions for split-screen manipulation
 	
+	//initialize for 1 screen game
 	void SetForOneScreen(float game_res_width,float game_res_height)
 	{
 		screens[0].in_active_use = true;
@@ -139,16 +142,19 @@ public:
 		lead_cameras[3].SetCameraActiveStatus(false);
 	}
 	
+	//initialize for 2 screen game
 	void SetForTwoScreens(float game_res_width,float game_res_height)
 	{
+		//split in half. width is halved. height is not changed.
+		
 		screens[0].in_active_use = true;
-		screens[0].screen_rect = {0,0,game_res_width / 2, game_res_height / 2};
-		(*lead_cameras[0].GetCameraRectPointer()) = {0,0,game_res_width / 2,game_res_height / 2};
+		screens[0].screen_rect = {0,0,game_res_width / 2, game_res_height};
+		(*lead_cameras[0].GetCameraRectPointer()) = {0,0,game_res_width / 2,game_res_height};
 		lead_cameras[0].SetCameraActiveStatus(true);
 		
 		screens[1].in_active_use = true;
-		screens[1].screen_rect = {game_res_width / 2, 0,game_res_width / 2, game_res_height / 2};
-		(*lead_cameras[1].GetCameraRectPointer()) = {0,0,game_res_width / 2,game_res_height / 2};
+		screens[1].screen_rect = {game_res_width / 2, 0,game_res_width / 2, game_res_height};
+		(*lead_cameras[1].GetCameraRectPointer()) = {0,0,game_res_width / 2,game_res_height};
 		lead_cameras[1].SetCameraActiveStatus(true);
 		
 		screens[2].in_active_use = false;
@@ -158,6 +164,7 @@ public:
 		lead_cameras[3].SetCameraActiveStatus(false);
 	}
 	
+	//initialize for 3 screen game
 	void SetForThreeScreens(float game_res_width,float game_res_height)
 	{
 		screens[0].in_active_use = true;
@@ -179,6 +186,7 @@ public:
 		lead_cameras[3].SetCameraActiveStatus(false);
 	}
 	
+	//initialize for 4 screen game
 	void SetForFourScreens(float game_res_width,float game_res_height)
 	{
 		screens[0].in_active_use = true;
@@ -202,46 +210,89 @@ public:
 		lead_cameras[3].SetCameraActiveStatus(true);
 	}
 	
-	//function to join screen one and screen two
-	void JoinScreenZeroAndScreenOne(float game_res_width, float game_res_height)
+	//function to join screen zero and screen one
+	void JoinScreenZeroAndScreenOne()
 	{
+		//assuming width and height of cameras have already been initialized
 		//join 2 screens, height stays the same, width changes
 		
 		//make screen 0 and camera 0 bigger
 		screens[0].in_active_use = true;
-		screens[0].screen_rect = {0,0,game_res_width, game_res_height};
-		lead_cameras[0].GetCameraRectPointer()->width = game_res_width;
-		lead_cameras[0].GetCameraRectPointer()->height = game_res_height;
+		screens[0].screen_rect.width = game_screen_width;
+		lead_cameras[0].GetCameraRectPointer()->width = game_screen_width;;
+		
 		lead_cameras[0].SetCameraActiveStatus(true);
 		
 		//disable screen 1 and camera 1
 		screens[1].in_active_use = false;
-		screens[1].screen_rect = {0,0,game_res_width, game_res_height};
-		lead_cameras[1].GetCameraRectPointer()->width = game_res_width;
-		lead_cameras[1].GetCameraRectPointer()->height = game_res_height;
+		screens[1].screen_rect.width = game_screen_width;
+		lead_cameras[1].GetCameraRectPointer()->width = game_screen_width;
+		
 		lead_cameras[1].SetCameraActiveStatus(false);
 	}
 	
-	//function to split screen one and screen two
-	void SplitScreenZeroAndScreenOne(float game_res_width, float game_res_height)
+	//function to split screen zero and screen one
+	void SplitScreenZeroAndScreenOne()
 	{
 		//split into 2 screens in half, height stays the same, width changes
 		
 		//make screen 0 and camera 0 smaller
 		screens[0].in_active_use = true;
-		screens[0].screen_rect = {0,0,game_res_width / 2, game_res_height};
-		lead_cameras[0].GetCameraRectPointer()->width = game_res_width / 2;
-		lead_cameras[0].GetCameraRectPointer()->height = game_res_height;
-		
+		screens[0].screen_rect.x = 0;
+		screens[0].screen_rect.width = game_screen_width / 2;
+		lead_cameras[0].GetCameraRectPointer()->width = game_screen_width / 2;
+
 		lead_cameras[0].SetCameraActiveStatus(true);
 		
 		//enable screen 1 and make it the same size as screen 0
 		screens[1].in_active_use = true;
-		screens[1].screen_rect = {game_res_width / 2, 0,game_res_width / 2, game_res_height};
-		lead_cameras[1].GetCameraRectPointer()->width = game_res_width / 2;
-		lead_cameras[1].GetCameraRectPointer()->height = game_res_height;
+		screens[1].screen_rect.x = game_screen_width / 2;
+		screens[1].screen_rect.width = game_screen_width / 2;
+		lead_cameras[1].GetCameraRectPointer()->width = game_screen_width / 2;
 		
 		lead_cameras[1].SetCameraActiveStatus(true);
+	}
+	
+	//function to join screen two and screen three
+	void JoinScreenTwoAndScreenThree()
+	{
+		//assuming width and height of cameras have already been initialized
+		//join 2 screens, height stays the same, width changes
+		
+		screens[2].in_active_use = true;
+		screens[2].screen_rect.width = game_screen_width;
+		lead_cameras[2].GetCameraRectPointer()->width = game_screen_width;;
+		
+		lead_cameras[2].SetCameraActiveStatus(true);
+		
+		//disable screen 1 and camera 1
+		screens[3].in_active_use = false;
+		screens[3].screen_rect.width = game_screen_width;
+		lead_cameras[3].GetCameraRectPointer()->width = game_screen_width;
+		
+		lead_cameras[3].SetCameraActiveStatus(false);
+	}
+	
+	//function to split screen one and screen two
+	void SplitScreenTwoAndScreenThree()
+	{
+		//split into 2 screens in half, height stays the same, width changes
+		
+		//make screen 0 and camera 0 smaller
+		screens[2].in_active_use = true;
+		screens[2].screen_rect.x = 0;
+		screens[2].screen_rect.width = game_screen_width / 2;
+		lead_cameras[2].GetCameraRectPointer()->width = game_screen_width / 2;
+
+		lead_cameras[2].SetCameraActiveStatus(true);
+		
+		//enable screen 1 and make it the same size as screen 0
+		screens[3].in_active_use = true;
+		screens[3].screen_rect.x = game_screen_width / 2;
+		screens[3].screen_rect.width = game_screen_width / 2;
+		lead_cameras[3].GetCameraRectPointer()->width = game_screen_width / 2;
+		
+		lead_cameras[3].SetCameraActiveStatus(true);
 	}
 	
 };

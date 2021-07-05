@@ -33,6 +33,9 @@ void CameraSystem::Init_MetroidVaniaMode(CameraManager* camera_m_ptr, std::uint8
 	float gameScreenWidth_float = static_cast <float> (gameScreenWidth);
 	float gameScreenHeight_float = static_cast <float> (gameScreenHeight); 
 	
+	m_camera_manager_ptr->game_screen_width = gameScreenWidth_float;
+	m_camera_manager_ptr->game_screen_height = gameScreenHeight_float;
+	
 	//initialize cameras based on number of players
 	switch(num_players)
 	{
@@ -239,14 +242,14 @@ void CameraSystem::Update_MetroidVaniaMode()
 	{
 		if( ShouldAdjacentHorizontalCamerasJoin(camera_a_ptr,camera_b_ptr) )
 		{
-			m_camera_manager_ptr->JoinScreenZeroAndScreenOne(640.0f,360.0f);
+			m_camera_manager_ptr->JoinScreenZeroAndScreenOne();
 		}
 	}
 	else
 	{
 		if( ShouldAdjacentHorizontalCamerasSplit(camera_a_ptr,camera_b_ptr) )
 		{
-			m_camera_manager_ptr->SplitScreenZeroAndScreenOne(640.0f,360.0f);
+			m_camera_manager_ptr->SplitScreenZeroAndScreenOne();
 		}
 	}
 	
