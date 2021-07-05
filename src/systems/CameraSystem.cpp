@@ -20,7 +20,7 @@ void CameraSystem::Init(CustomCamera* camera, std::uint8_t num_players)
 	level_bound_left_x = 0;
 	level_bound_right_x = 6600;
 	level_bound_up_y = 0;
-	level_bound_down_y = 6600;
+	level_bound_down_y = 6240;
 
 }
 
@@ -114,8 +114,9 @@ void CameraSystem::Update_MetroidVaniaMode()
 			camera_rect->y = transform.position.y - (camera_rect->height / 2);
 			
 			//level bounds
-			if(camera_rect->x < level_bound_left_x){camera_rect->x = 0;}
+			if(camera_rect->x < level_bound_left_x){camera_rect->x = level_bound_left_x;}
 			if(camera_rect->x > level_bound_right_x){camera_rect->x = level_bound_right_x;}
+			
 			if(camera_rect->y < level_bound_up_y){camera_rect->y = level_bound_up_y;}
 			if(camera_rect->y > level_bound_down_y){camera_rect->y = level_bound_down_y;}
 			

@@ -99,15 +99,15 @@ void WorldEditor::logic()
 		
 		//render 9 rows of tiles
 	
-		size_t start_tiles[9];
-		size_t end_tiles[9];
+		size_t start_tiles[12];
+		size_t end_tiles[12];
 		
 		//get index based on top left corner of camera
 		size_t horiz_index = trunc(camera_ptr->x / 30 );
 		size_t vert_index = trunc( camera_ptr->y / 30 ) * num_tiles_horizontal;
 		
 		//initialize start tiles
-		for(size_t i = 0; i < 9; i++)
+		for(size_t i = 0; i < 12; i++)
 		{
 			start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
 			if(start_tiles[i] >= world_one.tiles_vector.size()){start_tiles[i] = world_one.tiles_vector.size() - 2;}
@@ -117,14 +117,14 @@ void WorldEditor::logic()
 		size_t camera_offset_width = trunc( camera_ptr->width / 30 );
 		
 		//initialize end tiles
-		for(size_t i = 0; i < 9; i++)
+		for(size_t i = 0; i < 12; i++)
 		{
 			end_tiles[i] = start_tiles[i] + camera_offset_width;
 			if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
 		}
 		
 		
-		for(size_t i = 0; i < 9; i++)
+		for(size_t i = 0; i < 12; i++)
 		{
 			for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
 			{
@@ -182,15 +182,15 @@ void WorldEditor::RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& cam
 	
 	//render 9 rows of tiles
 	
-	size_t start_tiles[9];
-	size_t end_tiles[9];
+	size_t start_tiles[12];
+	size_t end_tiles[12];
 	
 	//get index based on top left corner of camera
 	size_t horiz_index = trunc(camera.x / 30 );
 	size_t vert_index = trunc( camera.y / 30 ) * num_tiles_horizontal;
 	
 	//initialize start tiles
-	for(size_t i = 0; i < 9; i++)
+	for(size_t i = 0; i < 12; i++)
 	{
 		start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
 		if(start_tiles[i] > world_ptr->tiles_vector.size()){start_tiles[i] = world_ptr->tiles_vector.size() - 1;}
@@ -201,14 +201,14 @@ void WorldEditor::RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& cam
 	size_t camera_offset_width = trunc( camera.width / 30 ) + 2;
 	
 	//initialize end tiles
-	for(size_t i = 0; i < 9; i++)
+	for(size_t i = 0; i < 12; i++)
 	{
 		end_tiles[i] = start_tiles[i] + camera_offset_width;
 		if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
 	}
 	
 	
-	for(size_t i = 0; i < 9; i++)
+	for(size_t i = 0; i < 12; i++)
 	{
 		for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
 		{
