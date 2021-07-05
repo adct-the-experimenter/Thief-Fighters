@@ -30,6 +30,11 @@ protected:
 	float zoom_time_counter;
 	
 	CameraManager* m_camera_manager_ptr;
+	
+	std::uint16_t level_bound_left_x;
+	std::uint16_t level_bound_right_x;
+	std::uint16_t level_bound_up_y;
+	std::uint16_t level_bound_down_y;
 };
 
 #endif

@@ -93,6 +93,9 @@ struct World
 	
 	//holds frames from tilesheet
 	std::vector <Rectangle> frame_clip_map;
+	
+	//id variable to indicate which world it is
+	std::uint8_t world_id;
 };
 
 //The 4 worlds that players can inhabit simultaneously

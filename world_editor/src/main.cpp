@@ -373,6 +373,8 @@ void logic()
 					quitGame = true;
 				}
 				
+				gCharSelector.Reset();
+				
 				switch(game_mode_selected)
 				{
 					//versus fight game mode
@@ -382,9 +384,7 @@ void logic()
 						
 						//initialize stage selector
 						gStageSelector.Init(gStageManager.GetNumberOfStagesInitialized());
-						
-						gCharSelector.Reset();
-						
+												
 						//initialize render system
 						renderSystem->Init(&main_camera); 
 						
@@ -420,6 +420,7 @@ void logic()
 						
 						//initialize render system
 						renderSystem->Init_MetroidVaniaMode(&main_camera_manager);
+						
 						
 						break;
 					}

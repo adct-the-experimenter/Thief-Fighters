@@ -71,6 +71,16 @@ public:
 		return in_active_use;
 	}
 	
+	void SetWorldID(std::uint8_t id)
+	{
+		m_world_id = id;
+	}
+	
+	std::uint8_t GetWorldID()
+	{
+		return m_world_id;
+	}
+	
 private:
 
 	Rectangle camera_rect;
@@ -85,6 +95,9 @@ private:
 	
 	//bool to indicate if camera is in active use
 	bool in_active_use;
+	
+	//indicates which world camera is in
+	std::uint8_t m_world_id;
 };
 
 //class to manager 4 cameras

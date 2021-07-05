@@ -16,6 +16,11 @@ void CameraSystem::Init(CustomCamera* camera, std::uint8_t num_players)
 	m_num_players = num_players;
 	
 	zoom_time_counter = 0;
+	
+	level_bound_left_x = 0;
+	level_bound_right_x = 6600;
+	level_bound_up_y = 0;
+	level_bound_down_y = 6600;
 
 }
 
@@ -33,29 +38,31 @@ void CameraSystem::Init_MetroidVaniaMode(CameraManager* camera_m_ptr, std::uint8
 			//1 camera 
 			m_camera_manager_ptr->lead_cameras[0].Init(gameScreenWidth,gameScreenHeight);
 			m_camera_manager_ptr->lead_cameras[0].SetCameraActiveStatus(true);
+			m_camera_manager_ptr->lead_cameras[0].SetLevelBounds(level_bound_left_x,level_bound_right_x,level_bound_up_y,level_bound_down_y);
 			break;
 		}
 		case 2:
 		{
 			//2 cameras, top and bottom
-			m_camera_manager_ptr->lead_cameras[0].Init(gameScreenWidth ,gameScreenHeight / 2);
-			m_camera_manager_ptr->lead_cameras[0].SetCameraActiveStatus(true);
+			for(size_t i = 0; i < 3; i++)
+			{
+				m_camera_manager_ptr->lead_cameras[i].Init(gameScreenWidth,gameScreenHeight / 2);
+				m_camera_manager_ptr->lead_cameras[i].SetCameraActiveStatus(true);
+				m_camera_manager_ptr->lead_cameras[i].SetLevelBounds(level_bound_left_x,level_bound_right_x,level_bound_up_y,level_bound_down_y);
+			}
 			
-			m_camera_manager_ptr->lead_cameras[1].Init(gameScreenWidth ,gameScreenHeight / 2);
-			m_camera_manager_ptr->lead_cameras[1].SetCameraActiveStatus(true);
 			break;
 		}
 		case 3:
 		{ 
 			//3 cameras in upside down triangle formation
-			m_camera_manager_ptr->lead_cameras[0].Init(gameScreenWidth / 2,gameScreenHeight / 2);
-			m_camera_manager_ptr->lead_cameras[0].SetCameraActiveStatus(true);
+			for(size_t i = 0; i < 3; i++)
+			{
+				m_camera_manager_ptr->lead_cameras[i].Init(gameScreenWidth / 2,gameScreenHeight / 2);
+				m_camera_manager_ptr->lead_cameras[i].SetCameraActiveStatus(true);
+				m_camera_manager_ptr->lead_cameras[i].SetLevelBounds(level_bound_left_x,level_bound_right_x,level_bound_up_y,level_bound_down_y);
+			}
 			
-			m_camera_manager_ptr->lead_cameras[1].Init(gameScreenWidth / 2,gameScreenHeight / 2);
-			m_camera_manager_ptr->lead_cameras[1].SetCameraActiveStatus(true);
-			
-			m_camera_manager_ptr->lead_cameras[2].Init(gameScreenWidth / 2,gameScreenHeight / 2);
-			m_camera_manager_ptr->lead_cameras[2].SetCameraActiveStatus(true);
 			
 			break;
 		}
@@ -68,11 +75,12 @@ void CameraSystem::Init_MetroidVaniaMode(CameraManager* camera_m_ptr, std::uint8
 		{
 			m_camera_manager_ptr->lead_cameras[i].Init(gameScreenWidth / 2,gameScreenHeight / 2);
 			m_camera_manager_ptr->lead_cameras[i].SetCameraActiveStatus(true);
-			//m_camera_manager_ptr.lead_cameras[0].SetLevelBounds(0,gameScreenWidth / 2,0,gameScreenHeight / 2);
+			m_camera_manager_ptr->lead_cameras[i].SetLevelBounds(level_bound_left_x,level_bound_right_x,level_bound_up_y,level_bound_down_y);
 		}
 		
 	}
 }
+
 
 void CameraSystem::Update_MetroidVaniaMode()
 {
@@ -106,8 +114,10 @@ void CameraSystem::Update_MetroidVaniaMode()
 			camera_rect->y = transform.position.y - (camera_rect->height / 2);
 			
 			//level bounds
-			if(camera_rect->x < 0){camera_rect->x = 0;}
-			if(camera_rect->y < 0){camera_rect->y = 0;}
+			if(camera_rect->x < level_bound_left_x){camera_rect->x = 0;}
+			if(camera_rect->x > level_bound_right_x){camera_rect->x = level_bound_right_x;}
+			if(camera_rect->y < level_bound_up_y){camera_rect->y = level_bound_up_y;}
+			if(camera_rect->y > level_bound_down_y){camera_rect->y = level_bound_down_y;}
 			
 		}
 	}

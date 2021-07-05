@@ -10,6 +10,9 @@
 #include "systems/AnimationSystem.h"
 #include "systems/AttackPowerMechanicSystem.h"
 #include "systems/PlayerDeathSystem.h"
+
+#include "systems/WorldSystem.h"
+
 #include "core/ControllerInputHandler.h"
 #include "core/ControllerInput.h"
 
@@ -26,7 +29,7 @@
 #include "misc/char_selector.h" //for CharacterSelector class
 #include "misc/stage_selector.h" //for StageSelector class
 #include "misc/num_player_setter.h" //for NumPlayerSetter class
-
+#include "misc/game_mode_selector.h" //for GameModeSelector
 
 
 #include <string>
@@ -51,6 +54,8 @@ KeyboardTypingInputHandler gKeyboardTypingInputHandler;
 
 NumPlayerSetter gNumPlayerSetter;
 
+GameModeSelector gGameModeSelector;
+
 std::vector <Entity> entities(MAX_ENTITIES);
 
 //function to initialize main ECS
@@ -67,6 +72,8 @@ std::shared_ptr <PhysicsSystem> physicsSystem;
 std::shared_ptr <AttackPowerMechanicSystem> attackPowerMechanicSystem;
 
 std::shared_ptr <PlayerDeathSystem> playerDeathSystem;
+
+std::shared_ptr <WorldSystem> worldSystem;
 
 //function to init raylib system
 void InitRaylibSystem();
@@ -95,6 +102,8 @@ GameState m_game_state = GameState::TITLE_MENU;
 std::shared_ptr <CameraSystem> cameraSystem;
 CustomCamera main_camera;
 
+CameraManager main_camera_manager;
+
 CharacterAssetManager gCharAssetManager;
 
 CharacterSelector gCharSelector;
@@ -107,12 +116,15 @@ StageManager gStageManager;
 
 StageSelector gStageSelector;
 
+
 bool quitGame = false;
 
 //using render texture of resolution 640x360 to scale it up better by integers.
 RenderTexture2D target;
 int gameScreenWidth = 640;
 int gameScreenHeight = 360;
+
+static std::uint8_t game_mode_selected = 0;
 		
 int main(int argc, char* args[])
 {
@@ -131,6 +143,7 @@ int main(int argc, char* args[])
 		gControllerInputHandler.Init(gNumPlayers);
 		
 		gNumPlayerSetter.Init();
+		gGameModeSelector.Init();
 		
 		InitMainECS();
 		
@@ -149,6 +162,7 @@ int main(int argc, char* args[])
 		//set camera
 		main_camera.Init(gameScreenWidth,gameScreenHeight);
 		main_camera.SetLevelBounds(0,640,0,360);
+		
 
 		while (!quitGame)
 		{
@@ -167,6 +181,12 @@ int main(int argc, char* args[])
 	
 	gMediaLoader.freeMedia();
 	gStageManager.FreeCurrentLoadedLevel();
+    
+    //if game mode selected was metroidvania story mode
+    if(game_mode_selected == 1)
+    {
+		worldSystem->FreeResources();
+	}
     
 	CloseRaylibSystem();
 	
@@ -200,7 +220,14 @@ void handle_events()
 	{
 		case GameState::TITLE_MENU:
 		{
-			gNumPlayerSetter.handle_input(gControllerInput,gKeyboardInput);
+			if(!gGameModeSelector.MoveToNextStateBool())
+			{
+				gGameModeSelector.handle_input(gControllerInput,gKeyboardInput);
+			}
+			else
+			{
+				gNumPlayerSetter.handle_input(gControllerInput,gKeyboardInput);
+			}
 			break;
 		}
 		case GameState::CHAR_SELECTOR:
@@ -236,10 +263,18 @@ void handle_events()
 			
 			break;
 		}
+		case GameState::METROIDVANIA_GAME:
+		{
+			input_ReactSystem->Update(gControllerInput);
+			
+			break;
+		}
 	}
 }
 
 static bool show_restart_game_message = false;
+
+
 
 void logic()
 {
@@ -254,7 +289,16 @@ void logic()
 		{
 			bool moveNextState = false;
 			
-			gNumPlayerSetter.logic();
+			//logic for game mode setter 	
+			//logic for num player setter
+			if(!gGameModeSelector.MoveToNextStateBool())
+			{
+				gGameModeSelector.logic();
+			}
+			else
+			{
+				gNumPlayerSetter.logic();
+			}
 			
 			//if need to move to next state
 			if(gNumPlayerSetter.MoveToNextStateBool())
@@ -263,7 +307,10 @@ void logic()
 				
 				gNumPlayers = gNumPlayerSetter.GetNumberOfPlayers();
 				
+				game_mode_selected = gGameModeSelector.GetModeSelected();
+				
 				gNumPlayerSetter.Reset();
+				gGameModeSelector.Reset();
 				
 			}
 			
@@ -307,12 +354,48 @@ void logic()
 					quitGame = true;
 				}
 				
-				//initialize stage selector
-				gStageSelector.Init(gStageManager.GetNumberOfStagesInitialized());
-				
-				m_game_state = GameState::STAGE_SELECTOR;
-				
 				gCharSelector.Reset();
+				
+				switch(game_mode_selected)
+				{
+					//versus fight game mode
+					case 0:
+					{ 
+						m_game_state = GameState::STAGE_SELECTOR; 
+						
+						//initialize stage selector
+						gStageSelector.Init(gStageManager.GetNumberOfStagesInitialized());
+												
+						//initialize render system
+						renderSystem->Init(&main_camera); 
+						
+						break;
+					}
+					//metroidvania mode
+					case 1:
+					{
+						//intiailize the world system
+						 
+						m_game_state = GameState::METROIDVANIA_GAME;
+						
+						worldSystem->SetPointerToCameraManager(&main_camera_manager);
+						
+						if(!worldSystem->Init())
+						{
+							std::cout << "Failed to intialize world system!\n";
+							quitGame = true;
+						}
+						
+						cameraSystem->Init_MetroidVaniaMode(&main_camera_manager,gNumPlayers, gameScreenWidth, gameScreenHeight);
+						
+						//initialize render system
+						renderSystem->Init_MetroidVaniaMode(&main_camera_manager);
+						
+						break;
+					}
+				}
+				
+				
 			}
 			
 			break;
@@ -426,6 +509,67 @@ void logic()
 		}
 		case GameState::METROIDVANIA_GAME:
 		{
+			worldSystem->logic(dt);
+			
+			//handle activating powers based on input
+			attackPowerMechanicSystem->HandlePowerActivation(dt);
+			
+			//move players and other entities
+			physicsSystem->Update_MetroidVaniaMode(dt);
+			
+			//move attack boxes with players
+			attackPowerMechanicSystem->MoveAttackBoxesWithPlayer(dt);
+			
+			//check collisions between players
+			attackPowerMechanicSystem->CollisionDetectionBetweenPlayers();
+			
+			//react to collisions
+			attackPowerMechanicSystem->ReactToCollisions(dt);
+			
+			//perform power transactions if needed so that players can
+			//receive their slain opponent's power
+			attackPowerMechanicSystem->PerformNeededPowerTransactions();
+			
+			//set up frame for render
+			animationSystem->Update(dt);
+			
+			//check for dead players, set bool to stop rendering them
+			playerDeathSystem->Update();
+			
+			if(playerDeathSystem->OnePlayerWon() && gNumPlayers > 1)
+			{
+				show_restart_game_message = true;
+				winning_player = playerDeathSystem->GetPlayerWhoWon();
+			}
+			else if(gNumPlayers == 1)
+			{
+				winning_player = 0;
+			}
+			
+			if(restart_game)
+			{
+				//remove components of players in game
+				for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
+				{
+					gCoordinator.RemoveComponent<InputReact>(entity_it);
+					gCoordinator.RemoveComponent<CollisionBox>(entity_it);
+					gCoordinator.RemoveComponent<Animation>(entity_it);
+					gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
+					gCoordinator.RemoveComponent<Player>(entity_it);
+					gCoordinator.RemoveComponent<Transform2D>(entity_it);
+					gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
+					gCoordinator.RemoveComponent<Gravity2D>(entity_it);
+					gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
+				}
+				
+				//set game state back to title screen
+				m_game_state = GameState::TITLE_MENU;
+				
+				restart_game = false;
+				show_restart_game_message = false;
+				winning_player = -1;
+				playerDeathSystem->Reset();
+			}
 			
 			break;
 		}
@@ -454,7 +598,14 @@ void render()
 		{
 			DrawTexture(title_menu_texture, 0, 0, WHITE);
 			
-			gNumPlayerSetter.render();
+			if(!gGameModeSelector.MoveToNextStateBool())
+			{
+				gGameModeSelector.render();
+			}
+			else
+			{
+				gNumPlayerSetter.render();
+			}
 			
 			break;
 		}
@@ -509,6 +660,19 @@ void render()
 				DrawText("Winning player press start to return to title screen to restart game.", 20,15,12, GOLD);
 			}
 						
+			break;
+		}
+		case GameState::METROIDVANIA_GAME:
+		{
+			//render tiles with cameras
+			
+			cameraSystem->Update_MetroidVaniaMode();
+			
+			worldSystem->render();
+			
+			//render any entity that has render component
+			renderSystem->Update_MetroidVaniaMode();
+			
 			break;
 		}
 	}
@@ -665,7 +829,16 @@ void InitMainECS()
 	player_death_sig.set( gCoordinator.GetComponentType<RenderModelComponent>() );
 	gCoordinator.SetSystemSignature<PlayerDeathSystem>(player_death_sig);
 	
+	//make world system
 	
+	worldSystem = gCoordinator.RegisterSystem<WorldSystem>();
+	
+	Signature world_system_sig;
+	world_system_sig.set( gCoordinator.GetComponentType<Player>() );
+	world_system_sig.set( gCoordinator.GetComponentType<Transform2D>() );
+	world_system_sig.set( gCoordinator.GetComponentType<CollisionBox>() );
+	
+	gCoordinator.SetSystemSignature<WorldSystem>(world_system_sig);
 }
 
 void InitRaylibSystem()

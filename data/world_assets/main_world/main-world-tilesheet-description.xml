@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <!--Num must be ordered sequentially for the TileManager and editor to pick it up well.-->
 <TileDescriptionXML>
-	<Tilesheet path="main-world-tilesheet.png"/>
+	<Tilesheet path="main_world/main-world-tilesheet.png"/>
 	<Tiles>
 		<Tile type="BACKGROUND" x="0" y="0" id="0"/>
 		<Tile type="PUSHBACK" x="30" y="0" id="1"/>

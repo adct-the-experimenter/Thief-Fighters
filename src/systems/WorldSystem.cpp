@@ -19,10 +19,73 @@ World world_two;
 World world_three;
 World world_four;
 
-void WorldSystem::Init()
+bool WorldSystem::Init()
 {
+	//load file paths
+	if( !WorldSystem::LoadWorldFilepaths() )
+	{
+		std::cout << "\nFailed to load tilesheet and level filepaths in world-registry.xml!\n";
+		return false;
+	}
 	
+	//load main world by default
+	//change later when saving and loading from file is implemented
+	
+	if(!WorldSystem::LoadWorldLevel(&world_one,0))
+	{
+		std::cout << "\nFailed to load world level in world system initialization.\n";
+		return false;
+	}
+	
+	
+	//place all players in main world by default
+	//change later when saving and loading from file is implemented
+	
+	for (auto const& entity : mEntities)
+	{
+		auto& player = gCoordinator.GetComponent<Player>(entity);
+		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
+		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
+		
+		player.world_id = 0;
+		collisionBox.world_id = 0;
+	}
+	
+	//set all cameras to main world by default
+	//change later when saving and loading from file is implemented
+	for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
+	{
+		m_camera_manager_ptr->lead_cameras[i].SetWorldID(0);
+	}
+	
+	return true;
 }
+
+void WorldSystem::FreeResources()
+{
+
+	if(world_one.in_active_use)
+	{
+		FreeWorldLevel(&world_one);
+	}
+	
+	if(world_two.in_active_use)
+	{
+		FreeWorldLevel(&world_one);
+	}
+	
+	if(world_three.in_active_use)
+	{
+		FreeWorldLevel(&world_one);
+	}
+	
+	if(world_four.in_active_use)
+	{
+		FreeWorldLevel(&world_one);
+	}
+}
+
+void WorldSystem::SetPointerToCameraManager(CameraManager* cam_manager_ptr){m_camera_manager_ptr = cam_manager_ptr;}
 
 bool WorldSystem::LoadWorldFilepaths()
 {
@@ -109,9 +172,10 @@ bool WorldSystem::LoadDataBasedOnTilesheetDescription(World* world_ptr,std::stri
     pugi::xml_node tilesheet_node = root.child("Tilesheet");
     std::string tilesheet_path = tilesheet_node.attribute("path").value();
     
+    std::string tilesheetPathFull = DATADIR_STR + "/world_assets/" + tilesheet_path;
     
     //load tile sheet
-    world_ptr->tilesheet_texture = LoadTexture(tilesheet_path.c_str());
+    world_ptr->tilesheet_texture = LoadTexture(tilesheetPathFull.c_str());
         
     //set up tile selector based on data
     pugi::xml_node tileRoot = root.child("Tiles");
@@ -149,7 +213,8 @@ bool WorldSystem::LoadDataBasedOnTilesheetDescription(World* world_ptr,std::stri
 		std::uint16_t tile_id = atoi(valString.c_str());
 		
 		//push into frame clip map
-		world_ptr->frame_clip_map[tile_id] = frame_clip;
+		//assuming tile id is in squential order from least to greatest 0 - n
+		world_ptr->frame_clip_map.push_back(frame_clip);
 		
 	}
 	
@@ -161,7 +226,7 @@ bool WorldSystem::LoadDataFromXMLFile(World* world_ptr,std::string mapFilePath, 
 	//read tilesheet description xml file for tile parameters
 	if(!WorldSystem::LoadDataBasedOnTilesheetDescription(world_ptr,tilesheetDescriptionFilePath))
 	{
-		std::cout << "Failed to read tilesheet description xml!\n";
+		std::cout << "\nFailed to read tilesheet description xml!\n";
 		return false;
 	}
 	else
@@ -255,20 +320,10 @@ bool WorldSystem::LoadDataFromXMLFile(World* world_ptr,std::string mapFilePath, 
     
 }
 
-bool WorldSystem::LoadWorldLevel(std::uint8_t level_num)
+bool WorldSystem::LoadWorldLevel(World* world_ptr, std::uint8_t level_num)
 {
 	size_t num_tiles_horiz = 220;
 	size_t square_area = num_tiles_horiz * num_tiles_horiz;
-	
-	World* world_ptr = nullptr;
-	
-	switch(level_num)
-	{
-		case 0:{ world_ptr = &world_one; break;}
-		case 1:{ world_ptr = &world_two; break;}
-		case 2:{ world_ptr = &world_three; break;}
-		case 3:{ world_ptr = &world_four; break;}
-	}
 	
 	world_ptr->tiles_vector.resize(square_area); 
 	world_ptr->in_active_use = true;
@@ -294,63 +349,119 @@ bool WorldSystem::LoadWorldLevel(std::uint8_t level_num)
 	return true;
 }
 
-void WorldSystem::FreeWorldLevel(std::uint8_t level_num)
-{
-	World* world_ptr = nullptr;
-	
-	switch(level_num)
-	{
-		case 0:{ world_ptr = &world_one; break;}
-		case 1:{ world_ptr = &world_two; break;}
-		case 2:{ world_ptr = &world_three; break;}
-		case 3:{ world_ptr = &world_four; break;}
-	}
-	
+void WorldSystem::FreeWorldLevel(World* world_ptr)
+{		
 	world_ptr->tiles_vector.clear();
 	world_ptr->frame_clip_map.clear(); 
 	world_ptr->in_active_use = false;
+	UnloadTexture(world_ptr->tilesheet_texture);
+	
 }
 
 void WorldSystem::logic(float& dt)
 {
+	//for all players
 	for (auto const& entity : mEntities)
 	{
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
 		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
+			
+		//get world that player is in
+		//get player location in world
 		
-		//for all players
+		//if player collides with transportation
+			//handle transportation of players
 			
-			//get world that player is in
-			//get player location in world
+			//prevent non-camera lead player from inhabiting world alone
 			
+			//if world is not already in active use, load the tiles for it
 			
+			//change world that player is in
+			//change player location in world
 			
-			
-			//if player collides with transportation
-				//handle transportation of players
-				
-				//prevent non-camera lead player from inhabiting world alone
-				
-				//if world is not already in active use, load the tiles for it
-				
-				//change world that player is in
-				//change player location in world
-				
-				//set which camera player is in
+			//set which camera player is in
 	}
 			
+}
+
+static void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
+{
+	
+	//number of tiles in a row
+	size_t num_tiles_horizontal = 220;
+	
+	//render 9 rows of tiles
+	
+	size_t start_tiles[9];
+	size_t end_tiles[9];
+	
+	//get index based on top left corner of camera
+	size_t horiz_index = trunc(camera.x / 30 );
+	size_t vert_index = trunc( camera.y / 30 ) * num_tiles_horizontal;
+	
+	//initialize start tiles
+	for(size_t i = 0; i < 9; i++)
+	{
+		start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
+		if(start_tiles[i] > world_ptr->tiles_vector.size()){start_tiles[i] = world_ptr->tiles_vector.size() - 1;}
+	}
+	
+	//get camera width offset
+	//added 2 tiles to prevent tearing when player is walking
+	size_t camera_offset_width = trunc( camera.width / 30 ) + 2;
+	
+	//initialize end tiles
+	for(size_t i = 0; i < 9; i++)
+	{
+		end_tiles[i] = start_tiles[i] + camera_offset_width;
+		if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
+	}
+	
+	
+	for(size_t i = 0; i < 9; i++)
+	{
+		for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
+		{
+			
+			Vector2 pos = {world_ptr->tiles_vector.at(tile_index).x - camera.x ,world_ptr->tiles_vector.at(tile_index).y - camera.y };
+			
+			//std::cout << "pos : " << pos.x << " , " << pos.y << std::endl;
+			if(world_ptr->tiles_vector.at(tile_index).frame_clip_ptr)
+			{
+				DrawTextureRec(world_ptr->tilesheet_texture, 
+						   *world_ptr->tiles_vector.at(tile_index).frame_clip_ptr, 
+						   pos, 
+						   WHITE);
+			}
+		}
+		
+		
+	}
+	
 }
 
 void WorldSystem::render()
 {
 	//for all players
 		
-		//get world that player is in
-		//get player location in world
+	//render tiles to camera based on player location
+	
+	//only render tiles near player
+	
+	if(world_one.in_active_use)
+	{
+		for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
+		{
+			//if camera is active and has the same id as the world
+			if( world_one.world_id == m_camera_manager_ptr->lead_cameras[i].GetWorldID() &&
+				m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
+			{
+				RenderLevelMapRelativeToCamera(&world_one,*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer());
+			}
+		}
 		
-		//render tiles to camera based on player location
 		
-		//only render tiles near player
+	}
 	
 }
