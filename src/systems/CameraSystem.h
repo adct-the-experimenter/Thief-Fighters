@@ -35,6 +35,9 @@ private:
 	std::uint16_t level_bound_right_x;
 	std::uint16_t level_bound_up_y;
 	std::uint16_t level_bound_down_y;
+	
+	float m_gameScreenWidth; 
+	float m_gameScreenHeight;
 };
 
 #endif

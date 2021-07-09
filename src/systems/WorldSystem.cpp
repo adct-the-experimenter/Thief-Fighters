@@ -460,17 +460,21 @@ void WorldSystem::render()
 	
 	if(world_one.in_active_use)
 	{
-		for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
+		for(size_t i = 0; i < m_camera_manager_ptr->screens.size(); i++)
 		{
-			//if camera is active and has the same id as the world
-			if( world_one.world_id == m_camera_manager_ptr->lead_cameras[i].GetWorldID() &&
-				m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus() &&
-				m_camera_manager_ptr->screens[i].in_active_use )
+			if(m_camera_manager_ptr->screens[i].in_active_use)
 			{
-				RenderLevelMapRelativeToCameraAndScreen(&world_one,
-														*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer(),
-														m_camera_manager_ptr->screens[i].screen_rect);
+				//if camera is active and has the same id as the world
+				if( world_one.world_id == m_camera_manager_ptr->screens[i].camera_ptr->GetWorldID() &&
+					m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus() 
+					)
+				{
+					RenderLevelMapRelativeToCameraAndScreen(&world_one,
+															*m_camera_manager_ptr->screens[i].camera_rect_ptr,
+															m_camera_manager_ptr->screens[i].screen_rect);
+				}
 			}
+			
 		}
 		
 		

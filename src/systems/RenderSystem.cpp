@@ -99,14 +99,14 @@ void RenderSystem::Update_MetroidVaniaMode()
 				
 				
 				//if renderable object is within camera bounds.
-				//if(render_comp.render)
-				//{
+				if(render_comp.render && m_camera_manager_ptr->screens[i].in_active_use)
+				{
 					
-					if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus() && m_camera_manager_ptr->screens[i].in_active_use)
+					if(m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus())
 					{
 						//std::cout << "\nCamera " << i << " is being rendered!\n";
 						
-						Rectangle* camera_ptr = m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer();
+						Rectangle* camera_ptr = m_camera_manager_ptr->screens[i].camera_ptr->GetCameraRectPointer();
 						
 						//std::cout << "\npos: " << transform.position.x << " , " << transform.position.y << std::endl;
 						
@@ -131,7 +131,7 @@ void RenderSystem::Update_MetroidVaniaMode()
 						}
 					}
 					
-				//}
+				}
 				
 				
 			}

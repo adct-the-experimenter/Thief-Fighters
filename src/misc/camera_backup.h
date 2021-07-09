@@ -5,7 +5,6 @@
 #include "raylib.h"
 
 #include <bitset>
-#include <iostream>
 
 class CustomCamera
 {
@@ -108,8 +107,6 @@ struct Screen
 {
 	Rectangle screen_rect;
 	bool in_active_use;
-	CustomCamera* camera_ptr;
-	Rectangle* camera_rect_ptr;
 };
 
 //class to manager 4 cameras
@@ -128,7 +125,7 @@ public:
 									    
 									    //three player screen states
 									    splitS0S1S2_joinNone,
-									    splitS1_joinS0S2, splitS2_joinS0S1,
+									    splitS0_joinS1S2, splitS1_joinS0S2, splitS2_joinS0S1,
 									    splitNone_joinS0S1S2,
 									    
 									    //four player screen states
@@ -248,50 +245,25 @@ public:
 		camera_screen_state = CS_State::splitS0S1S2S3_joinNone;
 	}
 	
-	void AttachCameraToScreen(CustomCamera* camera, std::uint8_t screen_num)
-	{
-		if(screen_num >= 4)
-		{
-			std::cout << "\nError out of range screen index used in AttachCameraToScreen!\n";
-			return;
-		}
-		
-		screens[screen_num].camera_ptr = camera;
-		screens[screen_num].camera_rect_ptr = camera->GetCameraRectPointer();
-	}
-	
 	//function to join screen zero and screen one
 	void JoinScreenZeroAndScreenOne()
 	{
 		//assuming width and height of cameras have already been initialized
 		//join 2 screens, height stays the same, width changes
 		
-		//if only 2 players
-		if(m_num_players == 2)
-		{
-			camera_screen_state = CS_State::splitNone_joinS0S1;
-			ApplyNewScreenState();
-		}
-		else if(m_num_players == 3)
-		{
-			//if all screens are split
-			if(camera_screen_state == CS_State::splitS0S1S2_joinNone)
-			{			
-				camera_screen_state = CS_State::splitS2_joinS0S1;
-			}
-			//if only screen one is split
-			else if(camera_screen_state == CS_State::splitS1_joinS0S2)
-			{
-				camera_screen_state = CS_State::splitNone_joinS0S1S2;
-			}
-			
-			ApplyNewScreenState();
-		}
-		else if(m_num_players >= 4)
-		{
-			
-		}
+		//make screen 0 and camera 0 bigger
+		screens[0].in_active_use = true;
+		screens[0].screen_rect.width = game_screen_width;
+		lead_cameras[0].GetCameraRectPointer()->width = game_screen_width;;
 		
+		lead_cameras[0].SetCameraActiveStatus(true);
+		
+		//disable screen 1 and camera 1
+		screens[1].in_active_use = false;
+		screens[1].screen_rect.width = game_screen_width;
+		lead_cameras[1].GetCameraRectPointer()->width = game_screen_width;
+		
+		lead_cameras[1].SetCameraActiveStatus(false);
 	}
 	
 	//function to split screen zero and screen one
@@ -299,11 +271,19 @@ public:
 	{
 		//split into 2 screens in half, height stays the same, width changes
 		
-		if(m_num_players == 2)
-		{
-			camera_screen_state = CS_State::splitS0S1_joinNone;
-			ApplyNewScreenState();
-		}
+		screens[0].in_active_use = true;
+		screens[0].screen_rect.x = 0;
+		screens[0].screen_rect.width = game_screen_width / 2;
+		lead_cameras[0].GetCameraRectPointer()->width = game_screen_width / 2;
+
+		lead_cameras[0].SetCameraActiveStatus(true);
+		
+		screens[1].in_active_use = true;
+		screens[1].screen_rect.x = game_screen_width / 2;
+		screens[1].screen_rect.width = game_screen_width / 2;
+		lead_cameras[1].GetCameraRectPointer()->width = game_screen_width / 2;
+		
+		lead_cameras[1].SetCameraActiveStatus(true);
 	}
 	
 	//function to join screen two and screen three
@@ -312,19 +292,18 @@ public:
 		//assuming width and height of cameras have already been initialized
 		//join 2 screens, height stays the same, width changes
 		
-		//enable screen 0 and its attached camera
 		screens[2].in_active_use = true;
 		screens[2].screen_rect.width = game_screen_width;
-		screens[2].camera_rect_ptr->width = game_screen_width;
+		lead_cameras[2].GetCameraRectPointer()->width = game_screen_width;
 		
-		screens[2].camera_ptr->SetCameraActiveStatus(true);
+		lead_cameras[2].SetCameraActiveStatus(true);
 		
-		//disable screen 1 and its attached camera
+		//disable screen 1 and camera 1
 		screens[3].in_active_use = false;
 		screens[3].screen_rect.width = game_screen_width;
-		screens[3].camera_rect_ptr->width = game_screen_width;
+		lead_cameras[3].GetCameraRectPointer()->width = game_screen_width;
 		
-		screens[3].camera_ptr->SetCameraActiveStatus(false);
+		lead_cameras[3].SetCameraActiveStatus(false);
 	}
 	
 	//function to split screen two and screen three
@@ -335,17 +314,17 @@ public:
 		screens[2].in_active_use = true;
 		screens[2].screen_rect.x = 0;
 		screens[2].screen_rect.width = game_screen_width / 2;
-		screens[2].camera_rect_ptr->width = game_screen_width / 2;
+		lead_cameras[2].GetCameraRectPointer()->width = game_screen_width / 2;
 
-		screens[2].camera_ptr->SetCameraActiveStatus(true);
+		lead_cameras[2].SetCameraActiveStatus(true);
 		
 		//enable screen 3 and make it the same size as screen 2
 		screens[3].in_active_use = true;
 		screens[3].screen_rect.x = game_screen_width / 2;
 		screens[3].screen_rect.width = game_screen_width / 2;
-		screens[2].camera_rect_ptr->width = game_screen_width / 2;
+		lead_cameras[3].GetCameraRectPointer()->width = game_screen_width / 2;
 		
-		screens[3].camera_ptr->SetCameraActiveStatus(true);
+		lead_cameras[3].SetCameraActiveStatus(true);
 	}
 	
 	//function to join screen zero and two
@@ -428,207 +407,7 @@ public:
 		
 		lead_cameras[3].SetCameraActiveStatus(true);
 	}
-	
-	void ApplyNewScreenState()
-	{
-		switch(camera_screen_state)
-		{
-			case CS_State::NONE:
-			{
-				break;
-			}
-			
-			//one player screen state
-			case CS_State::S0_only:
-			{
-				screens[0].in_active_use = true;
-				screens[0].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
-				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
-				
-				screens[1].camera_ptr->SetCameraActiveStatus(false);
-				screens[1].in_active_use = false;
-				screens[2].camera_ptr->SetCameraActiveStatus(false);
-				screens[2].in_active_use = false;
-				screens[3].camera_ptr->SetCameraActiveStatus(false);
-				screens[3].in_active_use = false;
-				
-				break;
-			}
-			
-			//two player screen states
-			
-			case CS_State::splitS0S1_joinNone:
-			{
-				//enable screen 0 and its attached camera
-				screens[0].in_active_use = true;
-				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
-				
-				//enable screen 1 and its attached camera
-				screens[1].in_active_use = true;
-				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width,game_screen_height};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				
-				screens[1].camera_ptr->SetCameraActiveStatus(true);
-				break;
-			}
-			case CS_State::splitNone_joinS0S1:
-			{
-				//enable screen 0 and its attached camera
-				screens[0].in_active_use = true;
-				screens[0].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
-				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
-				
-				//disable screen 1 and its attached camera
-				screens[1].in_active_use = false;
-				screens[1].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
-				
-				screens[1].camera_ptr->SetCameraActiveStatus(false);
-				break;
-			}
-			
-			//three player screen states
-			case CS_State::splitS0S1S2_joinNone:
-			{
-				//enable screen 0 and its attached camera
-				screens[0].in_active_use = true;
-				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
-				
-				//enable screen 1 and its attached camera
-				screens[1].in_active_use = true;
-				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				
-				screens[1].camera_ptr->SetCameraActiveStatus(true);
-				
-				//enable screen 2 and its attached camera
-				screens[2].in_active_use = true;
-				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
-				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				
-				screens[2].camera_ptr->SetCameraActiveStatus(true);
-				
-				break;
-			}
-			case CS_State::splitS1_joinS0S2:
-			{
-				//enable screen 1 and its attached camera
-				screens[1].in_active_use = true;
-				screens[1].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				
-				screens[1].camera_ptr->SetCameraActiveStatus(true);
-				
-				//disable screen 2 and its attached camera
-				screens[2].in_active_use = false;
-				screens[2].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				
-				screens[2].camera_ptr->SetCameraActiveStatus(false);
-				
-				//enable screen 0 and its attached camera
-				screens[0].in_active_use = true;
-				screens[0].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
-				break;
-			}
-			case CS_State::splitS2_joinS0S1:
-			{
-				//enable screen 2 and its attached camera
-				screens[2].in_active_use = true;
-				screens[2].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				
-				screens[2].camera_ptr->SetCameraActiveStatus(true);
-				
-				//disable screen 0 and its attached camera
-				screens[0].in_active_use = false;
-				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				
-				screens[0].camera_ptr->SetCameraActiveStatus(false);
-				
-				//enable screen 1 and its attached camera
-				screens[1].in_active_use = true;
-				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				
-				screens[1].camera_ptr->SetCameraActiveStatus(true);
-				break;
-			}
-			case CS_State::splitNone_joinS0S1S2:
-			{
-				//enable screen 0 and its attached camera
-				screens[0].in_active_use = true;
-				screens[0].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				
-				screens[0].camera_ptr->SetCameraActiveStatus(false);
-				
-				//disable screen 1 and its attached camera
-				screens[1].in_active_use = false;
-				screens[1].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
-				
-				screens[1].camera_ptr->SetCameraActiveStatus(false);
-				
-				//enable screen 2 and its attached camera
-				screens[2].in_active_use = true;
-				screens[2].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				
-				screens[2].camera_ptr->SetCameraActiveStatus(true);
-				break;
-			}
-			
-			//four player screen states
-			case CS_State::splitS0S1S2S3_joinNone:
-			{
-				break;
-			}
-			case CS_State::splitS0_joinS1S2S3:
-			{
-				break;
-			}
-			case CS_State::splitS1_joinS0S2S3:
-			{
-				break;
-			} 
-			case CS_State::splitS2_joinS0S1S3:
-			{
-				break;
-			}
-			case CS_State::splitS3_joinS0S1S2:
-			{
-				break;
-			}
-			case CS_State::splitS0S1_joinS2S3:
-			{
-				break;
-			}
-			case CS_State::splitS0S2_joinS1S3:
-			{
-				break;
-			}
-			case CS_State::splitNone_joinS0S1S2S3:
-			{
-				break;
-			}
-		}
-	}
-	
+
 private:
 	
 };
