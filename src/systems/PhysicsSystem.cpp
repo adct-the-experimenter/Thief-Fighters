@@ -483,10 +483,10 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 	
 }
 
-static float level_bound_right_x = 640;
 static float level_bound_left_x = 0;
-static float level_bound_down_y = 360;
+static float level_bound_right_x = 6600;
 static float level_bound_up_y = 0;
+static float level_bound_down_y = 6240 + 500;
 
 static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y, 
 										float& obj_vx, float& obj_vy, 
@@ -679,10 +679,10 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 					physics_type_comp.jump_count = 0;
 				}
 				
-				//CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,
-				//							  rigidBody.velocity.x, rigidBody.velocity.y,
-				//							  dt,
-				//							  collisionBox.width, collisionBox.height);
+				CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,
+											  rigidBody.velocity.x, rigidBody.velocity.y,
+											  dt,
+											  collisionBox.width, collisionBox.height);
 				
 				
 				break;
