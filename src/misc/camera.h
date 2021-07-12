@@ -362,15 +362,15 @@ public:
 				//enable screen 0 and its attached camera
 				//make it bigger
 				screens[0].in_active_use = true;
-				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height};
+				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
 				
 				screens[0].camera_ptr->SetCameraActiveStatus(true);
 				
 				//disable screen 1 and its attached camera
 				screens[1].in_active_use = false;
-				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width,game_screen_height};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[1].screen_rect = (Rectangle){game_screen_width,0,game_screen_width,game_screen_height};
+				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
 				
 				screens[1].camera_ptr->SetCameraActiveStatus(false);
 			}

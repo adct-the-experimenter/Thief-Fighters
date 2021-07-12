@@ -254,7 +254,7 @@ static bool ShouldAdjacentVerticalCamerasSplit(CustomCamera* camera_a_ptr, Custo
 
 }
 
-//#define DEBUG_CAMERA_SYSTEM
+#define DEBUG_CAMERA_SYSTEM
 
 void CameraSystem::Update_MetroidVaniaMode()
 {
