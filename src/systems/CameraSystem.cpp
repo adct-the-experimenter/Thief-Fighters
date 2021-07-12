@@ -212,11 +212,9 @@ static bool ShouldAdjacentVerticalCamerasJoin(CustomCamera* camera_a_ptr, Custom
 	if( CheckCollisionBetweenRectangles(*a_rect_ptr, *b_rect_ptr) )
 	{
 		float diff_camera_y = abs(b_rect_ptr->y - a_rect_ptr->y);
-		float diff_camera_x = abs(b_rect_ptr->x - a_rect_ptr->x);
 		
 		//if camera B is more than halfway inside camera A, join the cameras
-		if(diff_camera_y <= gameScreenHeight ||
-			diff_camera_x <= gameScreenWidth)
+		if(diff_camera_y <= gameScreenHeight )
 		{
 			return true;
 		}
@@ -254,7 +252,9 @@ static bool ShouldAdjacentVerticalCamerasSplit(CustomCamera* camera_a_ptr, Custo
 
 }
 
-#define DEBUG_CAMERA_SYSTEM
+//#define DEBUG_CAMERA_SYSTEM
+
+
 
 void CameraSystem::Update_MetroidVaniaMode()
 {
@@ -271,6 +271,7 @@ void CameraSystem::Update_MetroidVaniaMode()
 	//Change camera configurations depending on how close camera leads are to each other
 	//if one camera lead is 3/4 inside another camera lead's camera join together.
 	//else if one camera lead is 3/4 outside another camera lead's camera split.
+	
 	
 		
 	//for metroidvania game mode
@@ -304,14 +305,15 @@ void CameraSystem::Update_MetroidVaniaMode()
 	}
 	
 	//attach camera to screen based on position
-	CustomCamera* topLeft_camera = nullptr;
-	CustomCamera* topRight_camera = nullptr;
-	CustomCamera* bottomLeft_camera = nullptr;
-	CustomCamera* bottomRight_camera = nullptr;
+	
 	
 	if(m_num_players == 2)
 	{
+		CustomCamera* topLeft_camera = nullptr;
+		CustomCamera* topRight_camera = nullptr;
+		
 		//check which camera is most left
+		
 		if(m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer()->x < m_camera_manager_ptr->lead_cameras[1].GetCameraRectPointer()->x)
 		{
 			topLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
@@ -329,66 +331,237 @@ void CameraSystem::Update_MetroidVaniaMode()
 	}
 	else if(m_num_players == 3)
 	{
+		CustomCamera* topLeft_camera = nullptr;
+		CustomCamera* topRight_camera = nullptr;
+		CustomCamera* bottomLeft_camera = nullptr;
+		
+		Rectangle* camera_zero_ptr = m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer();
+		Rectangle* camera_one_ptr = m_camera_manager_ptr->lead_cameras[1].GetCameraRectPointer();
+		Rectangle* camera_two_ptr = m_camera_manager_ptr->lead_cameras[2].GetCameraRectPointer();
+		
+		//calculate average point of cameras, assuming it works well enough as center
+		float avg_x = (camera_zero_ptr->x + camera_one_ptr->x + camera_two_ptr->x) / 3;
+		float avg_y = (camera_zero_ptr->y + camera_one_ptr->y + camera_two_ptr->y ) / 3;
+		
+		//determine top left camera
+		if(camera_zero_ptr->x < avg_x && camera_zero_ptr->y < avg_y 
+			&& m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus())
+		{
+			topLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
+		}
+		else if(camera_one_ptr->x < avg_x && camera_one_ptr->y < avg_y  
+				&& m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus())
+		{
+			topLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
+		}
+		else if(camera_two_ptr->x < avg_x && camera_two_ptr->y < avg_y 
+				 && m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus())
+		{
+			topLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
+		
+		
+		//determine top right camera
+		if(camera_zero_ptr->x > avg_x && camera_zero_ptr->y < avg_y 
+			 && m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus())
+		{
+			topRight_camera = &m_camera_manager_ptr->lead_cameras[0];
+		}
+		else if(camera_one_ptr->x > avg_x && camera_one_ptr->y < avg_y 
+			 && m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus())
+		{
+			topRight_camera = &m_camera_manager_ptr->lead_cameras[1];
+		}
+		else if(camera_two_ptr->x > avg_x && camera_two_ptr->y < avg_y 
+			 && m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus())
+		{
+			topRight_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
+		
+		
+		//determine bottom left camera
+		if(camera_zero_ptr->y > avg_y  && m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus())
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
+		}
+		else if(camera_one_ptr->y > avg_y  && m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus())
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
+		}
+		else if(camera_two_ptr->y > avg_y  && m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus())
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
+		
+		
+		if(topLeft_camera)
+		{
+			m_camera_manager_ptr->AttachCameraToScreen(topLeft_camera,0);
+		}
+			
+		if(topRight_camera)
+		{
+			m_camera_manager_ptr->AttachCameraToScreen(topRight_camera,1);
+		}
+		if(bottomLeft_camera)
+		{
+			m_camera_manager_ptr->AttachCameraToScreen(bottomLeft_camera,2);
+		}
 		
 	}
 	else if(m_num_players >= 4)
 	{
+		CustomCamera* topLeft_camera = nullptr;
+		CustomCamera* topRight_camera = nullptr;
+		CustomCamera* bottomLeft_camera = nullptr;
+		CustomCamera* bottomRight_camera = nullptr;
+	
+		Rectangle* camera_zero_ptr = m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer();
+		Rectangle* camera_one_ptr = m_camera_manager_ptr->lead_cameras[1].GetCameraRectPointer();
+		Rectangle* camera_two_ptr = m_camera_manager_ptr->lead_cameras[2].GetCameraRectPointer();
+		Rectangle* camera_three_ptr = m_camera_manager_ptr->lead_cameras[3].GetCameraRectPointer();
 		
+		//calculate average point of cameras, assuming it works well enough as center
+		float avg_x = (camera_zero_ptr->x + camera_one_ptr->x + camera_two_ptr->x + camera_three_ptr->x) / 4;
+		float avg_y = (camera_zero_ptr->y + camera_one_ptr->y + camera_two_ptr->y + camera_three_ptr->y) / 4;
+		
+		//determine top left camera
+		if(camera_zero_ptr->x < avg_x && camera_zero_ptr->y < avg_y)
+		{
+			topLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
+		}
+		else if(camera_one_ptr->x < avg_x && camera_one_ptr->y < avg_y )
+		{
+			topLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
+		}
+		else if(camera_two_ptr->x < avg_x && camera_two_ptr->y < avg_y )
+		{
+			topLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
+		else if(camera_three_ptr->x < avg_x && camera_three_ptr->y < avg_y)
+		{
+			topLeft_camera = &m_camera_manager_ptr->lead_cameras[3];
+		}
+		
+		//determine top right camera
+		if(camera_zero_ptr->x > avg_x && camera_zero_ptr->y < avg_y )
+		{
+			topRight_camera = &m_camera_manager_ptr->lead_cameras[0];
+		}
+		else if(camera_one_ptr->x > avg_x && camera_one_ptr->y < avg_y )
+		{
+			topRight_camera = &m_camera_manager_ptr->lead_cameras[1];
+		}
+		else if(camera_two_ptr->x > avg_x && camera_two_ptr->y < avg_y )
+		{
+			topRight_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
+		else if(camera_three_ptr->x > avg_x && camera_three_ptr->y < avg_y)
+		{
+			topRight_camera = &m_camera_manager_ptr->lead_cameras[3];
+		}
+		
+		//determine bottom left camera
+		if(camera_zero_ptr->x < avg_x && camera_zero_ptr->y > avg_y)
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
+		}
+		else if(camera_one_ptr->x < avg_x && camera_one_ptr->y > avg_y)
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
+		}
+		else if(camera_two_ptr->x < avg_x && camera_two_ptr->y > avg_y)
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
+		else if(camera_three_ptr->x < avg_x && camera_three_ptr->y > avg_y)
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
+		
+		//determine bottom right camera
+		if(camera_zero_ptr->x > avg_x && camera_zero_ptr->y > avg_y)
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
+		}
+		else if(camera_one_ptr->x > avg_x && camera_one_ptr->y > avg_y)
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
+		}
+		else if(camera_two_ptr->x > avg_x && camera_two_ptr->y > avg_y)
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
+		else if(camera_three_ptr->x > avg_x && camera_three_ptr->y > avg_y)
+		{
+			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		}
 	}
 	
-	CustomCamera* camera_a_ptr = nullptr;
-	CustomCamera* camera_b_ptr = nullptr;
 	
 	//if at least two players are playing
 	if(m_num_players >= 2)
 	{
-		//determine if screens/cameras zero and one should join or split
-		camera_a_ptr = topLeft_camera;
-		camera_b_ptr = topRight_camera;
+		CustomCamera* topLeft_camera = m_camera_manager_ptr->screens[0].camera_ptr;
+		CustomCamera* topRight_camera = m_camera_manager_ptr->screens[1].camera_ptr;
 		
-		//check if cameras need to be joined together
-		if( camera_a_ptr->GetCameraActiveStatus() && camera_b_ptr->GetCameraActiveStatus())
+		if(topLeft_camera && topRight_camera)
 		{
-			if( ShouldAdjacentHorizontalCamerasJoin(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
+			//determine if screens/cameras zero and one should join or split
+			CustomCamera* camera_a_ptr = topLeft_camera;
+			CustomCamera* camera_b_ptr = topRight_camera;
+			
+			//check if cameras need to be joined together
+			if( !m_camera_manager_ptr->screens_joined_bitset[1] || !m_camera_manager_ptr->screens_joined_bitset[0])
 			{
-				m_camera_manager_ptr->JoinScreenZeroAndScreenOne();
-				std::cout << "\nJoining screen zero and screen one!\n \n";
+				if( ShouldAdjacentHorizontalCamerasJoin(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
+				{
+					m_camera_manager_ptr->JoinScreenZeroAndScreenOne();
+					std::cout << "\nJoining screen zero and screen one!\n \n";
+				}
+			}
+			//check if cameras need to be split
+			else
+			{
+				if( ShouldAdjacentHorizontalCamerasSplit(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
+				{
+					m_camera_manager_ptr->SplitScreenZeroAndScreenOne();
+					std::cout << "\nSplitting screen zero and screen one!\n \n";
+				}
 			}
 		}
-		//check if cameras need to be split
-		else
-		{
-			if( ShouldAdjacentHorizontalCamerasSplit(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
-			{
-				m_camera_manager_ptr->SplitScreenZeroAndScreenOne();
-				std::cout << "\nSplitting screen zero and screen one!\n \n";
-			}
-		}
+		
 	}
 	
 	//if at least three players are playing
 	if(m_num_players >= 3)
 	{
-		//determine if adjacent vertical screens/cameras zero and two should join or split
-		camera_a_ptr = &m_camera_manager_ptr->lead_cameras[0];
-		camera_b_ptr = &m_camera_manager_ptr->lead_cameras[2];
+		CustomCamera* topLeft_camera = m_camera_manager_ptr->screens[0].camera_ptr;
+		CustomCamera* bottomLeft_camera = m_camera_manager_ptr->screens[2].camera_ptr;
 		
-		//check if cameras need to be joined together
-		if( camera_a_ptr->GetCameraActiveStatus() && camera_b_ptr->GetCameraActiveStatus())
+		if(bottomLeft_camera && topLeft_camera)
 		{
-			if( ShouldAdjacentVerticalCamerasJoin(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight))
+			//determine if screens/cameras zero and one should join or split
+			CustomCamera* camera_a_ptr = topLeft_camera;
+			CustomCamera* camera_b_ptr = bottomLeft_camera;
+			
+			//check if cameras need to be joined together
+			if( !m_camera_manager_ptr->screens_joined_bitset[2] || !m_camera_manager_ptr->screens_joined_bitset[0] )
 			{
-				m_camera_manager_ptr->JoinScreenZeroAndScreenTwo();
-				std::cout << "\nJoining screen zero and screen two.\n";
+				if( ShouldAdjacentVerticalCamerasJoin(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
+				{
+					m_camera_manager_ptr->JoinScreenZeroAndScreenTwo();
+					std::cout << "\nJoining screen zero and screen two!\n \n";
+				}
 			}
-		}
-		//check if cameras need to be split
-		else
-		{
-			if( ShouldAdjacentVerticalCamerasSplit(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
+			//check if cameras need to be split
+			else
 			{
-				m_camera_manager_ptr->SplitScreenZeroAndScreenTwo();
-				std::cout << "\nSplitting screen zero and screen two.\n";
+				if( ShouldAdjacentVerticalCamerasSplit(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
+				{
+					m_camera_manager_ptr->SplitScreenZeroAndScreenTwo();
+					std::cout << "\nSplitting screen zero and screen two!\n \n";
+				}
 			}
 		}
 	}
@@ -396,47 +569,7 @@ void CameraSystem::Update_MetroidVaniaMode()
 	//if at least four players are playing
 	if(m_num_players >= 4)
 	{
-		//determine if adjacent horizontal screens/cameras two and three should join or split
-		camera_a_ptr = &m_camera_manager_ptr->lead_cameras[2];
-		camera_b_ptr = &m_camera_manager_ptr->lead_cameras[3];
 		
-		//check if cameras need to be joined together
-		if( camera_a_ptr->GetCameraActiveStatus() && camera_b_ptr->GetCameraActiveStatus())
-		{
-			if( ShouldAdjacentHorizontalCamerasJoin(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
-			{
-				m_camera_manager_ptr->JoinScreenTwoAndScreenThree();
-			}
-		}
-		//check if cameras need to be split
-		else
-		{
-			if( ShouldAdjacentHorizontalCamerasSplit(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
-			{
-				m_camera_manager_ptr->SplitScreenTwoAndScreenThree();
-			}
-		}
-		
-		//determine if adjacent vertical screens/cameras one and three should join or split
-		camera_a_ptr = &m_camera_manager_ptr->lead_cameras[1];
-		camera_b_ptr = &m_camera_manager_ptr->lead_cameras[3];
-		
-		//check if cameras need to be joined together
-		if( camera_a_ptr->GetCameraActiveStatus() && camera_b_ptr->GetCameraActiveStatus())
-		{
-			if( ShouldAdjacentVerticalCamerasJoin(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
-			{
-				m_camera_manager_ptr->JoinScreenOneAndScreenThree();
-			}
-		}
-		//check if cameras need to be split
-		else
-		{
-			if( ShouldAdjacentVerticalCamerasSplit(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
-			{
-				m_camera_manager_ptr->SplitScreenOneAndScreenThree();
-			}
-		}
 	}
 		
 	

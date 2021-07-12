@@ -464,14 +464,21 @@ void WorldSystem::render()
 		{
 			if(m_camera_manager_ptr->screens[i].in_active_use)
 			{
-				//if camera is active and has the same id as the world
-				if( world_one.world_id == m_camera_manager_ptr->screens[i].camera_ptr->GetWorldID() &&
-					m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus() 
-					)
+				if(m_camera_manager_ptr->screens[i].camera_ptr)
 				{
-					RenderLevelMapRelativeToCameraAndScreen(&world_one,
-															*m_camera_manager_ptr->screens[i].camera_rect_ptr,
-															m_camera_manager_ptr->screens[i].screen_rect);
+					//if camera is active and has the same id as the world
+					if( world_one.world_id == m_camera_manager_ptr->screens[i].camera_ptr->GetWorldID() &&
+						m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus() 
+						)
+					{
+						RenderLevelMapRelativeToCameraAndScreen(&world_one,
+																*m_camera_manager_ptr->screens[i].camera_rect_ptr,
+																m_camera_manager_ptr->screens[i].screen_rect);
+					}
+				}
+				else
+				{
+					std::cout << "Uninitialized camera for active screen!\n";
 				}
 			}
 			

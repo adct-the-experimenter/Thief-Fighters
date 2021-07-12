@@ -334,6 +334,7 @@ public:
 		ApplyNewScreenState();
 	}
 	
+	
 	void ApplyNewScreenState()
 	{
 		
@@ -470,14 +471,14 @@ public:
 				
 				//disable screen 1 and its attached camera
 				screens[1].in_active_use = false;
-				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width,game_screen_height};
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
 				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height };
 				
 				screens[1].camera_ptr->SetCameraActiveStatus(false);
 				
 				//disable screen 2 and its attached camera
 				screens[2].in_active_use = false;
-				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width ,game_screen_height};
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2 ,game_screen_height / 2};
 				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width ,game_screen_height};
 				
 				screens[2].camera_ptr->SetCameraActiveStatus(false);
