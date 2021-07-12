@@ -108,8 +108,8 @@ CharacterAssetManager gCharAssetManager;
 CharacterSelector gCharSelector;
 std::int8_t gNumPlayers = 2;
 
-const std::int16_t screenWidth = 800;
-const std::int16_t screenHeight = 450;
+const std::int16_t screenWidth = 640;
+const std::int16_t screenHeight = 360;
 
 StageManager gStageManager;
 

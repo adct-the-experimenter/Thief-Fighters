@@ -251,7 +251,10 @@ static bool ShouldAdjacentVerticalCamerasSplit(CustomCamera* camera_a_ptr, Custo
 	}
 	
 	return true;
+
 }
+
+//#define DEBUG_CAMERA_SYSTEM
 
 void CameraSystem::Update_MetroidVaniaMode()
 {
@@ -292,10 +295,11 @@ void CameraSystem::Update_MetroidVaniaMode()
 			if(camera_rect->y < level_bound_up_y){camera_rect->y = level_bound_up_y;}
 			if(camera_rect->y > level_bound_down_y){camera_rect->y = level_bound_down_y;}
 			
+			#ifdef DEBUG_CAMERA_SYSTEM
 			std::cout << "\nPlayer camera " << int(player.camera_num_leader) << " is updated!\n "
 			<< "camera pos: " << camera_rect->x << " , " << camera_rect->y << " ," 
 			<< camera_rect->width <<  " , " << camera_rect->height << std::endl;
-			
+			#endif
 		}
 	}
 	
