@@ -87,6 +87,19 @@ if(WIN32)
 endif()
 
 
+#Specific thread library linking to make miniaudio work
+if( ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD" )
+	set ( PROJECT_LINK_LIBS  ${PROJECT_LINK_LIBS} pthread m)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+	message( STATUS "System detected is FreeBSD")
+	
+elseif( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
+	set ( PROJECT_LINK_LIBS  ${PROJECT_LINK_LIBS} pthread m dl)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+	message(STATUS "System detected is Linux")
+else ()
+
+endif()
 
 set(SOURCES 
 src/main.cpp
@@ -102,6 +115,7 @@ src/systems/PlayerDeathSystem.cpp
 src/systems/PhysicsSystem.cpp
 src/systems/CameraSystem.cpp
 src/systems/AnimationSystem.cpp
+src/systems/SoundSystem.cpp
 src/systems/RenderSystem.cpp
 src/systems/InputReactorSystem.cpp
 src/systems/EnemySystem.cpp
@@ -117,7 +131,7 @@ src/core/ControllerInputHandler.cpp src/core/KeyboardTypingInputHandler.cpp
 #make executable sphere from simple-sphere.cpp 
 add_executable(${PROJECT_NAME} ${SOURCES})
 #link libraries
-target_link_libraries(${PROJECT_NAME} ${PROJECT_LINK_LIBS})
+target_link_libraries(${PROJECT_NAME} ${PROJECT_LINK_LIBS} )
 
 #make install ops
 install(TARGETS thief-fighters DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
