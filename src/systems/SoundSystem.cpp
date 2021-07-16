@@ -35,6 +35,7 @@ static void data_callback(ma_device* pDevice, void* pOutput, const void* pInput,
 
 bool SoundSystem::Init()
 {
+	sound_system_initialized = false;
 	//initialize audio device here
 	
 	//set up device configuration
@@ -62,20 +63,25 @@ bool SoundSystem::Init()
         return false;
     }
 	
+	sound_system_initialized = true;
 	return true;
 }
 
 void SoundSystem::Update_VersusMode()
 {
-	//play sound based on sound id 
+	//play sound based on sound id received
 }
 	
 void SoundSystem::Update_MetroidVaniaMode()
 {
+	//play sound based on sound id received
 	
 }
 
 void SoundSystem::Close()
 {
-	ma_device_uninit(&main_audio_device);
+	if(sound_system_initialized)
+	{
+		ma_device_uninit(&main_audio_device);
+	}
 }

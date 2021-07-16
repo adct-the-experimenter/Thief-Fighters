@@ -24,6 +24,7 @@ private:
 	
 	//sound bank
 	
+	bool sound_system_initialized;
 };
 
 #endif
