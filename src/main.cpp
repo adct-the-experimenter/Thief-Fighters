@@ -13,6 +13,8 @@
 
 #include "systems/WorldSystem.h"
 
+#include "systems/SoundSystem.h"
+
 #include "core/ControllerInputHandler.h"
 #include "core/ControllerInput.h"
 
@@ -75,6 +77,8 @@ std::shared_ptr <PlayerDeathSystem> playerDeathSystem;
 
 std::shared_ptr <WorldSystem> worldSystem;
 
+std::shared_ptr <SoundSystem> soundSystem;
+
 //function to init raylib system
 void InitRaylibSystem();
 
@@ -130,7 +134,6 @@ int main(int argc, char* args[])
 {
 	InitRaylibSystem();
 	
-	
 	if(!loadMedia())
 	{
 		std::cout << "Not loading game. Failed to load media!\n";
@@ -146,6 +149,14 @@ int main(int argc, char* args[])
 		gGameModeSelector.Init();
 		
 		InitMainECS();
+		
+		//initialize sound system, 
+		//if sound system fails to initialize, stop program.
+		if(!soundSystem->Init())
+		{
+			std::cout << "\nFailed to set up sound system!\n";
+			return -1;
+		}
 		
 		//create entities for all 8 players
 		for(size_t i = 0; i < 8; i++)
@@ -187,6 +198,8 @@ int main(int argc, char* args[])
     {
 		worldSystem->FreeResources();
 	}
+	
+	soundSystem->Close();
     
 	CloseRaylibSystem();
 	
@@ -203,6 +216,9 @@ void GameLoop()
 	
 	//run render for all entities in manager
 	render();
+	
+	//sound module
+	sound();
 	
 }
 
@@ -707,7 +723,42 @@ void render()
 
 void sound()
 {
-	
+	switch(m_game_state)
+	{
+		case GameState::TITLE_MENU:
+		{	
+			break;
+		}
+		case GameState::CHAR_SELECTOR:
+		{
+			
+			break;
+		}
+		case GameState::STAGE_SELECTOR:
+		{
+			
+			break;
+		}
+		case GameState::TUTORIAL:
+		{
+			
+			break;
+		}
+		case GameState::FIGHT_GAME:
+		{
+			//load buffer and			
+			//play sounds in buffer			
+			soundSystem->Update_VersusMode();
+						
+			break;
+		}
+		case GameState::METROIDVANIA_GAME:
+		{
+			soundSystem->Update_MetroidVaniaMode();
+			
+			break;
+		}
+	}
 }
 
 bool loadMedia()
@@ -746,7 +797,7 @@ void InitMainECS()
 	gCoordinator.RegisterComponent<Animation>();
 	gCoordinator.RegisterComponent<CollisionBox>();
 	gCoordinator.RegisterComponent<Player>();
-	
+	gCoordinator.RegisterComponent<SoundComponent>();
 	
 	//make rendering system that only reacts to entities
 	//with render info component
@@ -839,6 +890,16 @@ void InitMainECS()
 	world_system_sig.set( gCoordinator.GetComponentType<CollisionBox>() );
 	
 	gCoordinator.SetSystemSignature<WorldSystem>(world_system_sig);
+	
+	//make sound system
+	
+	soundSystem = gCoordinator.RegisterSystem <SoundSystem>();
+	
+	Signature sound_system_sig;
+	sound_system_sig.set( gCoordinator.GetComponentType<SoundComponent>() );
+	
+	gCoordinator.SetSystemSignature<SoundSystem>(sound_system_sig);
+	
 }
 
 void InitRaylibSystem()
@@ -864,15 +925,20 @@ void InitRaylibSystem()
     
     //initialize game controller input
     gControllerInputHandler.Init(1);
+    
+    // Initialize audio device
+    InitAudioDevice();      
 }
 
 void CloseRaylibSystem()
 {
 	UnloadRenderTexture(target);    // Unload render texture
-	
-    CloseWindow();        // Close window and OpenGL context
     
     //Quit SDL subsystems
     SDL_Quit();
+    
+    CloseAudioDevice();
+    
+    CloseWindow();        // Close window and OpenGL context
 }
 

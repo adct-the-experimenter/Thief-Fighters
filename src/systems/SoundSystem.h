@@ -1,9 +1,9 @@
 #ifndef SOUND_SYSTEM_H
 #define SOUND_SYSTEM_H
 
-#include "core/miniaudio.h"
+#include "core/system.h"
 
-class SoundSystem
+class SoundSystem : public System
 {
 
 public:

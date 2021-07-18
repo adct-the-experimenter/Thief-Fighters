@@ -55,6 +55,7 @@ struct CharStats
 	float damage_factor;
 };
 
+
 //list of characters avaiable for playing
 extern std::array <std::string,8> character_names;
 

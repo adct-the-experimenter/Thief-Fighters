@@ -218,4 +218,11 @@ struct Enemy
 	EnemyType type;
 };
 
+
+
+struct SoundComponent
+{
+	std::uint8_t sound_id;
+};
+
 #endif

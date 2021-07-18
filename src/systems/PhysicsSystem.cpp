@@ -488,7 +488,7 @@ static float level_bound_right_x = 6600;
 static float level_bound_up_y = 0;
 static float level_bound_down_y = 6240 + 500;
 
-static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y, 
+static void CheckCollisionWithLevelBounds_MetroidVania(float& obj_x, float& obj_y, 
 										float& obj_vx, float& obj_vy, 
 										float& dt, 
 										std::uint32_t& obj_width,
@@ -525,6 +525,51 @@ static void CheckCollisionWithLevelBounds(float& obj_x, float& obj_y,
 			dt);
 		
 		obj_y = level_bound_down_y - obj_height - 1;
+	}
+}
+
+static float stage_bound_left_x = 0;
+static float stage_bound_right_x = 640;
+static float stage_bound_up_y = 0;
+static float stage_bound_down_y = 360;
+
+static void CheckCollisionWithLevelBounds_Versus(float& obj_x, float& obj_y, 
+										float& obj_vx, float& obj_vy, 
+										float& dt, 
+										std::uint32_t& obj_width,
+										std::uint32_t& obj_height)
+{
+	//if go to the right of the level bound
+	if(obj_x + obj_width >= 640.0f)
+	{
+		obj_x = stage_bound_right_x - obj_width - 1;
+	}
+	//if go to the left of level bound
+	else if(obj_x <= 0.0f)
+	{
+		
+		obj_x = stage_bound_left_x + 1;
+	}
+	
+	//if go above up bound
+	if(obj_y + 2*obj_height <= 0.0f)
+	{
+		//push back player 
+		PushBack(obj_x, obj_y, 
+			obj_vx, obj_vy, 
+			dt);
+		obj_y = stage_bound_up_y + 1;
+	}
+	
+	//if go below down bound
+	else if(obj_y + obj_height >= 360.0f)
+	{
+		//push back player 
+		PushBack(obj_x, obj_y, 
+			obj_vx, obj_vy, 
+			dt);
+		
+		obj_y = stage_bound_down_y - obj_height - 1;
 	}
 }
 
@@ -592,7 +637,7 @@ void PhysicsSystem::Update_VersusMode(float& dt)
 					physics_type_comp.jump_count = 0;
 				}
 				
-				CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,
+				CheckCollisionWithLevelBounds_Versus(transform.position.x, transform.position.y,
 											  rigidBody.velocity.x, rigidBody.velocity.y,
 											  dt,
 											  collisionBox.width, collisionBox.height);
@@ -679,7 +724,7 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 					physics_type_comp.jump_count = 0;
 				}
 				
-				CheckCollisionWithLevelBounds(transform.position.x, transform.position.y,
+				CheckCollisionWithLevelBounds_MetroidVania(transform.position.x, transform.position.y,
 											  rigidBody.velocity.x, rigidBody.velocity.y,
 											  dt,
 											  collisionBox.width, collisionBox.height);

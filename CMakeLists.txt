@@ -63,7 +63,7 @@ endif()
  
  
 
-set ( PROJECT_INCLUDE_DIR  ${SDL2_INCLUDE_DIRS} ./src )
+set ( PROJECT_INCLUDE_DIR  ${SDL2_INCLUDE_DIRS} ./src ./src/core/soloud ./src/core/soloud/include)
 
 #for where to find header files for source and library
 if (EMSCRIPTEN)
@@ -84,26 +84,28 @@ endif ()
 
 if(WIN32)
 	set ( PROJECT_LINK_LIBS  ${PROJECT_LINK_LIBS} opengl32 gdi32 winmm)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWITH_WINMM")
 endif()
 
 
 #Specific thread library linking to make miniaudio work
 if( ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD" )
-	set ( PROJECT_LINK_LIBS  ${PROJECT_LINK_LIBS} pthread m)
+	set ( PROJECT_LINK_LIBS  ${PROJECT_LINK_LIBS} pthread m )
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 	message( STATUS "System detected is FreeBSD")
 	
 elseif( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
-	set ( PROJECT_LINK_LIBS  ${PROJECT_LINK_LIBS} pthread m dl)
+	set ( PROJECT_LINK_LIBS  ${PROJECT_LINK_LIBS} pthread m dl )
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 	message(STATUS "System detected is Linux")
 else ()
 
 endif()
 
+
 set(SOURCES 
 src/main.cpp
-src/misc/StageManager.cpp src/systems/WorldSystem.cpp
+src/misc/StageManager.cpp src/systems/WorldSystem.cpp src/misc/sound_media.cpp
 src/misc/globalvariables.cpp
 src/misc/MediaLoader.cpp
 src/misc/game_mode_selector.cpp src/misc/num_player_setter.cpp
@@ -115,7 +117,7 @@ src/systems/PlayerDeathSystem.cpp
 src/systems/PhysicsSystem.cpp
 src/systems/CameraSystem.cpp
 src/systems/AnimationSystem.cpp
-src/systems/SoundSystem.cpp
+src/systems/SoundSystem.cpp 
 src/systems/RenderSystem.cpp
 src/systems/InputReactorSystem.cpp
 src/systems/EnemySystem.cpp

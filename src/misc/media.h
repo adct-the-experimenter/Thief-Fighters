@@ -13,6 +13,4 @@ extern Texture2D tutorial_texture;
 
 
 
-
-
 #endif
