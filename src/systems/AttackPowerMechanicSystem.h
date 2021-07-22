@@ -51,6 +51,8 @@ private:
 	std::array <bool*,8> player_hurt_invincible_ptrs;
 	std::array <float*,8> player_attack_damage_factor_ptrs;
 	
+	std::array <SoundComponent*,8> player_sound_comp_types;
+	
 	//collision handling functions to determine if players hit each other
 	bool AreBothPlayersAlive(int& player_a_num, int& player_b_num);
 	AttackEvent CheckCollisionBetween2Players(int& player_a_num, int& player_b_num);

@@ -218,11 +218,15 @@ struct Enemy
 	EnemyType type;
 };
 
-
+enum class SoundType : std::uint8_t { NONE=0, GENERAL_SOUND, CHAR_SOUND};
 
 struct SoundComponent
 {
-	std::uint8_t sound_id;
+	SoundType sound_type;
+	std::uint8_t general_sound_id;
+	
+	std::int16_t char_index; //index to indicate which character is making the sound
+	std::uint8_t char_sound_id; //index to indicate which sound is being played
 };
 
 #endif

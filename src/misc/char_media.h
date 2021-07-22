@@ -66,6 +66,7 @@ extern std::array <Texture2D,8> character_sheet_textures;
 
 extern std::array <CharFrames,8> character_frame_animations;
 
+
 struct RequestedCharacters
 {
 	//array to hold the character number asked by 8 players

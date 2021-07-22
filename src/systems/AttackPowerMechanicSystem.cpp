@@ -21,12 +21,14 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_taking_damage_state_ptrs[i] = nullptr;
 		player_attack_damage_factor_ptrs[i] = nullptr;
 		player_hurt_invincible_ptrs[i] = nullptr;
+		player_sound_comp_types[i] = nullptr;
 	}
 		
 	for (auto const& entity : mEntities)
 	{
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
+		auto& sound_comp = gCoordinator.GetComponent<SoundComponent>(entity);
 		
 		player_health_ptrs[player.player_num - 1] = &player.player_health;
 		
@@ -46,6 +48,8 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		
 		//set collected power for player
 		player.collected_powers[player.current_power] = 1;
+		
+		player_sound_comp_types[player.player_num - 1] = &sound_comp;
 	}
 	
 	m_num_players = num_players;
@@ -457,10 +461,8 @@ void AttackPowerMechanicSystem::MoveAttackBoxesWithPlayer(float& dt)
 	{
 		
 		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
-		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
-		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
 		
 		if(player.attack_box.active)
 		{
@@ -827,6 +829,9 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 		
 		player_position_ptrs[attack_event.player_num_victim - 1]->x += sign*knockback;
 		
+		//make sound
+		player_sound_comp_types[attack_event.player_num_victim - 1]->sound_type = SoundType::GENERAL_SOUND;
+		
 	}
 
 }
@@ -839,7 +844,6 @@ void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
-		//auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
 		
 		//if player is in state of taking damage 
 		//activate hurt animation and keep them from moving

@@ -1,8 +1,11 @@
 #include "SoundSystem.h"
 
 
+#include "core/coordinator.h"
+
 #include "misc/sound_media.h"
 
+extern Coordinator gCoordinator;
 
 bool SoundSystem::Init()
 {
@@ -15,9 +18,25 @@ bool SoundSystem::Init()
 
 void SoundSystem::Update_VersusMode()
 {
-	//play sound based on sound id received
+	//for every entity
+	for (auto const& entity : mEntities)
+	{
+		auto& sound_comp = gCoordinator.GetComponent<SoundComponent>(entity);
+		
+		//play sound based on sound component information
+		if(sound_comp.sound_type == SoundType::GENERAL_SOUND)
+		{
+			PlaySound(hit_sound);
+		}
+		else if(sound_comp.sound_type == SoundType::CHAR_SOUND)
+		{
+			//PlaySound(hit_sound);
+		}
+		
+		sound_comp.sound_type = SoundType::NONE;
+		
+	}
 	
-	//PlaySound(hit_sound);
     
 }
 	
@@ -29,5 +48,5 @@ void SoundSystem::Update_MetroidVaniaMode()
 
 void SoundSystem::Close()
 {
-	
+	UnloadGeneralAudio();
 }
