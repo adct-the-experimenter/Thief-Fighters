@@ -3,6 +3,6 @@
 
 #include <cstdint>
 
-enum class GeneralSoundID : std::uint8_t {HIT_SOUND = 0,};
+enum class GeneralSoundID : std::uint8_t {HIT_SOUND = 0};
 
 #endif

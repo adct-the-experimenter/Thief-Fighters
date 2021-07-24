@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <Root>
   <Characters>
-	  <Character name="Randy" sheet_path="randy/theif-fighters-randy.png" frame_path="randy/randy-frames-v1.xml" stat_path="randy/randy-stats.xml" />
-	  <Character name="Shadow" sheet_path="shadow/theif-fighters-shadow.png" frame_path="shadow/shadow-frames-v1.xml" stat_path="shadow/shadow-stats.xml" />
-	  <Character name="Sun Man" sheet_path="sun_man/theif-fighters-sun-man.png" frame_path="sun_man/sun-man-frames-v1.xml" stat_path="sun_man/sun-man-stats.xml" />
-	  <Character name="Moon Man" sheet_path="moon_man/theif-fighters-moon-man.png" frame_path="moon_man/moon-man-frames-v1.xml" stat_path="moon_man/moon-man-stats.xml" />
-	  <Character name="Ophelia" sheet_path="ophelia/theif-fighters-ophelia.png" frame_path="ophelia/ophelia-frames-v1.xml" stat_path="ophelia/ophelia-stats.xml" />
-	  <Character name="Tina" sheet_path="tina/theif-fighters-tina.png" frame_path="tina/tina-frames-v1.xml" stat_path="tina/tina-stats.xml" />
-	  <Character name="W. Bear" sheet_path="w_bear/theif-fighters-w-bear.png" frame_path="w_bear/w-bear-frames-v1.xml" stat_path="w_bear/w-bear-stats.xml" />
-	  <Character name="Wasp" sheet_path="wasp/theif-fighters-wasp.png" frame_path="wasp/wasp-frames-v1.xml" stat_path="wasp/wasp-stats.xml" />
+	  <Character name="Randy" sheet_path="randy/theif-fighters-randy.png" frame_path="randy/randy-frames-v1.xml" stat_path="randy/randy-stats.xml" sounds_path="randy/sounds/randy-sounds.xml"/>
+	  <Character name="Shadow" sheet_path="shadow/theif-fighters-shadow.png" frame_path="shadow/shadow-frames-v1.xml" stat_path="shadow/shadow-stats.xml" sounds_path="shadow/sounds/shadow-sounds.xml"/>
+	  <Character name="Sun Man" sheet_path="sun_man/theif-fighters-sun-man.png" frame_path="sun_man/sun-man-frames-v1.xml" stat_path="sun_man/sun-man-stats.xml" sounds_path="sun_man/sounds/sun-man-sounds.xml"/>
+	  <Character name="Moon Man" sheet_path="moon_man/theif-fighters-moon-man.png" frame_path="moon_man/moon-man-frames-v1.xml" stat_path="moon_man/moon-man-stats.xml" sounds_path="moon_man/sounds/moon-man-sounds.xml"/>
+	  <Character name="Ophelia" sheet_path="ophelia/theif-fighters-ophelia.png" frame_path="ophelia/ophelia-frames-v1.xml" stat_path="ophelia/ophelia-stats.xml" sounds_path="ophelia/sounds/ophelia-sounds.xml"/>
+	  <Character name="Tina" sheet_path="tina/theif-fighters-tina.png" frame_path="tina/tina-frames-v1.xml" stat_path="tina/tina-stats.xml" sounds_path="tina/sounds/tina-sounds.xml"/>
+	  <Character name="W. Bear" sheet_path="w_bear/theif-fighters-w-bear.png" frame_path="w_bear/w-bear-frames-v1.xml" stat_path="w_bear/w-bear-stats.xml" sounds_path="w_bear/sounds/w_bear-sounds.xml"/>
+	  <Character name="Wasp" sheet_path="wasp/theif-fighters-wasp.png" frame_path="wasp/wasp-frames-v1.xml" stat_path="wasp/wasp-stats.xml" sounds_path="wasp/sounds/wasp-sounds.xml"/>
   </Characters>    
 </Root>

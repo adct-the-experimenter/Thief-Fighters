@@ -9,11 +9,15 @@
 #include "core/system.h"
 #include "core/coordinator.h"
 
-//define character variables from media.h
+#include "misc/char_sounds.h"
+
+//define character variables from char_media.h
 std::array <std::string,8> character_names;
 std::array <Texture2D,8> character_profile_textures;
 std::array <Texture2D,8> character_sheet_textures;
 std::array <CharFrames,8> character_frame_animations;
+std::array <CharSounds,8> character_sounds;
+
 
 extern Coordinator gCoordinator;
 
@@ -47,7 +51,8 @@ bool CharacterAssetManager::LoadCharacterProfilesFromXML()
     pugi::xml_node profileRoot = root.child("Profiles");
     
     size_t iterator = 0;
-	//go through each tile type in tiles node
+    
+	//go through each profile
 	for (pugi::xml_node profile_node = profileRoot.first_child(); profile_node; profile_node = profile_node.next_sibling())
 	{	
 				
@@ -267,6 +272,34 @@ static bool ReadCharacterStatsFromFile(std::string filepath_frames,CharStats& ch
 	return true;
 }
 
+static bool LoadSoundsFromFile(std::string filepath_sounds,CharSounds& char_sound)
+{
+	//read frame data by pugi xml
+	// Create empty XML document within memory
+    pugi::xml_document doc;
+    
+    // Load XML file into memory
+    // Remark: to fully read declaration entries you have to specify
+    // "pugi::parse_declaration"
+    pugi::xml_parse_result result = doc.load_file(filepath_sounds.c_str(),
+												pugi::parse_default);
+    if (!result)
+    {
+		std::cout << "File: " << filepath_sounds << std::endl;
+        std::cout << "Parse error: " << result.description()
+            << ", character pos= " << result.offset;
+        return false;
+    }
+    
+    pugi::xml_node root = doc.child("Root");
+    
+    pugi::xml_node sound_node = root.child("Sound");
+    
+    char_sound.sounds[static_cast <int> (CharSoundID::HIT_SOUND)] = LoadSound(sound_node.attribute("hit_sound").value());
+           
+	return true;
+}
+
 bool CharacterAssetManager::LoadCharacterAssets(RequestedCharacters& req_chars, std::uint8_t num_players)
 {
 	//read name and file paths to character profile image from xml file with PugiXML
@@ -293,11 +326,11 @@ bool CharacterAssetManager::LoadCharacterAssets(RequestedCharacters& req_chars, 
     
     pugi::xml_node root = doc.child("Root");
     
-    //set up tile selector based on data
     pugi::xml_node charRoot = root.child("Characters");
     
     std::array <std::string,8> filepaths_char_animations;
     std::array <std::string,8> filepaths_char_stats;
+    std::array <std::string,8> filepaths_char_sounds;
     
     //initialize which characters to load
     std::vector <std::string> char_to_load_vec;
@@ -340,6 +373,9 @@ bool CharacterAssetManager::LoadCharacterAssets(RequestedCharacters& req_chars, 
 				
 				std::string filepath_stats = char_node.attribute("stat_path").value();
 				filepaths_char_stats[ char_index_to_load_vec[char_iterator] ] = DATADIR_STR + "/fighter_assets/" + filepath_stats;
+				
+				std::string filepath_sounds = char_node.attribute("sounds_path").value();
+				filepaths_char_sounds[ char_index_to_load_vec[char_iterator] ] = DATADIR_STR + "/fighter_assets/" + filepath_sounds;
 			}
 			
 		}
@@ -405,6 +441,16 @@ bool CharacterAssetManager::LoadCharacterAssets(RequestedCharacters& req_chars, 
 		//<< " from file " << filepaths_char_stats[ req_chars.char_texture_index_req[i] ] << std::endl;
 	}
 	
+	//load sounds for requested characters from xml file path
+	for(std::uint8_t char_iterator = 0; char_iterator < char_to_load_vec.size(); char_iterator++)
+	{
+		if( !LoadSoundsFromFile( filepaths_char_sounds[ char_index_to_load_vec[char_iterator] ], character_sounds[ char_index_to_load_vec[char_iterator] ] ) )
+		{
+			std::cout << "\nFailed to load sounds for requested character " << req_chars.requested_by_player[char_iterator] << std::endl;
+			return false;
+			break;
+		}
+	}
 	
 	return true;
 }
