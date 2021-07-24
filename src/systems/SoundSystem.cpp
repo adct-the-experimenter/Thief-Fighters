@@ -26,7 +26,7 @@ void SoundSystem::Update_VersusMode()
 		//play sound based on sound component information
 		if(sound_comp.sound_type == SoundType::GENERAL_SOUND)
 		{
-			PlaySound(hit_sound);
+			PlayGeneralSound(sound_comp.general_sound_id);
 		}
 		else if(sound_comp.sound_type == SoundType::CHAR_SOUND)
 		{
