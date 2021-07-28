@@ -30,6 +30,7 @@
 #include "raylib.h" //for vector2
 
 #include "misc/general_sounds.h" //for general sound ID
+#include "misc/char_sounds.h" //for char sound ID
 
 // A simple type alias
 using ComponentType = std::uint8_t;
@@ -225,10 +226,11 @@ enum class SoundType : std::uint8_t { NONE=0, GENERAL_SOUND, CHAR_SOUND};
 struct SoundComponent
 {
 	SoundType sound_type;
+	
 	GeneralSoundID general_sound_id;
+	CharSoundID char_sound_id;
 	
 	std::int16_t char_index; //index to indicate which character is making the sound
-	std::uint8_t char_sound_id; //index to indicate which sound is being played
 };
 
 #endif

@@ -296,6 +296,10 @@ static bool LoadSoundsFromFile(std::string filepath_sounds,CharSounds& char_soun
     pugi::xml_node sound_node = root.child("Sound");
     
     std::string filepath_dir = sound_node.attribute("dir_path").value();
+    
+    //load char-specific sounds
+    
+    //load hit sound
     std::string filepath_sound = sound_node.attribute("hit").value();
     
     std::string filepath_sound_full = DATADIR_STR + "/fighter_assets/" + filepath_dir + filepath_sound;

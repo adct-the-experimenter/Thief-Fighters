@@ -509,6 +509,7 @@ void logic()
 					gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
 					gCoordinator.RemoveComponent<Gravity2D>(entity_it);
 					gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
+					gCoordinator.RemoveComponent<SoundComponent>(entity_it);
 				}
 				
 				//set game state back to title screen
@@ -665,7 +666,6 @@ void render()
 		    //render any entity that has render component
 			renderSystem->Update();
 			
-			//attackPowerMechanicSystem->DebugRender();
 			
 			if(gNumPlayers == 1)
 			{

@@ -830,8 +830,11 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 		player_position_ptrs[attack_event.player_num_victim - 1]->x += sign*knockback;
 		
 		//make sound
-		player_sound_comp_types[attack_event.player_num_victim - 1]->sound_type = SoundType::GENERAL_SOUND;
-		player_sound_comp_types[attack_event.player_num_victim - 1]->general_sound_id = GeneralSoundID::HIT_SOUND;
+		//player_sound_comp_types[attack_event.player_num_victim - 1]->sound_type = SoundType::GENERAL_SOUND;
+		//player_sound_comp_types[attack_event.player_num_victim - 1]->general_sound_id = GeneralSoundID::HIT_SOUND;
+		
+		player_sound_comp_types[attack_event.player_num_attacker - 1]->sound_type = SoundType::CHAR_SOUND;
+		player_sound_comp_types[attack_event.player_num_attacker - 1]->char_sound_id = CharSoundID::HIT_SOUND;
 	}
 
 }

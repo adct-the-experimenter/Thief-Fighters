@@ -22,7 +22,7 @@ void PlayGeneralSound(GeneralSoundID& sound_id)
 	PlaySound(general_sounds[ static_cast<int>(sound_id) ]);
 }
 
-void PlayCharacterSound(std::uint8_t& char_index,CharSoundID& sound_id)
+void PlayCharacterSound(std::int16_t& char_index,CharSoundID& sound_id)
 {
 	PlaySound(character_sounds[char_index].sounds[ static_cast<int>(sound_id) ]);
 }

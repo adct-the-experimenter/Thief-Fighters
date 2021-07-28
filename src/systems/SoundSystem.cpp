@@ -5,6 +5,8 @@
 
 #include "misc/sound_media.h"
 
+#include "misc/char_media.h"
+
 extern Coordinator gCoordinator;
 
 bool SoundSystem::Init()
@@ -30,7 +32,7 @@ void SoundSystem::Update_VersusMode()
 		}
 		else if(sound_comp.sound_type == SoundType::CHAR_SOUND)
 		{
-			//PlaySound(hit_sound);
+			PlayCharacterSound(sound_comp.char_index,sound_comp.char_sound_id);
 		}
 		
 		sound_comp.sound_type = SoundType::NONE;
