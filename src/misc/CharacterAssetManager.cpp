@@ -305,6 +305,8 @@ static bool LoadSoundsFromFile(std::string filepath_sounds,CharSounds& char_soun
     std::string filepath_sound_full = DATADIR_STR + "/fighter_assets/" + filepath_dir + filepath_sound;
     
     char_sound.sounds[static_cast <int> (CharSoundID::HIT_SOUND)] = LoadSound(filepath_sound_full.c_str());
+    
+    char_sound.soundsLoaded = true;
            
 	return true;
 }
@@ -464,5 +466,28 @@ bool CharacterAssetManager::LoadCharacterAssets(RequestedCharacters& req_chars, 
 	return true;
 }
 
+void CharacterAssetManager::FreeCurrentlyLoadedCharacterAssets()
+{
+	for(size_t i = 0; i < character_sheet_textures.size(); i++)
+	{
+		UnloadTexture(character_sheet_textures[i]);
+	}
+		
+	for(size_t i = 0; i < character_sounds.size(); i++)
+	{
+		if(character_sounds[i].soundsLoaded)
+		{
+			UnloadSound(character_sounds[i].sounds[0]);
+			character_sounds[i].soundsLoaded = false;
+		}
+		
+	}
+}
 
-
+void CharacterAssetManager::FreeLoadedCharacterProfiles()
+{
+	for(size_t i = 0; i < character_profile_textures.size(); i++)
+	{
+		UnloadTexture(character_profile_textures[i]);
+	}
+}

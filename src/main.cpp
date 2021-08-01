@@ -190,6 +190,7 @@ int main(int argc, char* args[])
 							
 	}
 	
+	gCharAssetManager.FreeLoadedCharacterProfiles();
 	gMediaLoader.freeMedia();
 	gStageManager.FreeCurrentLoadedLevel();
     
@@ -512,6 +513,9 @@ void logic()
 					gCoordinator.RemoveComponent<SoundComponent>(entity_it);
 				}
 				
+				//free loaded character media
+				gCharAssetManager.FreeCurrentlyLoadedCharacterAssets();
+				
 				//set game state back to title screen
 				m_game_state = GameState::TITLE_MENU;
 				
@@ -578,6 +582,9 @@ void logic()
 					gCoordinator.RemoveComponent<Gravity2D>(entity_it);
 					gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
 				}
+				
+				//free loaded character media
+				gCharAssetManager.FreeCurrentlyLoadedCharacterAssets();
 				
 				//set game state back to title screen
 				m_game_state = GameState::TITLE_MENU;

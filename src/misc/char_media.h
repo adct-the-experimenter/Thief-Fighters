@@ -60,6 +60,7 @@ struct CharStats
 struct CharSounds
 {
 	std::array <Sound,5> sounds;
+	bool soundsLoaded = false;
 };
 
 
