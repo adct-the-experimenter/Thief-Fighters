@@ -191,6 +191,7 @@ int main(int argc, char* args[])
 	}
 	
 	gCharAssetManager.FreeLoadedCharacterProfiles();
+	gCharAssetManager.FreeCurrentlyLoadedCharacterAssets();
 	gMediaLoader.freeMedia();
 	gStageManager.FreeCurrentLoadedLevel();
     
