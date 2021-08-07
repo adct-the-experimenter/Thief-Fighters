@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <Root>
-	<Sound dir_path="randy/sounds/" hit="randy-punch.wav"/>
+	<Sound dir_path="sun_man/sounds/" hit="sun-man-punch.wav"/>
 </Root>
