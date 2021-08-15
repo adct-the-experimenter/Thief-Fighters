@@ -31,6 +31,7 @@ void MediaLoader::freeMedia()
 	UnloadTexture(title_menu_texture);
 	UnloadTexture(char_select_texture);
 	
+	/*
 	for(size_t i = 0; i < character_sheet_textures.size(); i++)
 	{
 		UnloadTexture(character_sheet_textures[i]);
@@ -40,4 +41,5 @@ void MediaLoader::freeMedia()
 	{
 		UnloadTexture(character_profile_textures[i]);
 	}
+	*/
 }

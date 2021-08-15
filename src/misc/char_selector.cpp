@@ -449,14 +449,23 @@ void CharacterSelector::logic()
 			AnimatedActorType type = AnimatedActorType::PLAYER;
 			Animation anim_component = {};
 			anim_component.anim_actor_type = type;
+			
 			gCoordinator.AddComponent(
 						*player_entities_vec.at(i),
 						anim_component
 					);
 			
 				
+			//add sound component
 			
+			SoundComponent sound_comp = {};
+			sound_comp.sound_type = SoundType::NONE;
+			sound_comp.char_index = fighter_boxes[i].char_choice;
 			
+			gCoordinator.AddComponent(
+						*player_entities_vec.at(i),
+						sound_comp
+					);
 		}
 		
 		move_next_state = true;

@@ -4,6 +4,7 @@
 #include "raylib.h"
 
 #include <string>
+#include <array>
 
 struct OneFrameGroup
 {
@@ -55,6 +56,14 @@ struct CharStats
 	float damage_factor;
 };
 
+//sounds for character
+struct CharSounds
+{
+	std::array <Sound,5> sounds;
+	bool soundsLoaded = false;
+};
+
+
 //list of characters avaiable for playing
 extern std::array <std::string,8> character_names;
 
@@ -64,6 +73,8 @@ extern std::array <Texture2D,8> character_profile_textures;
 extern std::array <Texture2D,8> character_sheet_textures;
 
 extern std::array <CharFrames,8> character_frame_animations;
+
+extern std::array <CharSounds,8> character_sounds;
 
 struct RequestedCharacters
 {
