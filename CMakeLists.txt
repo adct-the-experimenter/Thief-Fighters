@@ -63,7 +63,7 @@ endif()
  
  
 
-set ( PROJECT_INCLUDE_DIR  ${SDL2_INCLUDE_DIRS} ./src ./src/core/soloud ./src/core/soloud/include)
+set ( PROJECT_INCLUDE_DIR  ${SDL2_INCLUDE_DIRS} ./src )
 
 #for where to find header files for source and library
 if (EMSCRIPTEN)
