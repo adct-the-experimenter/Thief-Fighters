@@ -373,7 +373,7 @@ public:
 				screens[1].screen_rect = (Rectangle){game_screen_width,0,game_screen_width,game_screen_height};
 				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
 				
-				screens[1].camera_ptr->SetCameraActiveStatus(false);
+				screens[1].camera_ptr->SetCameraActiveStatus(true);
 			}
 		}
 		else if(m_num_players == 3)

@@ -30,6 +30,7 @@ void MediaLoader::freeMedia()
 {
 	UnloadTexture(title_menu_texture);
 	UnloadTexture(char_select_texture);
+	UnloadTexture(tutorial_texture);
 	
 	/*
 	for(size_t i = 0; i < character_sheet_textures.size(); i++)
