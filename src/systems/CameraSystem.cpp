@@ -366,14 +366,12 @@ void CameraSystem::Update_MetroidVaniaMode()
 		}
 		else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x
 				&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
-				//&& m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus()
 				)
 		{
 			topLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
 		}
 		else if(camera_two_center_x < camera_zero_center_x && camera_two_center_x < camera_one_center_x
 				&& (camera_two_center_y < avg_y - camera_two_ptr->height*0.5 || camera_two_center_y > avg_y + camera_two_ptr->height*0.5) 
-				//&& m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus()
 				)
 		{
 			topLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
@@ -383,21 +381,18 @@ void CameraSystem::Update_MetroidVaniaMode()
 		//determine top right camera
 		if(camera_zero_center_x >  camera_one_center_x && camera_zero_center_x > camera_two_center_x
 			&& (camera_zero_center_y < avg_y - camera_zero_ptr->height*0.5 || camera_zero_center_y > avg_y + camera_zero_ptr->height*0.5)
-			//&& m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus()
 			)
 		{
 			topRight_camera = &m_camera_manager_ptr->lead_cameras[0];
 		}
 		else if(camera_one_center_x >  camera_zero_center_x && camera_one_center_x > camera_two_center_x
 				&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
-				//&& m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus()
 				)
 		{
 			topRight_camera = &m_camera_manager_ptr->lead_cameras[1];
 		}
 		else if(camera_two_center_x > camera_zero_center_x && camera_two_center_x > camera_one_center_x
 				&& (camera_two_center_y < avg_y - camera_two_ptr->height*0.5 || camera_two_center_y > avg_y + camera_two_ptr->height*0.5) 
-				//&& m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus()
 				)
 		{
 			topRight_camera = &m_camera_manager_ptr->lead_cameras[2];
@@ -407,21 +402,18 @@ void CameraSystem::Update_MetroidVaniaMode()
 		//determine bottom left camera
 		if(camera_zero_center_x <  camera_one_center_x && camera_zero_center_x < camera_two_center_x
 			&& (camera_zero_center_y < avg_y - camera_zero_ptr->height*0.5 || camera_zero_center_y > avg_y + camera_zero_ptr->height*0.5)
-			//&& m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus()
 			)
 		{
 			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
 		}
 		else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x
 				&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
-				//&& m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus()
 				)
 		{
 			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
 		}
 		else if(camera_two_center_x < camera_zero_center_x && camera_two_center_x < camera_one_center_x
 				&& (camera_two_center_y < avg_y - camera_two_ptr->height*0.5 || camera_two_center_y > avg_y + camera_two_ptr->height*0.5) 
-				//&& m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus()
 				)
 		{
 			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
@@ -495,7 +487,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		if(camera_zero_center_x <  camera_one_center_x && camera_zero_center_x < camera_two_center_x
 			&& camera_zero_center_x <  camera_three_center_x
 			&& camera_zero_center_y < avg_y
-			//&& m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus()
 			)
 		{
 			topLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
@@ -503,7 +494,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x
 				&& camera_one_center_x <  camera_three_center_x
 				&& camera_one_center_y < avg_y
-				//&& m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus()
 				)
 		{
 			topLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
@@ -511,7 +501,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_two_center_x < camera_zero_center_x && camera_two_center_x < camera_one_center_x
 				&& camera_two_center_x <  camera_three_center_x
 				&& camera_two_center_y < avg_y 
-				//&& m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus()
 				)
 		{
 			topLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
@@ -519,7 +508,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_three_center_x < camera_zero_center_x && camera_three_center_x < camera_one_center_x
 				&& camera_three_center_x <  camera_two_center_x
 				&& camera_three_center_y < avg_y 
-				//&& m_camera_manager_ptr->lead_cameras[3].GetCameraActiveStatus()
 				)
 		{
 			topLeft_camera = &m_camera_manager_ptr->lead_cameras[3];
@@ -529,7 +517,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		if(camera_zero_center_x >  camera_one_center_x && camera_zero_center_x > camera_two_center_x
 			&& camera_zero_center_x >  camera_three_center_x
 			&& camera_zero_center_y < avg_y
-			//&& m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus()
 			)
 		{
 			topRight_camera = &m_camera_manager_ptr->lead_cameras[0];
@@ -537,7 +524,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_one_center_x >  camera_zero_center_x && camera_one_center_x > camera_two_center_x
 				&& camera_one_center_x >  camera_three_center_x
 				&& camera_one_center_y < avg_y
-				//&& m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus()
 				)
 		{
 			topRight_camera = &m_camera_manager_ptr->lead_cameras[1];
@@ -545,7 +531,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_two_center_x > camera_zero_center_x && camera_two_center_x > camera_one_center_x
 				&& camera_two_center_x >  camera_three_center_x
 				&& camera_two_center_y < avg_y 
-				//&& m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus()
 				)
 		{
 			topRight_camera = &m_camera_manager_ptr->lead_cameras[2];
@@ -553,7 +538,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_three_center_x > camera_zero_center_x && camera_three_center_x > camera_one_center_x
 				&& camera_three_center_x >  camera_two_center_x
 				&& camera_three_center_y < avg_y 
-				//&& m_camera_manager_ptr->lead_cameras[3].GetCameraActiveStatus()
 				)
 		{
 			topRight_camera = &m_camera_manager_ptr->lead_cameras[3];
@@ -563,7 +547,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		if(camera_zero_center_x <  camera_one_center_x && camera_zero_center_x < camera_two_center_x
 			&& camera_zero_center_x <  camera_three_center_x
 			&& camera_zero_center_y > avg_y
-			//&& m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus()
 			)
 		{
 			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
@@ -571,7 +554,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x
 				&& camera_one_center_x <  camera_three_center_x
 				&& camera_one_center_y > avg_y
-				//&& m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus()
 				)
 		{
 			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
@@ -579,7 +561,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_two_center_x < camera_zero_center_x && camera_two_center_x < camera_one_center_x
 				&& camera_two_center_x <  camera_three_center_x
 				&& camera_two_center_y > avg_y 
-				//&& m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus()
 				)
 		{
 			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
@@ -587,7 +568,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_three_center_x < camera_zero_center_x && camera_three_center_x < camera_one_center_x
 				&& camera_three_center_x <  camera_two_center_x
 				&& camera_three_center_y > avg_y 
-				//&& m_camera_manager_ptr->lead_cameras[3].GetCameraActiveStatus()
 				)
 		{
 			bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[3];
@@ -597,7 +577,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		if(camera_zero_center_x >  camera_one_center_x && camera_zero_center_x > camera_two_center_x
 			&& camera_zero_center_x >  camera_three_center_x
 			&& camera_zero_center_y > avg_y
-			//&& m_camera_manager_ptr->lead_cameras[0].GetCameraActiveStatus()
 			)
 		{
 			bottomRight_camera = &m_camera_manager_ptr->lead_cameras[0];
@@ -605,7 +584,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_one_center_x > camera_zero_center_x && camera_one_center_x > camera_two_center_x
 				&& camera_one_center_x >  camera_three_center_x
 				&& camera_one_center_y > avg_y
-				//&& m_camera_manager_ptr->lead_cameras[1].GetCameraActiveStatus()
 				)
 		{
 			bottomRight_camera = &m_camera_manager_ptr->lead_cameras[1];
@@ -613,7 +591,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_two_center_x > camera_zero_center_x && camera_two_center_x > camera_one_center_x
 				&& camera_two_center_x >  camera_three_center_x
 				&& camera_two_center_y > avg_y 
-				//&& m_camera_manager_ptr->lead_cameras[2].GetCameraActiveStatus()
 				)
 		{
 			bottomRight_camera = &m_camera_manager_ptr->lead_cameras[2];
@@ -621,7 +598,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 		else if(camera_three_center_x > camera_zero_center_x && camera_three_center_x > camera_one_center_x
 				&& camera_three_center_x >  camera_two_center_x
 				&& camera_three_center_y > avg_y 
-				//&& m_camera_manager_ptr->lead_cameras[3].GetCameraActiveStatus()
 				)
 		{
 			bottomRight_camera = &m_camera_manager_ptr->lead_cameras[3];
