@@ -64,6 +64,19 @@ public:
 		return m_camera_lead_player_num;
 	}
 	
+	void SetLeadPlayerCoordinates(float x, float y)
+	{
+		lead_player_x = x;
+		lead_player_y = y;
+	}
+	
+	void GetLeadPlayerCoordinates(float& x, float& y)
+	{
+		x = lead_player_x;
+		y = lead_player_y;
+	}
+	
+	/*
 	void SetCameraActiveStatus(bool state)
 	{
 		in_active_use = state;
@@ -73,6 +86,7 @@ public:
 	{
 		return in_active_use;
 	}
+	*/
 	
 	void SetWorldID(std::uint8_t id)
 	{
@@ -86,6 +100,10 @@ public:
 	
 private:
 
+	//coordinates of player
+	float lead_player_x;
+	float lead_player_y;
+	
 	Rectangle camera_rect;
 	std::uint16_t m_level_bound_left_x;
 	std::uint16_t m_level_bound_right_x;
@@ -97,7 +115,7 @@ private:
 	std::uint8_t m_camera_lead_player_num;
 	
 	//bool to indicate if camera is in active use
-	bool in_active_use;
+	//bool in_active_use;
 	
 	//indicates which world camera is in
 	std::uint8_t m_world_id;
@@ -110,6 +128,7 @@ struct Screen
 	bool in_active_use;
 	CustomCamera* camera_ptr;
 	Rectangle* camera_rect_ptr;
+	Rectangle screen_camera;
 };
 
 //secondary camera
@@ -154,16 +173,16 @@ public:
 		screens[0].in_active_use = true;
 		screens[0].screen_rect = {0,0,game_res_width,game_res_height};
 		(*lead_cameras[0].GetCameraRectPointer()) = {0,0,game_res_width,game_res_height};
-		lead_cameras[0].SetCameraActiveStatus(true);
+		//lead_cameras[0].SetCameraActiveStatus(true);
 		
 		screens[1].in_active_use = false;
-		lead_cameras[1].SetCameraActiveStatus(false);
+		//lead_cameras[1].SetCameraActiveStatus(true);
 		
 		screens[2].in_active_use = false;
-		lead_cameras[1].SetCameraActiveStatus(false);
+		//lead_cameras[1].SetCameraActiveStatus(false);
 		
 		screens[3].in_active_use = false;
-		lead_cameras[3].SetCameraActiveStatus(false);
+		//lead_cameras[3].SetCameraActiveStatus(false);
 		
 		//set as all split
 		screens_joined_bitset[0] = 0;
@@ -180,18 +199,18 @@ public:
 		screens[0].in_active_use = true;
 		screens[0].screen_rect = {0,0,game_res_width / 2, game_res_height};
 		(*lead_cameras[0].GetCameraRectPointer()) = {0,0,game_res_width / 2,game_res_height};
-		lead_cameras[0].SetCameraActiveStatus(true);
+		//lead_cameras[0].SetCameraActiveStatus(true);
 		
 		screens[1].in_active_use = true;
 		screens[1].screen_rect = {game_res_width / 2, 0,game_res_width / 2, game_res_height};
 		(*lead_cameras[1].GetCameraRectPointer()) = {0,0,game_res_width / 2,game_res_height};
-		lead_cameras[1].SetCameraActiveStatus(true);
+		//lead_cameras[1].SetCameraActiveStatus(true);
 		
 		screens[2].in_active_use = false;
-		lead_cameras[2].SetCameraActiveStatus(false);
+		//lead_cameras[2].SetCameraActiveStatus(false);
 		
 		screens[3].in_active_use = false;
-		lead_cameras[3].SetCameraActiveStatus(false);
+		//lead_cameras[3].SetCameraActiveStatus(false);
 		
 		//set as all split
 		screens_joined_bitset[0] = 0;
@@ -206,20 +225,20 @@ public:
 		screens[0].in_active_use = true;
 		screens[0].screen_rect = {0,0,game_res_width / 2, game_res_height / 2};
 		(*lead_cameras[0].GetCameraRectPointer()) = (Rectangle){0,0,game_res_width / 2,game_res_height / 2};
-		lead_cameras[0].SetCameraActiveStatus(true);
+		//lead_cameras[0].SetCameraActiveStatus(true);
 		
 		screens[1].in_active_use = true;
 		screens[1].screen_rect = {game_res_width / 2, 0,game_res_width / 2, game_res_height / 2};
 		(*lead_cameras[1].GetCameraRectPointer()) = (Rectangle){0,0,game_res_width / 2,game_res_height / 2};
-		lead_cameras[1].SetCameraActiveStatus(true);
+		//lead_cameras[1].SetCameraActiveStatus(true);
 		
 		screens[2].in_active_use = true;
 		screens[2].screen_rect = {0, game_res_height / 2,game_res_width / 2, game_res_height / 2};
 		(*lead_cameras[2].GetCameraRectPointer()) = (Rectangle){0,0,game_res_width / 2,game_res_height / 2};
-		lead_cameras[2].SetCameraActiveStatus(true);
+		//lead_cameras[2].SetCameraActiveStatus(true);
 		
 		screens[3].in_active_use = false;
-		lead_cameras[3].SetCameraActiveStatus(false);
+		//lead_cameras[3].SetCameraActiveStatus(false);
 		
 		//set as all split
 		screens_joined_bitset[0] = 0;
@@ -234,22 +253,22 @@ public:
 		screens[0].in_active_use = true;
 		screens[0].screen_rect = {0,0,game_res_width / 2, game_res_height / 2};
 		(*lead_cameras[0].GetCameraRectPointer()) = (Rectangle){0,0,game_res_width / 2,game_res_height / 2};
-		lead_cameras[0].SetCameraActiveStatus(true);
+		//lead_cameras[0].SetCameraActiveStatus(true);
 		
 		screens[1].in_active_use = true;
 		screens[1].screen_rect = {game_res_width / 2, 0,game_res_width / 2, game_res_height / 2};
 		(*lead_cameras[1].GetCameraRectPointer()) = (Rectangle){0,0,game_res_width / 2,game_res_height / 2};
-		lead_cameras[1].SetCameraActiveStatus(true);
+		//lead_cameras[1].SetCameraActiveStatus(true);
 		
 		screens[2].in_active_use = true;
 		screens[2].screen_rect = {0, game_res_height / 2,game_res_width / 2, game_res_height / 2};
 		(*lead_cameras[2].GetCameraRectPointer()) = (Rectangle){0,0,game_res_width / 2,game_res_height / 2};
-		lead_cameras[2].SetCameraActiveStatus(true);
+		//lead_cameras[2].SetCameraActiveStatus(true);
 		
 		screens[3].in_active_use = true;
 		screens[3].screen_rect = {game_res_width / 2, game_res_height / 2,game_res_width / 2, game_res_height / 2};
 		(*lead_cameras[3].GetCameraRectPointer()) = (Rectangle){0,0,game_res_width / 2,game_res_height / 2};
-		lead_cameras[3].SetCameraActiveStatus(true);
+		//lead_cameras[3].SetCameraActiveStatus(true);
 		
 		//set as all split
 		screens_joined_bitset[0] = 0;
@@ -334,6 +353,51 @@ public:
 		ApplyNewScreenState();
 	}
 	
+	//function to update screen cameras based on lead player coordinates and screen camera dimensions
+	void UpdateScreenCameraLocation()
+	{
+		float x,y;
+		
+		for(size_t i = 0; i < m_num_players; i++)
+		{
+			screens[i].camera_ptr->GetLeadPlayerCoordinates(x,y);
+			
+			screens[i].screen_camera.x = x - 0.5*screens[i].screen_camera.width;
+			
+			if(screens[i].screen_camera.x < m_level_bound_left_x)
+			{
+				screens[i].screen_camera.x  = m_level_bound_left_x;
+			}
+			
+			if(screens[i].screen_camera.x > m_level_bound_right_x)
+			{
+				screens[i].screen_camera.x  = m_level_bound_right_x;
+			}
+			
+			screens[i].screen_camera.y = y - 0.5*screens[i].screen_camera.height;
+			
+			if(screens[i].screen_camera.y < m_level_bound_up_y)
+			{
+				screens[i].screen_camera.y  = m_level_bound_up_y;
+			}
+			
+			if(screens[i].screen_camera.y > m_level_bound_down_y)
+			{
+				screens[i].screen_camera.y = m_level_bound_down_y;
+			}
+		}
+	}
+	
+	void SetLevelBounds(std::uint16_t level_bound_left_x,
+				std::uint16_t level_bound_right_x,
+				std::uint16_t level_bound_up_y,
+				std::uint16_t level_bound_down_y)
+	{
+		m_level_bound_left_x = level_bound_left_x;
+		m_level_bound_right_x = level_bound_right_x;
+		m_level_bound_up_y = level_bound_up_y;
+		m_level_bound_down_y = level_bound_down_y;
+	}
 	
 	void ApplyNewScreenState()
 	{
@@ -346,16 +410,13 @@ public:
 				//enable screen 0 and its attached camera
 				screens[0].in_active_use = true;
 				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
-				
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+								
 				//enable screen 1 and its attached camera
 				screens[1].in_active_use = true;
 				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width,game_screen_height};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
 				
-				screens[1].camera_ptr->SetCameraActiveStatus(true);
 			}
 			//if screen zero and screen one joined
 			else if(screens_joined_bitset[0] && screens_joined_bitset[1])
@@ -364,16 +425,14 @@ public:
 				//make it bigger
 				screens[0].in_active_use = true;
 				screens[0].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height};
 				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
 				
 				//disable screen 1 and its attached camera
 				screens[1].in_active_use = false;
 				screens[1].screen_rect = (Rectangle){game_screen_width,0,game_screen_width,game_screen_height};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height};
 				
-				screens[1].camera_ptr->SetCameraActiveStatus(true);
 			}
 		}
 		else if(m_num_players == 3)
@@ -385,23 +444,20 @@ public:
 				//enable screen 0 and its attached camera
 				screens[0].in_active_use = true;
 				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
 				
 				//enable screen 1 and its attached camera
 				screens[1].in_active_use = true;
 				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 				
-				screens[1].camera_ptr->SetCameraActiveStatus(true);
 				
 				//enable screen 2 and its attached camera
 				screens[2].in_active_use = true;
 				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
-				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height/ 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 				
-				screens[2].camera_ptr->SetCameraActiveStatus(true);
 			}
 			//if screen two split screen one and screen zero joined
 			//011
@@ -411,23 +467,20 @@ public:
 				//stretch it to screen 1
 				screens[0].in_active_use = true;
 				screens[0].screen_rect = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
 				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
 				
 				//disable screen 1 and its attached camera
 				screens[1].in_active_use = false;
 				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width ,game_screen_height / 2};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
 				
-				screens[1].camera_ptr->SetCameraActiveStatus(false);
 				
 				//enable screen 2 and its attached camera
 				screens[2].in_active_use = true;
 				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
-				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
 				
-				screens[2].camera_ptr->SetCameraActiveStatus(true);
 			}
 			//if screen two and screen zero joined and screen one split
 			//101
@@ -437,23 +490,19 @@ public:
 				//stretch it to screen 2
 				screens[0].in_active_use = true;
 				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height };
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
 				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
 				
 				//disable screen 2 and its attached camera
 				screens[2].in_active_use = false;
 				screens[2].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
 				
-				screens[2].camera_ptr->SetCameraActiveStatus(false);
 				
 				//enable screen 1 and its attached camera
 				screens[1].in_active_use = true;
 				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
-				
-				screens[1].camera_ptr->SetCameraActiveStatus(false);
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height };
 				
 				
 			}
@@ -465,30 +514,31 @@ public:
 				//stretch it to screen 1 and screen 2
 				screens[0].in_active_use = true;
 				screens[0].screen_rect = (Rectangle){0,0,game_screen_width ,game_screen_height};
-				*screens[0].camera_rect_ptr = (Rectangle){0,0,game_screen_width ,game_screen_height };
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height};
 				
-				screens[0].camera_ptr->SetCameraActiveStatus(true);
 				
 				//disable screen 1 and its attached camera
 				screens[1].in_active_use = false;
 				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
-				*screens[1].camera_rect_ptr = (Rectangle){0,0,game_screen_width,game_screen_height };
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height};
 				
-				screens[1].camera_ptr->SetCameraActiveStatus(false);
 				
 				//disable screen 2 and its attached camera
 				screens[2].in_active_use = false;
 				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2 ,game_screen_height / 2};
-				*screens[2].camera_rect_ptr = (Rectangle){0,0,game_screen_width ,game_screen_height};
-				
-				screens[2].camera_ptr->SetCameraActiveStatus(false);
-				
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height};
+								
 			}
 		
 		}
 	}
 
 private:
+
+	std::uint16_t m_level_bound_left_x;
+	std::uint16_t m_level_bound_right_x;
+	std::uint16_t m_level_bound_up_y;
+	std::uint16_t m_level_bound_down_y;
 	
 };
 

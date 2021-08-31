@@ -468,26 +468,28 @@ void WorldSystem::render()
 			{
 				if(m_camera_manager_ptr->screens[i].camera_ptr)
 				{
-					#ifdef DEBUG_CAMERA_SYSTEM
-					std::cout << " camera active status: " << m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus() << std::endl;
-					#endif
+					//#ifdef DEBUG_CAMERA_SYSTEM
+					//std::cout << " camera active status: " << m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus() << std::endl;
+					//#endif
 					
 					//if camera is active and has the same id as the world
 					if( world_one.world_id == m_camera_manager_ptr->screens[i].camera_ptr->GetWorldID()  )
 					{
 						#ifdef DEBUG_CAMERA_SYSTEM
+						std::cout << "\n\nRendering Tiles in world system\n\n";
+						
 						std::cout << "screen " << i << std::endl;
 						
 						std::cout << "camera :" 
-						<< m_camera_manager_ptr->screens[i].camera_rect_ptr->x << " , " << 
-						m_camera_manager_ptr->screens[i].camera_rect_ptr->y << " , " <<
-						m_camera_manager_ptr->screens[i].camera_rect_ptr->width << " , " <<
-						m_camera_manager_ptr->screens[i].camera_rect_ptr->height
+						<< m_camera_manager_ptr->screens[i].screen_camera.x << " , " << 
+						m_camera_manager_ptr->screens[i].screen_camera.y << " , " <<
+						m_camera_manager_ptr->screens[i].screen_camera.width << " , " <<
+						m_camera_manager_ptr->screens[i].screen_camera.height
 						<< std::endl;
 						#endif
 						
 						RenderLevelMapRelativeToCameraAndScreen(&world_one,
-																*m_camera_manager_ptr->screens[i].camera_rect_ptr,
+																m_camera_manager_ptr->screens[i].screen_camera,
 																m_camera_manager_ptr->screens[i].screen_rect);
 					}
 				}

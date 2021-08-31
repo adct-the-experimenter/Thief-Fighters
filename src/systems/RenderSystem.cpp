@@ -84,6 +84,8 @@ void RenderSystem::Update()
 	
 }
 
+#define DEBUG_CAMERA_SYSTEM
+
 void RenderSystem::Update_MetroidVaniaMode()
 {
 	if(m_camera_manager_ptr)
@@ -102,15 +104,19 @@ void RenderSystem::Update_MetroidVaniaMode()
 				if(render_comp.render && m_camera_manager_ptr->screens[i].in_active_use)
 				{
 					
-					if(m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus())
-					{
-						//std::cout << "\nCamera " << i << " is being rendered!\n";
+					//if(m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus())
+					//{
 						
-						Rectangle* camera_ptr = m_camera_manager_ptr->screens[i].camera_ptr->GetCameraRectPointer();
 						
-						//std::cout << "\npos: " << transform.position.x << " , " << transform.position.y << std::endl;
+						Rectangle* camera_ptr = &m_camera_manager_ptr->screens[i].screen_camera;
 						
-						//std::cout << "camera: " << camera_ptr->x << " , " << camera_ptr->y << " , " <<  camera_ptr->width << " , " << camera_ptr->height << std::endl;
+						#ifdef DEBUG_CAMERA_SYSTEM
+						std::cout << "\n\nRendering in render system!\n\n";
+						std::cout << "\nScreen " << i << " is being rendered!\n";
+						std::cout << "\npos: " << transform.position.x << " , " << transform.position.y << std::endl;
+						
+						std::cout << "camera: " << camera_ptr->x << " , " << camera_ptr->y << " , " <<  camera_ptr->width << " , " << camera_ptr->height << std::endl;
+						#endif
 						
 						if(transform.position.x >= camera_ptr->x
 							&& transform.position.x <= camera_ptr->x + camera_ptr->width
@@ -129,7 +135,7 @@ void RenderSystem::Update_MetroidVaniaMode()
 							//render texuture according to frame, adjusted camera composition, tint
 							DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
 						}
-					}
+					//}
 					
 				}
 				
@@ -158,8 +164,8 @@ void RenderSystem::Update_MetroidVaniaMode_Editor()
 				if(render_comp.render)
 				{
 					
-					if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
-					{
+					//if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
+					//{
 						Rectangle* camera_ptr = m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer();
 						
 						//adjust render position relative to camera position
@@ -170,7 +176,7 @@ void RenderSystem::Update_MetroidVaniaMode_Editor()
 						
 						//render texuture according to frame, adjusted camera composition, tint
 						DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
-					}
+					//}
 					
 				}
 			}
