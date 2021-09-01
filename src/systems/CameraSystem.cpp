@@ -345,6 +345,7 @@ void CameraSystem::Update_MetroidVaniaMode()
 		Rectangle* camera_one_ptr = m_camera_manager_ptr->lead_cameras[1].GetCameraRectPointer();
 		Rectangle* camera_two_ptr = m_camera_manager_ptr->lead_cameras[2].GetCameraRectPointer();
 		
+		//
 		//calculate average point of cameras, assuming it works well enough as center
 		float camera_zero_center_x, camera_zero_center_y;
 		m_camera_manager_ptr->lead_cameras[0].GetLeadPlayerCoordinates(camera_zero_center_x,camera_zero_center_y);
@@ -657,6 +658,21 @@ void CameraSystem::Update_MetroidVaniaMode()
 		CustomCamera* topLeft_camera = m_camera_manager_ptr->screens[0].camera_ptr;
 		CustomCamera* bottomLeft_camera = m_camera_manager_ptr->screens[2].camera_ptr;
 		
+		//check collisions between camera rectangles
+		
+		//join screens of colliding camera rectangles
+		//split screens of non-colliding camera rectangles
+		
+		//if top left, top right, bottom left cameras are colliding together
+			//join all 3 screens
+		//else if only top left, top right cameras are colliding
+			//join screen 0 and screen 1, split screen 2
+		//else if only top left and bottom left cameras are collding 
+			//join screen 0 and screen 2, split screen 1
+		//else if none of the cameras are colliding
+			//split all 3 screens
+		
+		
 		if(bottomLeft_camera && topLeft_camera)
 		{
 			//determine if screens/cameras zero and one should join or split
@@ -669,7 +685,7 @@ void CameraSystem::Update_MetroidVaniaMode()
 				if( ShouldAdjacentVerticalCamerasJoin(camera_a_ptr,camera_b_ptr,m_gameScreenWidth,m_gameScreenHeight) )
 				{
 					m_camera_manager_ptr->JoinScreenZeroAndScreenTwo();
-					std::cout << "\nJoining screen zero and screen two!\n \n";
+					std::cout << "\nJoining screen zero and screen two!\n\n";
 				}
 			}
 			//check if cameras need to be split
