@@ -256,7 +256,7 @@ static bool ShouldAdjacentVerticalCamerasSplit(CustomCamera* camera_a_ptr, Custo
 }
 
 
-#define DEBUG_CAMERA_SYSTEM
+//#define DEBUG_CAMERA_SYSTEM
 
 void CameraSystem::DetermineCameraConfigTwoPlayers()
 {
@@ -525,147 +525,284 @@ void CameraSystem::DetermineCameraConfigFourPlusPlayers()
 	CustomCamera* topRight_camera = nullptr;
 	CustomCamera* bottomLeft_camera = nullptr;
 	CustomCamera* bottomRight_camera = nullptr;
-
+	
 	Rectangle* camera_zero_ptr = m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer();
 	Rectangle* camera_one_ptr = m_camera_manager_ptr->lead_cameras[1].GetCameraRectPointer();
 	Rectangle* camera_two_ptr = m_camera_manager_ptr->lead_cameras[2].GetCameraRectPointer();
 	Rectangle* camera_three_ptr = m_camera_manager_ptr->lead_cameras[3].GetCameraRectPointer();
 	
+	bool lead_cameras_assigned[4] = {false,false,false,false};
+	
+	//
 	//calculate average point of cameras, assuming it works well enough as center
+	float camera_zero_center_x, camera_zero_center_y;
+	m_camera_manager_ptr->lead_cameras[0].GetLeadPlayerCoordinates(camera_zero_center_x,camera_zero_center_y);
+	
+	float camera_one_center_x, camera_one_center_y;
+	m_camera_manager_ptr->lead_cameras[1].GetLeadPlayerCoordinates(camera_one_center_x,camera_one_center_y);
+	
+	float camera_two_center_x, camera_two_center_y;
+	m_camera_manager_ptr->lead_cameras[2].GetLeadPlayerCoordinates(camera_two_center_x,camera_two_center_y);
+	
+	float camera_three_center_x, camera_three_center_y;
+	m_camera_manager_ptr->lead_cameras[3].GetLeadPlayerCoordinates(camera_three_center_x,camera_three_center_y);
+	
 	float avg_y = (camera_zero_ptr->y + camera_one_ptr->y + camera_two_ptr->y + camera_three_ptr->y) / 4;
 	
-	//calculate average point of cameras, assuming it works well enough as center
-	float camera_zero_center_x = camera_zero_ptr->x + camera_zero_ptr->width*0.5;
-	float camera_zero_center_y = camera_zero_ptr->y + camera_zero_ptr->height*0.5;
-	
-	float camera_one_center_x = camera_one_ptr->x + camera_one_ptr->width*0.5;
-	float camera_one_center_y = camera_one_ptr->y + camera_one_ptr->height*0.5;
-	
-	float camera_two_center_x = camera_two_ptr->x + camera_two_ptr->width*0.5;
-	float camera_two_center_y = camera_two_ptr->y + camera_two_ptr->height*0.5;
-	
-	float camera_three_center_x = camera_three_ptr->x + camera_three_ptr->width*0.5;
-	float camera_three_center_y = camera_three_ptr->y + camera_three_ptr->height*0.5;
-	
-	
 	//determine top left camera
-	if(camera_zero_center_x <  camera_one_center_x && camera_zero_center_x < camera_two_center_x
-		&& camera_zero_center_x <  camera_three_center_x
-		&& camera_zero_center_y < avg_y
+	if(camera_zero_center_x <  camera_one_center_x && camera_zero_center_x < camera_two_center_x && camera_zero_center_x < camera_three_center_x
+		&& (camera_zero_center_y < avg_y - camera_zero_ptr->height*0.5 || camera_zero_center_y > avg_y + camera_zero_ptr->height*0.5)
 		)
 	{
 		topLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
+		lead_cameras_assigned[0] = true;
 	}
-	else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x
-			&& camera_one_center_x <  camera_three_center_x
-			&& camera_one_center_y < avg_y
+	else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x && camera_one_center_x < camera_three_center_x
+			&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
 			)
 	{
 		topLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
+		lead_cameras_assigned[1] = true;
 	}
-	else if(camera_two_center_x < camera_zero_center_x && camera_two_center_x < camera_one_center_x
-			&& camera_two_center_x <  camera_three_center_x
-			&& camera_two_center_y < avg_y 
+	else if(camera_two_center_x < camera_zero_center_x && camera_two_center_x < camera_one_center_x && camera_two_center_x < camera_three_center_x
+			&& (camera_two_center_y < avg_y - camera_two_ptr->height*0.5 || camera_two_center_y > avg_y + camera_two_ptr->height*0.5) 
 			)
 	{
 		topLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		lead_cameras_assigned[2] = true;
 	}
-	else if(camera_three_center_x < camera_zero_center_x && camera_three_center_x < camera_one_center_x
-			&& camera_three_center_x <  camera_two_center_x
-			&& camera_three_center_y < avg_y 
+	else if(camera_three_center_x < camera_zero_center_x && camera_three_center_x < camera_one_center_x && camera_three_center_x < camera_two_center_x
+			&& (camera_three_center_y < avg_y - camera_three_ptr->height*0.5 || camera_three_center_y > avg_y + camera_three_ptr->height*0.5) 
 			)
 	{
 		topLeft_camera = &m_camera_manager_ptr->lead_cameras[3];
+		lead_cameras_assigned[3] = true;
 	}
 	
 	//determine top right camera
-	if(camera_zero_center_x >  camera_one_center_x && camera_zero_center_x > camera_two_center_x
-		&& camera_zero_center_x >  camera_three_center_x
-		&& camera_zero_center_y < avg_y
+	if(camera_zero_center_x >  camera_one_center_x && camera_zero_center_x > camera_two_center_x && camera_zero_center_x > camera_three_center_x
+		&& (camera_zero_center_y < avg_y - camera_zero_ptr->height*0.5 || camera_zero_center_y > avg_y + camera_zero_ptr->height*0.5)
 		)
 	{
 		topRight_camera = &m_camera_manager_ptr->lead_cameras[0];
+		lead_cameras_assigned[0] = true;
 	}
-	else if(camera_one_center_x >  camera_zero_center_x && camera_one_center_x > camera_two_center_x
-			&& camera_one_center_x >  camera_three_center_x
-			&& camera_one_center_y < avg_y
+	else if(camera_one_center_x >  camera_zero_center_x && camera_one_center_x > camera_two_center_x && camera_one_center_x > camera_three_center_x
+			&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
 			)
 	{
 		topRight_camera = &m_camera_manager_ptr->lead_cameras[1];
+		lead_cameras_assigned[1] = true;
 	}
-	else if(camera_two_center_x > camera_zero_center_x && camera_two_center_x > camera_one_center_x
-			&& camera_two_center_x >  camera_three_center_x
-			&& camera_two_center_y < avg_y 
+	else if(camera_two_center_x > camera_zero_center_x && camera_two_center_x > camera_one_center_x && camera_two_center_x > camera_three_center_x
+			&& (camera_two_center_y < avg_y - camera_two_ptr->height*0.5 || camera_two_center_y > avg_y + camera_two_ptr->height*0.5) 
 			)
 	{
 		topRight_camera = &m_camera_manager_ptr->lead_cameras[2];
+		lead_cameras_assigned[2] = true;
 	}
-	else if(camera_three_center_x > camera_zero_center_x && camera_three_center_x > camera_one_center_x
-			&& camera_three_center_x >  camera_two_center_x
-			&& camera_three_center_y < avg_y 
+	else if(camera_three_center_x > camera_zero_center_x && camera_three_center_x > camera_one_center_x && camera_three_center_x > camera_two_center_x
+			&& (camera_three_center_y < avg_y - camera_three_ptr->height*0.5 || camera_three_center_y > avg_y + camera_three_ptr->height*0.5) 
 			)
 	{
 		topRight_camera = &m_camera_manager_ptr->lead_cameras[3];
+		lead_cameras_assigned[3] = true;
 	}
 	
 	//determine bottom left camera
-	if(camera_zero_center_x <  camera_one_center_x && camera_zero_center_x < camera_two_center_x
-		&& camera_zero_center_x <  camera_three_center_x
-		&& camera_zero_center_y > avg_y
+	if(camera_zero_center_x <  camera_one_center_x && camera_zero_center_x < camera_two_center_x && camera_zero_center_x < camera_three_center_x
+		&& (camera_zero_center_y < avg_y - camera_zero_ptr->height*0.5 || camera_zero_center_y > avg_y + camera_zero_ptr->height*0.5)
+		&& !lead_cameras_assigned[0]
 		)
 	{
 		bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
+		lead_cameras_assigned[1] = true;
 	}
-	else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x
-			&& camera_one_center_x <  camera_three_center_x
-			&& camera_one_center_y > avg_y
+	else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x && camera_one_center_x < camera_three_center_x
+			&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
+			&& !lead_cameras_assigned[1]
 			)
 	{
 		bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];
+		lead_cameras_assigned[1] = true;
 	}
-	else if(camera_two_center_x < camera_zero_center_x && camera_two_center_x < camera_one_center_x
-			&& camera_two_center_x <  camera_three_center_x
-			&& camera_two_center_y > avg_y 
+	else if(camera_two_center_x < camera_zero_center_x && camera_two_center_x < camera_one_center_x && camera_two_center_x < camera_three_center_x
+			&& (camera_two_center_y < avg_y - camera_two_ptr->height*0.5 || camera_two_center_y > avg_y + camera_two_ptr->height*0.5)
+			&& !lead_cameras_assigned[2] 
 			)
 	{
 		bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];
+		lead_cameras_assigned[2] = true;
 	}
-	else if(camera_three_center_x < camera_zero_center_x && camera_three_center_x < camera_one_center_x
-			&& camera_three_center_x <  camera_two_center_x
-			&& camera_three_center_y > avg_y 
+	else if(camera_three_center_x < camera_zero_center_x && camera_three_center_x < camera_one_center_x && camera_three_center_x < camera_two_center_x
+			&& (camera_three_center_y < avg_y - camera_three_ptr->height*0.5 || camera_three_center_y > avg_y + camera_three_ptr->height*0.5)
+			&& !lead_cameras_assigned[3] 
 			)
 	{
 		bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[3];
+		lead_cameras_assigned[3] = true;
 	}
 	
 	//determine bottom right camera
-	if(camera_zero_center_x >  camera_one_center_x && camera_zero_center_x > camera_two_center_x
-		&& camera_zero_center_x >  camera_three_center_x
-		&& camera_zero_center_y > avg_y
+	if(camera_zero_center_x >  camera_one_center_x && camera_zero_center_x > camera_two_center_x && camera_zero_center_x > camera_three_center_x
+		&& (camera_zero_center_y < avg_y - camera_zero_ptr->height*0.5 || camera_zero_center_y > avg_y + camera_zero_ptr->height*0.5)
+		&& !lead_cameras_assigned[0]
 		)
 	{
 		bottomRight_camera = &m_camera_manager_ptr->lead_cameras[0];
+		lead_cameras_assigned[0] = true;
 	}
-	else if(camera_one_center_x > camera_zero_center_x && camera_one_center_x > camera_two_center_x
-			&& camera_one_center_x >  camera_three_center_x
-			&& camera_one_center_y > avg_y
+	else if(camera_one_center_x >  camera_zero_center_x && camera_one_center_x > camera_two_center_x && camera_one_center_x > camera_three_center_x
+			&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
+			&& !lead_cameras_assigned[1]
 			)
 	{
 		bottomRight_camera = &m_camera_manager_ptr->lead_cameras[1];
+		lead_cameras_assigned[1] = true;
 	}
-	else if(camera_two_center_x > camera_zero_center_x && camera_two_center_x > camera_one_center_x
-			&& camera_two_center_x >  camera_three_center_x
-			&& camera_two_center_y > avg_y 
+	else if(camera_two_center_x > camera_zero_center_x && camera_two_center_x > camera_one_center_x && camera_two_center_x > camera_three_center_x
+			&& (camera_two_center_y < avg_y - camera_two_ptr->height*0.5 || camera_two_center_y > avg_y + camera_two_ptr->height*0.5) 
+			&& !lead_cameras_assigned[2]
 			)
 	{
 		bottomRight_camera = &m_camera_manager_ptr->lead_cameras[2];
+		lead_cameras_assigned[2] = true;
 	}
-	else if(camera_three_center_x > camera_zero_center_x && camera_three_center_x > camera_one_center_x
-			&& camera_three_center_x >  camera_two_center_x
-			&& camera_three_center_y > avg_y 
+	else if(camera_three_center_x > camera_zero_center_x && camera_three_center_x > camera_one_center_x && camera_three_center_x > camera_two_center_x
+			&& (camera_three_center_y < avg_y - camera_three_ptr->height*0.5 || camera_three_center_y > avg_y + camera_three_ptr->height*0.5) 
+			&& !lead_cameras_assigned[3]
 			)
 	{
 		bottomRight_camera = &m_camera_manager_ptr->lead_cameras[3];
+		lead_cameras_assigned[3] = true;
+	}
+	
+	//if the cameras have not been assigned
+	
+	if(!topLeft_camera)
+	{
+		if(!lead_cameras_assigned[0]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[0];}
+		else if(!lead_cameras_assigned[1]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[1];}
+		else if(!lead_cameras_assigned[2]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[2];}
+		else if(!lead_cameras_assigned[3]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[3];}
+	}
+	
+	if(!topRight_camera)
+	{
+		if(!lead_cameras_assigned[0]){topRight_camera = &m_camera_manager_ptr->lead_cameras[0];}
+		else if(!lead_cameras_assigned[1]){topRight_camera = &m_camera_manager_ptr->lead_cameras[1];}
+		else if(!lead_cameras_assigned[2]){topRight_camera = &m_camera_manager_ptr->lead_cameras[2];}
+		else if(!lead_cameras_assigned[3]){topRight_camera = &m_camera_manager_ptr->lead_cameras[3];}
+	}
+	
+	if(!bottomLeft_camera)
+	{
+		if(!lead_cameras_assigned[0]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];}
+		else if(!lead_cameras_assigned[1]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];}
+		else if(!lead_cameras_assigned[2]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];}
+		else if(!lead_cameras_assigned[3]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[3];}
+	}
+	
+	if(!bottomRight_camera)
+	{
+		if(!lead_cameras_assigned[0]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[0];}
+		else if(!lead_cameras_assigned[1]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[1];}
+		else if(!lead_cameras_assigned[2]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[2];}
+		else if(!lead_cameras_assigned[3]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[3];}
+	}
+	
+	m_camera_manager_ptr->AttachCameraToScreen(topLeft_camera,0);
+	m_camera_manager_ptr->AttachCameraToScreen(topRight_camera,1);
+	m_camera_manager_ptr->AttachCameraToScreen(bottomLeft_camera,2);
+	m_camera_manager_ptr->AttachCameraToScreen(bottomRight_camera,3);
+		
+	//check collisions between camera rectangles
+	
+	//join screens of colliding camera rectangles
+	//split screens of non-colliding camera rectangles
+	
+	//if top left, top right, bottom left cameras are colliding together
+	if(topLeft_camera && topRight_camera && bottomLeft_camera && bottomRight_camera)
+	{
+		
+		bool collide_01 = CheckCollisionBetweenRectangles(*topLeft_camera->GetCameraRectPointer(), *topRight_camera->GetCameraRectPointer());
+		bool collide_02 = CheckCollisionBetweenRectangles(*topLeft_camera->GetCameraRectPointer(),*bottomLeft_camera->GetCameraRectPointer());
+		bool collide_03 = CheckCollisionBetweenRectangles(*topLeft_camera->GetCameraRectPointer(),*bottomRight_camera->GetCameraRectPointer());
+		
+		bool collide_12 = CheckCollisionBetweenRectangles(*topRight_camera->GetCameraRectPointer(),*bottomLeft_camera->GetCameraRectPointer());
+		bool collide_13 = CheckCollisionBetweenRectangles(*topRight_camera->GetCameraRectPointer(),*bottomRight_camera->GetCameraRectPointer());
+		bool collide_23 = CheckCollisionBetweenRectangles(*bottomLeft_camera->GetCameraRectPointer(),*bottomRight_camera->GetCameraRectPointer());
+		
+		#ifdef DEBUG_CAMERA_SYSTEM
+		std::cout << "\ntopLeft_camera: " << topLeft_camera->GetCameraRectPointer()->x << " , " << topLeft_camera->GetCameraRectPointer()->y 
+										<< " , " << topLeft_camera->GetCameraRectPointer()->width << " , " << topLeft_camera->GetCameraRectPointer()->height;
+		
+		std::cout << "\ntopRightCamera: " << topRight_camera->GetCameraRectPointer()->x << " , " << topRight_camera->GetCameraRectPointer()->y 
+										<< " , " << topRight_camera->GetCameraRectPointer()->width << " , " << topRight_camera->GetCameraRectPointer()->height;
+										
+		std::cout << "\nbottomLeft_camera: " << bottomLeft_camera->GetCameraRectPointer()->x << " , " << bottomLeft_camera->GetCameraRectPointer()->y 
+										<< " , " << bottomLeft_camera->GetCameraRectPointer()->width << " , " << bottomLeft_camera->GetCameraRectPointer()->height;
+		
+		std::cout << "\nbottomRight_camera: " << bottomRight_camera->GetCameraRectPointer()->x << " , " << bottomRight_camera->GetCameraRectPointer()->y 
+										<< " , " << bottomRight_camera->GetCameraRectPointer()->width << " , " << bottomRight_camera->GetCameraRectPointer()->height;
+		
+		std::cout << "\ncollide 01: " << collide_01 
+				<< "\ncollide 02: " << collide_02 
+				<< "\ncollide 03: " << collide_03 
+				<< "\ncollide 12: " << collide_12
+				<< "\ncollide 13: " << collide_13
+				 << std::endl;
+		#endif
+		
+		if( (collide_01 && collide_02 && collide_03) || (collide_01 && collide_12 && collide_13) 
+			|| (collide_02 && collide_12 && collide_23) || (collide_03 && collide_13 && collide_23) )
+		{
+			#ifdef DEBUG_CAMERA_SYSTEM
+			std::cout << "\nJoining all 4 screens\n";
+			#endif
+			//join all 3 screens
+			m_camera_manager_ptr->screens_joined_bitset.set(0);
+			m_camera_manager_ptr->screens_joined_bitset.set(1);
+			m_camera_manager_ptr->screens_joined_bitset.set(2);
+			m_camera_manager_ptr->screens_joined_bitset.set(3);
+			m_camera_manager_ptr->ApplyNewScreenState();
+		}
+		else if( collide_01 && !collide_02 && !collide_12)
+		{
+			#ifdef DEBUG_CAMERA_SYSTEM
+			std::cout << "\nJoining screens 0 and 1, split screen 2\n";
+			#endif
+			//join screen 0 and screen 1, split screen 2
+			m_camera_manager_ptr->screens_joined_bitset.set(0);
+			m_camera_manager_ptr->screens_joined_bitset.set(1);
+			m_camera_manager_ptr->screens_joined_bitset.reset(2);
+			m_camera_manager_ptr->ApplyNewScreenState();
+		}
+		else if(!collide_01 && collide_02 && !collide_12)
+		{
+			#ifdef DEBUG_CAMERA_SYSTEM
+			std::cout << "\nJoining screens 0 and 2, split screen 1\n";
+			#endif
+			//join screen 0 and screen 2, split screen 1
+			m_camera_manager_ptr->screens_joined_bitset.set(0);
+			m_camera_manager_ptr->screens_joined_bitset.set(2);
+			m_camera_manager_ptr->screens_joined_bitset.reset(1);
+			m_camera_manager_ptr->ApplyNewScreenState();
+		}
+		//else if none of the cameras are colliding
+		else if(!collide_01 && !collide_02 && !collide_03 
+				&& !collide_12 && !collide_13 && !collide_23)
+		{
+			#ifdef DEBUG_CAMERA_SYSTEM
+			std::cout << "\nSplitting all 4 screens.\n";
+			#endif
+			//split all 3 screens
+			m_camera_manager_ptr->screens_joined_bitset.reset(0);
+			m_camera_manager_ptr->screens_joined_bitset.reset(1);
+			m_camera_manager_ptr->screens_joined_bitset.reset(2);
+			m_camera_manager_ptr->screens_joined_bitset.reset(3);
+			m_camera_manager_ptr->ApplyNewScreenState();
+		}
 	}
 }
 

@@ -366,24 +366,24 @@ public:
 			
 			if(screens[i].screen_camera.x < m_level_bound_left_x)
 			{
-				screens[i].screen_camera.x  = m_level_bound_left_x;
+				screens[i].screen_camera.x = m_level_bound_left_x;
 			}
 			
-			if(screens[i].screen_camera.x > m_level_bound_right_x)
+			if(screens[i].screen_camera.x + screens[i].screen_camera.width > m_level_bound_right_x)
 			{
-				screens[i].screen_camera.x  = m_level_bound_right_x;
+				screens[i].screen_camera.x = m_level_bound_right_x - screens[i].screen_camera.width;
 			}
 			
 			screens[i].screen_camera.y = y - 0.5*screens[i].screen_camera.height;
 			
 			if(screens[i].screen_camera.y < m_level_bound_up_y)
 			{
-				screens[i].screen_camera.y  = m_level_bound_up_y;
+				screens[i].screen_camera.y = m_level_bound_up_y;
 			}
 			
-			if(screens[i].screen_camera.y > m_level_bound_down_y)
+			if(screens[i].screen_camera.y > m_level_bound_down_y + screens[i].screen_camera.height)
 			{
-				screens[i].screen_camera.y = m_level_bound_down_y;
+				screens[i].screen_camera.y = m_level_bound_down_y + screens[i].screen_camera.height;
 			}
 		}
 	}

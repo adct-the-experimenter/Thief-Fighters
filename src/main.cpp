@@ -615,7 +615,7 @@ void render()
 	
 	BeginTextureMode(target);
 	
-	ClearBackground(RAYWHITE);
+	ClearBackground(BLACK);
 	
 	switch(m_game_state)
 	{
@@ -636,6 +636,7 @@ void render()
 		}
 		case GameState::CHAR_SELECTOR:
 		{
+			DrawTexture(char_select_texture, 0, 0, WHITE);
 			DrawText("In character selector. A = confirm choice. B = reset choice", 20, 20, 12, BLACK);
 			gCharSelector.render();
 			break;

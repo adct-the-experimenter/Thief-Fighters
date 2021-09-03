@@ -400,7 +400,7 @@ static void RenderLevelMapRelativeToCameraAndScreen(World* world_ptr,Rectangle& 
 	//number of tiles in a row
 	size_t num_tiles_horizontal = 220;
 	
-	//render 9 rows of tiles
+	//render 12 rows of tiles
 	
 	size_t start_tiles[12];
 	size_t end_tiles[12];
@@ -409,8 +409,10 @@ static void RenderLevelMapRelativeToCameraAndScreen(World* world_ptr,Rectangle& 
 	size_t horiz_index = trunc(camera.x / 30 );
 	size_t vert_index = trunc( camera.y / 30 ) * num_tiles_horizontal;
 	
+	size_t rows_to_render = trunc( camera.height / 30);
+	
 	//initialize start tiles
-	for(size_t i = 0; i < 12; i++)
+	for(size_t i = 0; i < rows_to_render; i++)
 	{
 		start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
 		if(start_tiles[i] > world_ptr->tiles_vector.size()){start_tiles[i] = world_ptr->tiles_vector.size() - 1;}
@@ -421,14 +423,14 @@ static void RenderLevelMapRelativeToCameraAndScreen(World* world_ptr,Rectangle& 
 	size_t camera_offset_width = trunc( camera.width / 30 ) + 2;
 	
 	//initialize end tiles
-	for(size_t i = 0; i < 12; i++)
+	for(size_t i = 0; i < rows_to_render; i++)
 	{
 		end_tiles[i] = start_tiles[i] + camera_offset_width;
 		if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
 	}
 	
 	
-	for(size_t i = 0; i < 12; i++)
+	for(size_t i = 0; i < rows_to_render; i++)
 	{
 		for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
 		{
