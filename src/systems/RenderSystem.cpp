@@ -84,7 +84,7 @@ void RenderSystem::Update()
 	
 }
 
-#define DEBUG_CAMERA_SYSTEM
+//#define DEBUG_CAMERA_SYSTEM
 
 void RenderSystem::Update_MetroidVaniaMode()
 {
@@ -103,39 +103,35 @@ void RenderSystem::Update_MetroidVaniaMode()
 				//if renderable object is within camera bounds.
 				if(render_comp.render && m_camera_manager_ptr->screens[i].in_active_use)
 				{
+						
+					Rectangle* camera_ptr = &m_camera_manager_ptr->screens[i].screen_camera;
 					
-					//if(m_camera_manager_ptr->screens[i].camera_ptr->GetCameraActiveStatus())
-					//{
+					#ifdef DEBUG_CAMERA_SYSTEM
+					std::cout << "\n\nRendering in render system!\n\n";
+					std::cout << "\nScreen " << i << " is being rendered!\n";
+					//std::cout << "\npos: " << transform.position.x << " , " << transform.position.y << std::endl;
+					
+					std::cout << "screen camera: " << camera_ptr->x << " , " << camera_ptr->y << " , " <<  camera_ptr->width << " , " << camera_ptr->height << std::endl;
+					#endif
+					
+					if(transform.position.x >= camera_ptr->x
+						&& transform.position.x <= camera_ptr->x + camera_ptr->width
+						&& transform.position.y >= camera_ptr->y
+						&& transform.position.y <= camera_ptr->y + camera_ptr->height
+						)
+					{
+					
+						//adjust render position relative to camera position
+						Vector2 adjusted_pos;
+						
+						adjusted_pos.x = transform.position.x - camera_ptr->x + m_camera_manager_ptr->screens[i].screen_rect.x;
+						adjusted_pos.y = transform.position.y - camera_ptr->y + m_camera_manager_ptr->screens[i].screen_rect.y;
 						
 						
-						Rectangle* camera_ptr = &m_camera_manager_ptr->screens[i].screen_camera;
-						
-						#ifdef DEBUG_CAMERA_SYSTEM
-						std::cout << "\n\nRendering in render system!\n\n";
-						std::cout << "\nScreen " << i << " is being rendered!\n";
-						std::cout << "\npos: " << transform.position.x << " , " << transform.position.y << std::endl;
-						
-						std::cout << "camera: " << camera_ptr->x << " , " << camera_ptr->y << " , " <<  camera_ptr->width << " , " << camera_ptr->height << std::endl;
-						#endif
-						
-						if(transform.position.x >= camera_ptr->x
-							&& transform.position.x <= camera_ptr->x + camera_ptr->width
-							&& transform.position.y >= camera_ptr->y
-							&& transform.position.y <= camera_ptr->y + camera_ptr->height
-							)
-						{
-						
-							//adjust render position relative to camera position
-							Vector2 adjusted_pos;
-							
-							adjusted_pos.x = transform.position.x - camera_ptr->x + m_camera_manager_ptr->screens[i].screen_rect.x;
-							adjusted_pos.y = transform.position.y - camera_ptr->y + m_camera_manager_ptr->screens[i].screen_rect.y;
-							
-							
-							//render texuture according to frame, adjusted camera composition, tint
-							DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
-						}
-					//}
+						//render texuture according to frame, adjusted camera composition, tint
+						DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
+					}
+					
 					
 				}
 				

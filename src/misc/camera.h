@@ -455,7 +455,7 @@ public:
 				
 				//enable screen 2 and its attached camera
 				screens[2].in_active_use = true;
-				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[2].screen_rect = (Rectangle){game_screen_width / 4,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
 				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 				
 			}
