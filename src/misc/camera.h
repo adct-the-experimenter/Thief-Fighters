@@ -666,8 +666,8 @@ public:
 			{
 				//enable screen 0 and its attached camera
 				screens[0].in_active_use = true;
-				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
-				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 				
 				//disable screen 3 and its attached camera
 				screens[3].in_active_use = false;
@@ -684,6 +684,30 @@ public:
 				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
 				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 			}
+			//if screen three and screen two joined, and screen zero and screen one split
+			else if(screens_joined_bitset[3] && screens_joined_bitset[2] && !screens_joined_bitset[1] && !screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 1 and its attached camera
+				screens[1].in_active_use = true;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//disable screen 3 and its attached camera
+				screens[3].in_active_use = false;
+				screens[3].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 2 and its attached camera
+				screens[2].in_active_use = true;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width ,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+			}
+			//1100
 			//if screen three split, screens zero one and two joined
 			//0111
 			else if(!screens_joined_bitset[3] && screens_joined_bitset[2] && screens_joined_bitset[1] && screens_joined_bitset[0])

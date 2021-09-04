@@ -415,7 +415,7 @@ void CameraSystem::DetermineCameraConfigThreePlayers()
 		)
 	{
 		bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
-		lead_cameras_assigned[1] = true;
+		lead_cameras_assigned[0] = true;
 	}
 	else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x
 			&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
@@ -438,23 +438,23 @@ void CameraSystem::DetermineCameraConfigThreePlayers()
 	
 	if(!topLeft_camera)
 	{
-		if(!lead_cameras_assigned[0]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[0];}
-		else if(!lead_cameras_assigned[1]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[1];}
-		else if(!lead_cameras_assigned[2]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[2];}
+		if(!lead_cameras_assigned[0]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[0]; lead_cameras_assigned[0] = true;}
+		else if(!lead_cameras_assigned[1]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[1]; lead_cameras_assigned[1] = true;}
+		else if(!lead_cameras_assigned[2]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[2]; lead_cameras_assigned[2] = true;}
 	}
 	
 	if(!topRight_camera)
 	{
-		if(!lead_cameras_assigned[0]){topRight_camera = &m_camera_manager_ptr->lead_cameras[0];}
-		else if(!lead_cameras_assigned[1]){topRight_camera = &m_camera_manager_ptr->lead_cameras[1];}
-		else if(!lead_cameras_assigned[2]){topRight_camera = &m_camera_manager_ptr->lead_cameras[2];}
+		if(!lead_cameras_assigned[0]){topRight_camera = &m_camera_manager_ptr->lead_cameras[0]; lead_cameras_assigned[0] = true;}
+		else if(!lead_cameras_assigned[1]){topRight_camera = &m_camera_manager_ptr->lead_cameras[1]; lead_cameras_assigned[1] = true;}
+		else if(!lead_cameras_assigned[2]){topRight_camera = &m_camera_manager_ptr->lead_cameras[2]; lead_cameras_assigned[2] = true;}
 	}
 	
 	if(!bottomLeft_camera)
 	{
-		if(!lead_cameras_assigned[0]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];}
-		else if(!lead_cameras_assigned[1]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];}
-		else if(!lead_cameras_assigned[2]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];}
+		if(!lead_cameras_assigned[0]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0]; lead_cameras_assigned[0] = true;}
+		else if(!lead_cameras_assigned[1]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1]; lead_cameras_assigned[1] = true;}
+		else if(!lead_cameras_assigned[2]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2]; lead_cameras_assigned[2] = true;}
 	}
 	
 	m_camera_manager_ptr->AttachCameraToScreen(topLeft_camera,0);
@@ -690,7 +690,7 @@ void CameraSystem::DetermineCameraConfigFourPlusPlayers()
 		)
 	{
 		bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];
-		lead_cameras_assigned[1] = true;
+		lead_cameras_assigned[0] = true;
 	}
 	else if(camera_one_center_x <  camera_zero_center_x && camera_one_center_x < camera_two_center_x && camera_one_center_x < camera_three_center_x
 			&& (camera_one_center_y < avg_y - camera_one_ptr->height*0.5 || camera_one_center_y > avg_y + camera_one_ptr->height*0.5)
@@ -751,39 +751,47 @@ void CameraSystem::DetermineCameraConfigFourPlusPlayers()
 		lead_cameras_assigned[3] = true;
 	}
 	
+	
+	
 	//if the cameras have not been assigned
 	
 	if(!topLeft_camera)
 	{
-		if(!lead_cameras_assigned[0]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[0];}
-		else if(!lead_cameras_assigned[1]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[1];}
-		else if(!lead_cameras_assigned[2]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[2];}
-		else if(!lead_cameras_assigned[3]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[3];}
+		if(!lead_cameras_assigned[0]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[0]; lead_cameras_assigned[0] = true;}
+		else if(!lead_cameras_assigned[1]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[1]; lead_cameras_assigned[1] = true;}
+		else if(!lead_cameras_assigned[2]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[2]; lead_cameras_assigned[2] = true;}
+		else if(!lead_cameras_assigned[3]){topLeft_camera = &m_camera_manager_ptr->lead_cameras[3]; lead_cameras_assigned[3] = true;}
 	}
 	
 	if(!topRight_camera)
 	{
-		if(!lead_cameras_assigned[0]){topRight_camera = &m_camera_manager_ptr->lead_cameras[0];}
-		else if(!lead_cameras_assigned[1]){topRight_camera = &m_camera_manager_ptr->lead_cameras[1];}
-		else if(!lead_cameras_assigned[2]){topRight_camera = &m_camera_manager_ptr->lead_cameras[2];}
-		else if(!lead_cameras_assigned[3]){topRight_camera = &m_camera_manager_ptr->lead_cameras[3];}
+		if(!lead_cameras_assigned[0]){topRight_camera = &m_camera_manager_ptr->lead_cameras[0]; lead_cameras_assigned[0] = true;}
+		else if(!lead_cameras_assigned[1]){topRight_camera = &m_camera_manager_ptr->lead_cameras[1]; lead_cameras_assigned[1] = true;}
+		else if(!lead_cameras_assigned[2]){topRight_camera = &m_camera_manager_ptr->lead_cameras[2]; lead_cameras_assigned[2] = true;}
+		else if(!lead_cameras_assigned[3]){topRight_camera = &m_camera_manager_ptr->lead_cameras[3]; lead_cameras_assigned[3] = true;}
 	}
 	
 	if(!bottomLeft_camera)
 	{
-		if(!lead_cameras_assigned[0]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0];}
-		else if(!lead_cameras_assigned[1]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1];}
-		else if(!lead_cameras_assigned[2]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2];}
-		else if(!lead_cameras_assigned[3]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[3];}
+		if(!lead_cameras_assigned[0]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[0]; lead_cameras_assigned[0] = true;}
+		else if(!lead_cameras_assigned[1]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[1]; lead_cameras_assigned[1] = true;}
+		else if(!lead_cameras_assigned[2]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[2]; lead_cameras_assigned[2] = true;}
+		else if(!lead_cameras_assigned[3]){bottomLeft_camera = &m_camera_manager_ptr->lead_cameras[3]; lead_cameras_assigned[3] = true;}
 	}
 	
 	if(!bottomRight_camera)
 	{
-		if(!lead_cameras_assigned[0]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[0];}
-		else if(!lead_cameras_assigned[1]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[1];}
-		else if(!lead_cameras_assigned[2]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[2];}
-		else if(!lead_cameras_assigned[3]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[3];}
+		if(!lead_cameras_assigned[0]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[0]; lead_cameras_assigned[0] = true;}
+		else if(!lead_cameras_assigned[1]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[1]; lead_cameras_assigned[1] = true;}
+		else if(!lead_cameras_assigned[2]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[2]; lead_cameras_assigned[2] = true;}
+		else if(!lead_cameras_assigned[3]){bottomRight_camera = &m_camera_manager_ptr->lead_cameras[3]; lead_cameras_assigned[3] = true;}
 	}
+	
+	#ifdef DEBUG_CAMERA_SYSTEM
+	std::cout << "lead cameras assigned,  0:" << lead_cameras_assigned[0] 
+	<< " , 1:" << lead_cameras_assigned[1] << " , 2:" << lead_cameras_assigned[2] 
+	<< " , 3:" << lead_cameras_assigned[3] << std::endl;
+	#endif
 	
 	m_camera_manager_ptr->AttachCameraToScreen(topLeft_camera,0);
 	m_camera_manager_ptr->AttachCameraToScreen(topRight_camera,1);
@@ -882,8 +890,21 @@ void CameraSystem::DetermineCameraConfigFourPlusPlayers()
 			m_camera_manager_ptr->screens_joined_bitset.reset(2);
 			m_camera_manager_ptr->ApplyNewScreenState();
 		}
+		//1100
+		else if(!collide_01 && !collide_02 && !collide_03 && !collide_12 && !collide_13 && collide_23)
+		{
+			#ifdef DEBUG_CAMERA_SYSTEM
+			std::cout << "\nJoining screens 2 and 3, split screen 1 and 0\n";
+			#endif
+			//join screen 2 and screen 3, split screen 1 and 0
+			m_camera_manager_ptr->screens_joined_bitset.reset(0);
+			m_camera_manager_ptr->screens_joined_bitset.reset(1);
+			m_camera_manager_ptr->screens_joined_bitset.set(2);
+			m_camera_manager_ptr->screens_joined_bitset.set(3);
+			m_camera_manager_ptr->ApplyNewScreenState();
+		}
 		//1110
-		else if(!collide_01 && !collide_02 && !collide_03 && (collide_12 || collide_13 || collide_23))
+		else if(!collide_01 && !collide_02 && !collide_03 && (collide_12 && collide_13 && collide_23))
 		{
 			#ifdef DEBUG_CAMERA_SYSTEM
 			std::cout << "\nJoining screens 1, 2, and 3, split screen 0 \n";
@@ -896,7 +917,7 @@ void CameraSystem::DetermineCameraConfigFourPlusPlayers()
 			m_camera_manager_ptr->ApplyNewScreenState();
 		}
 		//1101
-		else if((collide_02 || collide_03 || collide_23) && !collide_01 && !collide_12 && !collide_13 )
+		else if((collide_02 && collide_03 && collide_23) && !collide_01 && !collide_12 && !collide_13 )
 		{
 			#ifdef DEBUG_CAMERA_SYSTEM
 			std::cout << "\nJoining screens 0, 2, and 3, split screen 1 \n";
@@ -909,7 +930,7 @@ void CameraSystem::DetermineCameraConfigFourPlusPlayers()
 			m_camera_manager_ptr->ApplyNewScreenState();
 		}
 		//1011
-		else if( ( collide_13 || collide_03 || collide_01) && !collide_12 && !collide_23 && !collide_02)
+		else if( ( collide_13 && collide_03 && collide_01) && !collide_12 && !collide_23 && !collide_02)
 		{
 			#ifdef DEBUG_CAMERA_SYSTEM
 			std::cout << "\nJoining screens 0, 1, and 3, split screen 2 \n";
@@ -922,7 +943,7 @@ void CameraSystem::DetermineCameraConfigFourPlusPlayers()
 			m_camera_manager_ptr->ApplyNewScreenState();
 		}
 		//0111
-		else if(( collide_12 || collide_02 || collide_01) && !collide_03 && !collide_13 && !collide_23)
+		else if(( collide_12 && collide_02 && collide_01) && !collide_03 && !collide_13 && !collide_23)
 		{
 			#ifdef DEBUG_CAMERA_SYSTEM
 			std::cout << "\nJoining screens 0, 1, and 2, split screen 3 \n";
