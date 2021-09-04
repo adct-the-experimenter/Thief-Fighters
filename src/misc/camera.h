@@ -153,6 +153,7 @@ public:
 	
 	std::uint8_t m_num_players;
 	
+	
 	//cameras following players who have camera lead role
 	std::array <CustomCamera,4> lead_cameras;
 	
@@ -189,6 +190,8 @@ public:
 		screens_joined_bitset[1] = 0;
 		screens_joined_bitset[2] = 0;
 		screens_joined_bitset[4] = 0;
+		
+		m_num_screens_used = 1;
 	}
 	
 	//initialize for 2 screen game
@@ -217,6 +220,8 @@ public:
 		screens_joined_bitset[1] = 0;
 		screens_joined_bitset[2] = 0;
 		screens_joined_bitset[4] = 0;
+		
+		m_num_screens_used = 2;
 	}
 	
 	//initialize for 3 screen game
@@ -245,6 +250,8 @@ public:
 		screens_joined_bitset[1] = 0;
 		screens_joined_bitset[2] = 0;
 		screens_joined_bitset[4] = 0;
+		
+		m_num_screens_used = 3;
 	}
 	
 	//initialize for 4 screen game
@@ -275,6 +282,8 @@ public:
 		screens_joined_bitset[1] = 0;
 		screens_joined_bitset[2] = 0;
 		screens_joined_bitset[4] = 0;
+		
+		m_num_screens_used = 4;
 	}
 	
 	void AttachCameraToScreen(CustomCamera* camera, std::uint8_t screen_num)
@@ -358,8 +367,9 @@ public:
 	{
 		float x,y;
 		
-		for(size_t i = 0; i < m_num_players; i++)
+		for(std::uint8_t i = 0; i < m_num_screens_used; i++)
 		{
+			
 			screens[i].camera_ptr->GetLeadPlayerCoordinates(x,y);
 			
 			screens[i].screen_camera.x = x - 0.5*screens[i].screen_camera.width;
@@ -402,7 +412,7 @@ public:
 	void ApplyNewScreenState()
 	{
 		
-		if(m_num_players == 2)
+		if(m_num_screens_used == 2)
 		{
 			//if screen zero and screen one not joined
 			if(!screens_joined_bitset[0] && !screens_joined_bitset[1])
@@ -435,7 +445,7 @@ public:
 				
 			}
 		}
-		else if(m_num_players == 3)
+		else if(m_num_screens_used >= 3)
 		{
 			//if screen two, screen one, screen zero split
 			//000
@@ -552,7 +562,7 @@ public:
 			}
 		
 		}
-		else if(m_num_players == 4)
+		else if(m_num_screens_used == 4)
 		{
 			//if screen three, screen two, screen one, screen zero split
 			//0000
@@ -832,6 +842,7 @@ public:
 				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};				
 			}
 		}
+		
 	}
 
 private:
@@ -840,6 +851,8 @@ private:
 	std::uint16_t m_level_bound_right_x;
 	std::uint16_t m_level_bound_up_y;
 	std::uint16_t m_level_bound_down_y;
+	
+	std::uint8_t m_num_screens_used;
 	
 };
 

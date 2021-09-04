@@ -63,6 +63,7 @@ void CameraSystem::Init_MetroidVaniaMode(CameraManager* camera_m_ptr, std::uint8
 			
 			m_camera_manager_ptr->AttachCameraToScreen(&m_camera_manager_ptr->lead_cameras[0],0);
 			
+			
 			break;
 		}
 		case 2:
@@ -102,19 +103,18 @@ void CameraSystem::Init_MetroidVaniaMode(CameraManager* camera_m_ptr, std::uint8
 	
 	if(num_players >= 4)
 	{
-		//4 equal size cameras at top and bottom
-		for(size_t i = 0; i < 4; i++)
+		//3 cameras in upside down triangle formation
+		for(size_t i = 0; i < 3; i++)
 		{
 			m_camera_manager_ptr->lead_cameras[i].SetLevelBounds(level_bound_left_x,level_bound_right_x,level_bound_up_y,level_bound_down_y);
 			m_camera_manager_ptr->lead_cameras[i].SetCameraLeadPlayerNumber(i);
 		}
 		
-		m_camera_manager_ptr->SetForFourScreens(gameScreenWidth_float,gameScreenHeight_float);
+		m_camera_manager_ptr->SetForThreeScreens(gameScreenWidth_float,gameScreenHeight_float);
 		
 		m_camera_manager_ptr->AttachCameraToScreen(&m_camera_manager_ptr->lead_cameras[0],0);
 		m_camera_manager_ptr->AttachCameraToScreen(&m_camera_manager_ptr->lead_cameras[1],1);
 		m_camera_manager_ptr->AttachCameraToScreen(&m_camera_manager_ptr->lead_cameras[2],2);
-		m_camera_manager_ptr->AttachCameraToScreen(&m_camera_manager_ptr->lead_cameras[3],3);
 	}
 }
 
@@ -275,7 +275,7 @@ static bool ShouldAdjacentVerticalCamerasSplit(CustomCamera* camera_a_ptr, Custo
 }
 
 
-#define DEBUG_CAMERA_SYSTEM
+//#define DEBUG_CAMERA_SYSTEM
 
 void CameraSystem::DetermineCameraConfigTwoPlayers()
 {
@@ -1031,15 +1031,12 @@ void CameraSystem::Update_MetroidVaniaMode()
 	{
 		DetermineCameraConfigTwoPlayers();
 	}
-	else if(m_num_players == 3)
+	else if(m_num_players >= 3)
 	{
 		DetermineCameraConfigThreePlayers();
 		
 	}
-	else if(m_num_players >= 4)
-	{
-		DetermineCameraConfigFourPlusPlayers();
-	}
+	
 		
 	//update screen camera location based on camera lead coordinates and screen camera dimensions.
 	m_camera_manager_ptr->UpdateScreenCameraLocation();
