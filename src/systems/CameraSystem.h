@@ -38,6 +38,12 @@ private:
 	
 	float m_gameScreenWidth; 
 	float m_gameScreenHeight;
+	
+	//determine camera config based on number of players
+	void DetermineCameraConfigTwoPlayers();
+	void DetermineCameraConfigThreePlayers();
+	void DetermineCameraConfigFourPlusPlayers();
+	
 };
 
 #endif

@@ -153,6 +153,7 @@ public:
 	
 	std::uint8_t m_num_players;
 	
+	
 	//cameras following players who have camera lead role
 	std::array <CustomCamera,4> lead_cameras;
 	
@@ -189,6 +190,8 @@ public:
 		screens_joined_bitset[1] = 0;
 		screens_joined_bitset[2] = 0;
 		screens_joined_bitset[4] = 0;
+		
+		m_num_screens_used = 1;
 	}
 	
 	//initialize for 2 screen game
@@ -217,6 +220,8 @@ public:
 		screens_joined_bitset[1] = 0;
 		screens_joined_bitset[2] = 0;
 		screens_joined_bitset[4] = 0;
+		
+		m_num_screens_used = 2;
 	}
 	
 	//initialize for 3 screen game
@@ -245,6 +250,8 @@ public:
 		screens_joined_bitset[1] = 0;
 		screens_joined_bitset[2] = 0;
 		screens_joined_bitset[4] = 0;
+		
+		m_num_screens_used = 3;
 	}
 	
 	//initialize for 4 screen game
@@ -275,6 +282,8 @@ public:
 		screens_joined_bitset[1] = 0;
 		screens_joined_bitset[2] = 0;
 		screens_joined_bitset[4] = 0;
+		
+		m_num_screens_used = 4;
 	}
 	
 	void AttachCameraToScreen(CustomCamera* camera, std::uint8_t screen_num)
@@ -358,32 +367,33 @@ public:
 	{
 		float x,y;
 		
-		for(size_t i = 0; i < m_num_players; i++)
+		for(std::uint8_t i = 0; i < m_num_screens_used; i++)
 		{
+			
 			screens[i].camera_ptr->GetLeadPlayerCoordinates(x,y);
 			
 			screens[i].screen_camera.x = x - 0.5*screens[i].screen_camera.width;
 			
 			if(screens[i].screen_camera.x < m_level_bound_left_x)
 			{
-				screens[i].screen_camera.x  = m_level_bound_left_x;
+				screens[i].screen_camera.x = m_level_bound_left_x;
 			}
 			
-			if(screens[i].screen_camera.x > m_level_bound_right_x)
+			if(screens[i].screen_camera.x + screens[i].screen_camera.width > m_level_bound_right_x)
 			{
-				screens[i].screen_camera.x  = m_level_bound_right_x;
+				screens[i].screen_camera.x = m_level_bound_right_x - screens[i].screen_camera.width;
 			}
 			
 			screens[i].screen_camera.y = y - 0.5*screens[i].screen_camera.height;
 			
 			if(screens[i].screen_camera.y < m_level_bound_up_y)
 			{
-				screens[i].screen_camera.y  = m_level_bound_up_y;
+				screens[i].screen_camera.y = m_level_bound_up_y;
 			}
 			
-			if(screens[i].screen_camera.y > m_level_bound_down_y)
+			if(screens[i].screen_camera.y > m_level_bound_down_y + screens[i].screen_camera.height)
 			{
-				screens[i].screen_camera.y = m_level_bound_down_y;
+				screens[i].screen_camera.y = m_level_bound_down_y + screens[i].screen_camera.height;
 			}
 		}
 	}
@@ -402,7 +412,7 @@ public:
 	void ApplyNewScreenState()
 	{
 		
-		if(m_num_players == 2)
+		if(m_num_screens_used == 2)
 		{
 			//if screen zero and screen one not joined
 			if(!screens_joined_bitset[0] && !screens_joined_bitset[1])
@@ -435,7 +445,7 @@ public:
 				
 			}
 		}
-		else if(m_num_players == 3)
+		else if(m_num_screens_used >= 3)
 		{
 			//if screen two, screen one, screen zero split
 			//000
@@ -455,11 +465,11 @@ public:
 				
 				//enable screen 2 and its attached camera
 				screens[2].in_active_use = true;
-				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[2].screen_rect = (Rectangle){game_screen_width / 4,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
 				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 				
 			}
-			//if screen two split screen one and screen zero joined
+			//if screen two split, screen one and screen zero joined
 			//011
 			else if(!screens_joined_bitset[2] && screens_joined_bitset[1] && screens_joined_bitset[0])
 			{
@@ -479,10 +489,10 @@ public:
 				//enable screen 2 and its attached camera
 				screens[2].in_active_use = true;
 				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
-				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 				
 			}
-			//if screen two and screen zero joined and screen one split
+			//if screen two and screen zero joined, and screen one split
 			//101
 			else if(screens_joined_bitset[2] && !screens_joined_bitset[1] && screens_joined_bitset[0])
 			{
@@ -506,6 +516,27 @@ public:
 				
 				
 			}
+			//if screen two and screen one joined, and screen zero split
+			//110
+			else if(screens_joined_bitset[2] && screens_joined_bitset[1] && !screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				
+				
+				//disable screen 2 and its attached camera
+				screens[2].in_active_use = false;
+				screens[2].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				
+				
+				//enable screen 1 and its attached camera
+				screens[1].in_active_use = true;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height };
+			}
 			//if all screens joined
 			//111
 			else if(screens_joined_bitset[2] && screens_joined_bitset[1] && screens_joined_bitset[0])
@@ -526,11 +557,292 @@ public:
 				//disable screen 2 and its attached camera
 				screens[2].in_active_use = false;
 				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2 ,game_screen_height / 2};
-				screens[2].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
 								
 			}
 		
 		}
+		else if(m_num_screens_used == 4)
+		{
+			//if screen three, screen two, screen one, screen zero split
+			//0000
+			if(!screens_joined_bitset[3] && !screens_joined_bitset[2] && !screens_joined_bitset[1] && !screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 1 and its attached camera
+				screens[1].in_active_use = true;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 2 and its attached camera
+				screens[2].in_active_use = true;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 3 and its attached camera
+				screens[3].in_active_use = true;
+				screens[3].screen_rect = (Rectangle){game_screen_width / 2,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+			}
+			//if screen three split and screen two split, screen one and screen zero joined
+			//0011
+			else if(!screens_joined_bitset[3] && !screens_joined_bitset[2] && screens_joined_bitset[1] && screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				//stretch it to screen 1
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				
+				
+				//disable screen 1 and its attached camera
+				screens[1].in_active_use = false;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width ,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				
+				
+				//enable screen 2 and its attached camera
+				screens[2].in_active_use = true;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 3 and its attached camera
+				screens[3].in_active_use = true;
+				screens[3].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+			}
+			//if screen two and screen zero joined, and screen one and screen three split
+			//0101
+			else if(!screens_joined_bitset[3] && screens_joined_bitset[2] && !screens_joined_bitset[1] && screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				//stretch it to screen 2
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				
+				
+				//disable screen 2 and its attached camera
+				screens[2].in_active_use = false;
+				screens[2].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				
+				
+				//enable screen 1 and its attached camera
+				screens[1].in_active_use = true;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2 };
+				
+				//enable screen 3 and its attached camera
+				screens[3].in_active_use = true;
+				screens[3].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2 };
+				
+			}
+			//if screen two and screen one joined, and screen three and screen zero split
+			//0110
+			else if(!screens_joined_bitset[3] && screens_joined_bitset[2] && screens_joined_bitset[1] && !screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				
+				
+				//disable screen 2 and its attached camera
+				screens[2].in_active_use = false;
+				screens[2].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				
+				//enable screen 1 and its attached camera
+				screens[1].in_active_use = true;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 3 and its attached camera
+				screens[3].in_active_use = true;
+				screens[3].screen_rect = (Rectangle){game_screen_width / 2,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+			}
+			//if screen zero and screen three joined, and screen two and screen one split
+			//1001
+			else if(screens_joined_bitset[3] && !screens_joined_bitset[2] && !screens_joined_bitset[1] && screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//disable screen 3 and its attached camera
+				screens[3].in_active_use = false;
+				screens[3].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 1 and its attached camera
+				screens[1].in_active_use = true;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 2 and its attached camera
+				screens[2].in_active_use = true;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+			}
+			//if screen three and screen two joined, and screen zero and screen one split
+			else if(screens_joined_bitset[3] && screens_joined_bitset[2] && !screens_joined_bitset[1] && !screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 1 and its attached camera
+				screens[1].in_active_use = true;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//disable screen 3 and its attached camera
+				screens[3].in_active_use = false;
+				screens[3].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 2 and its attached camera
+				screens[2].in_active_use = true;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width ,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+			}
+			//1100
+			//if screen three split, screens zero one and two joined
+			//0111
+			else if(!screens_joined_bitset[3] && screens_joined_bitset[2] && screens_joined_bitset[1] && screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				
+				//disable screen 1 and its attached camera
+				screens[1].in_active_use = false;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				
+				//disable screen 2 and its attached camera
+				screens[2].in_active_use = false;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//enable screen 3 and its attached camera
+				screens[3].in_active_use = true;
+				screens[3].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width ,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+			}
+			//if screen two split, screens zero one and three joined
+			//1011
+			else if(screens_joined_bitset[3] && !screens_joined_bitset[2] && screens_joined_bitset[1] && screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				
+				//disable screen 1 and its attached camera
+				screens[1].in_active_use = false;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height};
+				
+				//enable screen 2 and its attached camera
+				screens[2].in_active_use = true;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				
+				//disable screen 3 and its attached camera
+				screens[3].in_active_use = false;
+				screens[3].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+			}
+			//if screen one split, screens zero two and three joined
+			//1101
+			else if(screens_joined_bitset[3] && screens_joined_bitset[2] && !screens_joined_bitset[1] && screens_joined_bitset[0])
+			{
+				//disable screen 0 and its attached camera
+				screens[0].in_active_use = false;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				
+				//enable screen 1 and its attached camera
+				screens[1].in_active_use = true;
+				screens[1].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				
+				//enable screen 2 and its attached camera
+				screens[2].in_active_use = true;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				
+				//disable screen 3 and its attached camera
+				screens[3].in_active_use = false;
+				screens[3].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+			}
+			//if screen zero split, and screens one two and three joined
+			//1110
+			else if(screens_joined_bitset[3] && screens_joined_bitset[2] && screens_joined_bitset[1] && !screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width ,game_screen_height / 2};
+				
+				//disable screen 1 and its attached camera
+				screens[1].in_active_use = false;
+				screens[1].screen_rect = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				
+				//enable screen 2 and its attached camera
+				screens[2].in_active_use = true;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height / 2};
+				
+				//disable screen 3 and its attached camera
+				screens[3].in_active_use = false;
+				screens[3].screen_rect = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+			}
+			//if all screens joined
+			//1111
+			else if(screens_joined_bitset[3] && screens_joined_bitset[2] && screens_joined_bitset[1] && screens_joined_bitset[0])
+			{
+				//enable screen 0 and its attached camera
+				//stretch it to screen 1 and screen 2
+				screens[0].in_active_use = true;
+				screens[0].screen_rect = (Rectangle){0,0,game_screen_width ,game_screen_height};
+				screens[0].screen_camera = (Rectangle){0,0,game_screen_width,game_screen_height};
+				
+				
+				//disable screen 1 and its attached camera
+				screens[1].in_active_use = false;
+				screens[1].screen_rect = (Rectangle){game_screen_width / 2,0,game_screen_width / 2,game_screen_height / 2};
+				screens[1].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				
+				//disable screen 2 and its attached camera
+				screens[2].in_active_use = false;
+				screens[2].screen_rect = (Rectangle){0,game_screen_height / 2,game_screen_width / 2 ,game_screen_height / 2};
+				screens[2].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};
+				
+				//disable screen 3 and its attached camera
+				screens[3].in_active_use = false;
+				screens[3].screen_rect = (Rectangle){game_screen_width / 2,game_screen_height / 2,game_screen_width / 2 ,game_screen_height / 2};
+				screens[3].screen_camera = (Rectangle){0,0,game_screen_width / 2,game_screen_height / 2};				
+			}
+		}
+		
 	}
 
 private:
@@ -539,6 +851,8 @@ private:
 	std::uint16_t m_level_bound_right_x;
 	std::uint16_t m_level_bound_up_y;
 	std::uint16_t m_level_bound_down_y;
+	
+	std::uint8_t m_num_screens_used;
 	
 };
 
