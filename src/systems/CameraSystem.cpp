@@ -226,6 +226,25 @@ static bool ShouldAdjacentVerticalCamerasJoin(CustomCamera* camera_a_ptr, Custom
 	return false;
 }
 
+static bool ShouldCollidingCamerasJoin(CustomCamera* camera_a_ptr, CustomCamera* camera_b_ptr)
+{
+	Rectangle* a_rect_ptr = camera_a_ptr->GetCameraRectPointer();
+	Rectangle* b_rect_ptr = camera_b_ptr->GetCameraRectPointer();
+	
+	float diff_camera_x = abs(b_rect_ptr->x - a_rect_ptr->x);
+	float diff_camera_y = abs(b_rect_ptr->y - a_rect_ptr->y);
+	
+	float dist_square = diff_camera_x*diff_camera_x + diff_camera_y*diff_camera_y;
+	
+	//if cameras are close i.e. x and y dist components are about half of game screen width or less
+	if(dist_square <= 0.5*camera_a_ptr->GetCameraRectPointer()->height*camera_a_ptr->GetCameraRectPointer()->width)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 static bool ShouldAdjacentVerticalCamerasSplit(CustomCamera* camera_a_ptr, CustomCamera* camera_b_ptr, float& gameScreenWidth,float& gameScreenHeight)
 {
 	Rectangle* a_rect_ptr = camera_a_ptr->GetCameraRectPointer();
@@ -256,7 +275,7 @@ static bool ShouldAdjacentVerticalCamerasSplit(CustomCamera* camera_a_ptr, Custo
 }
 
 
-//#define DEBUG_CAMERA_SYSTEM
+#define DEBUG_CAMERA_SYSTEM
 
 void CameraSystem::DetermineCameraConfigTwoPlayers()
 {
@@ -481,25 +500,80 @@ void CameraSystem::DetermineCameraConfigThreePlayers()
 		}
 		else if( collide_01 && !collide_02 && !collide_12)
 		{
-			#ifdef DEBUG_CAMERA_SYSTEM
-			std::cout << "\nJoining screens 0 and 1, split screen 2\n";
-			#endif
-			//join screen 0 and screen 1, split screen 2
-			m_camera_manager_ptr->screens_joined_bitset.set(0);
-			m_camera_manager_ptr->screens_joined_bitset.set(1);
-			m_camera_manager_ptr->screens_joined_bitset.reset(2);
-			m_camera_manager_ptr->ApplyNewScreenState();
+			if(ShouldCollidingCamerasJoin(topLeft_camera,topRight_camera) )
+			{
+				#ifdef DEBUG_CAMERA_SYSTEM
+				std::cout << "\nJoining screens 0 and 1, split screen 2\n";
+				#endif
+				//join screen 0 and screen 1, split screen 2
+				m_camera_manager_ptr->screens_joined_bitset.set(0);
+				m_camera_manager_ptr->screens_joined_bitset.set(1);
+				m_camera_manager_ptr->screens_joined_bitset.reset(2);
+				m_camera_manager_ptr->ApplyNewScreenState();
+			}
+			else
+			{
+				#ifdef DEBUG_CAMERA_SYSTEM
+				std::cout << "\nSplitting screens 0 and 1, split screen 2\n";
+				#endif
+				//split screen 0 and screen 1, split screen 2
+				m_camera_manager_ptr->screens_joined_bitset.reset(0);
+				m_camera_manager_ptr->screens_joined_bitset.reset(1);
+				m_camera_manager_ptr->screens_joined_bitset.reset(2);
+				m_camera_manager_ptr->ApplyNewScreenState();
+			}
+			
 		}
 		else if(!collide_01 && collide_02 && !collide_12)
 		{
-			#ifdef DEBUG_CAMERA_SYSTEM
-			std::cout << "\nJoining screens 0 and 2, split screen 1\n";
-			#endif
-			//join screen 0 and screen 2, split screen 1
-			m_camera_manager_ptr->screens_joined_bitset.set(0);
-			m_camera_manager_ptr->screens_joined_bitset.set(2);
-			m_camera_manager_ptr->screens_joined_bitset.reset(1);
-			m_camera_manager_ptr->ApplyNewScreenState();
+			if(ShouldCollidingCamerasJoin(topLeft_camera,bottomLeft_camera) )
+			{
+				#ifdef DEBUG_CAMERA_SYSTEM
+				std::cout << "\nJoining screens 0 and 2, split screen 1\n";
+				#endif
+				//join screen 0 and screen 2, split screen 1
+				m_camera_manager_ptr->screens_joined_bitset.set(0);
+				m_camera_manager_ptr->screens_joined_bitset.set(2);
+				m_camera_manager_ptr->screens_joined_bitset.reset(1);
+				m_camera_manager_ptr->ApplyNewScreenState();
+			}
+			else
+			{
+				#ifdef DEBUG_CAMERA_SYSTEM
+				std::cout << "\nSplitting screens 0 and 2, split screen 1\n";
+				#endif
+				//split screen 0 and screen 2, split screen 1
+				m_camera_manager_ptr->screens_joined_bitset.reset(0);
+				m_camera_manager_ptr->screens_joined_bitset.reset(2);
+				m_camera_manager_ptr->screens_joined_bitset.reset(1);
+				m_camera_manager_ptr->ApplyNewScreenState();
+			}
+		}
+		else if(!collide_01 && !collide_02 && collide_12)
+		{
+			if(ShouldCollidingCamerasJoin(topRight_camera,bottomLeft_camera) )
+			{
+				#ifdef DEBUG_CAMERA_SYSTEM
+				std::cout << "\nJoining screens 1 and 2, split screen 0\n";
+				#endif
+				//join screen 0 and screen 2, split screen 1
+				m_camera_manager_ptr->screens_joined_bitset.set(1);
+				m_camera_manager_ptr->screens_joined_bitset.set(2);
+				m_camera_manager_ptr->screens_joined_bitset.reset(0);
+				m_camera_manager_ptr->ApplyNewScreenState();
+			}
+			else
+			{
+				#ifdef DEBUG_CAMERA_SYSTEM
+				std::cout << "\nSplitting screens 1 and 2, split screen 0\n";
+				#endif
+				//split screen 0 and screen 2, split screen 1
+				m_camera_manager_ptr->screens_joined_bitset.reset(1);
+				m_camera_manager_ptr->screens_joined_bitset.reset(2);
+				m_camera_manager_ptr->screens_joined_bitset.reset(0);
+				m_camera_manager_ptr->ApplyNewScreenState();
+			}
+			
 		}
 		//else if none of the cameras are colliding
 		else if(!collide_01 && !collide_02 && !collide_12)
