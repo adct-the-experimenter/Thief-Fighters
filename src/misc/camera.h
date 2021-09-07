@@ -174,16 +174,13 @@ public:
 		screens[0].in_active_use = true;
 		screens[0].screen_rect = {0,0,game_res_width,game_res_height};
 		(*lead_cameras[0].GetCameraRectPointer()) = {0,0,game_res_width,game_res_height};
-		//lead_cameras[0].SetCameraActiveStatus(true);
+		screens[0].screen_camera = {0,0,game_res_width,game_res_height};
 		
 		screens[1].in_active_use = false;
-		//lead_cameras[1].SetCameraActiveStatus(true);
 		
 		screens[2].in_active_use = false;
-		//lead_cameras[1].SetCameraActiveStatus(false);
 		
 		screens[3].in_active_use = false;
-		//lead_cameras[3].SetCameraActiveStatus(false);
 		
 		//set as all split
 		screens_joined_bitset[0] = 0;

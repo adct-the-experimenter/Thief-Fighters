@@ -573,7 +573,7 @@ static void CheckCollisionWithLevelBounds_Versus(float& obj_x, float& obj_y,
 	}
 }
 
-static float jump_factor = 80.0f;
+static float jump_factor = 60.0f;
 
 void PhysicsSystem::Update_VersusMode(float& dt)
 {
@@ -598,24 +598,22 @@ void PhysicsSystem::Update_VersusMode(float& dt)
 				
 				bool jump = false;
 				
-				if(physics_type_comp.jump_count >= physics_type_comp.jump_count_limit)
+				if(physics_type_comp.jump_count >= 1)
 				{
 					jumpVel = 0;
 				}
 				
+				//if jumping
 				if(jumpVel < 0)
 				{					
-					jump = true;
 					physics_type_comp.grounded = false;
 					physics_type_comp.jump_count++;
-					rigidBody.velocity.y += jumpVel*( (2.1f) / (physics_type_comp.jump_count + 1) );
+					rigidBody.velocity.y += jumpVel*2.1f;
 				}
 				else if(jumpVel > 0)
 				{
 					physics_type_comp.grounded = false;
 				}
-				
-				
 				
 				rigidBody.velocity.y += (gravity.force.y * dt);
 				
@@ -677,24 +675,22 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				
 				bool jump = false;
 				
-				if(physics_type_comp.jump_count >= physics_type_comp.jump_count_limit)
+				if(physics_type_comp.jump_count >= 1)
 				{
 					jumpVel = 0;
 				}
 				
+				//if jumping
 				if(jumpVel < 0)
 				{					
-					jump = true;
 					physics_type_comp.grounded = false;
 					physics_type_comp.jump_count++;
-					rigidBody.velocity.y += jumpVel*( (2.1f) / (physics_type_comp.jump_count + 1) );
+					rigidBody.velocity.y += jumpVel*2.1f;
 				}
 				else if(jumpVel > 0)
 				{
 					physics_type_comp.grounded = false;
 				}
-				
-				
 				
 				rigidBody.velocity.y += (gravity.force.y * dt);
 				

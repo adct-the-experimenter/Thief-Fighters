@@ -1026,7 +1026,6 @@ void CameraSystem::Update_MetroidVaniaMode()
 	//attach camera to screen based on camera position
 	//split and join cameras based on camera position
 	
-	
 	if(m_num_players == 2)
 	{
 		DetermineCameraConfigTwoPlayers();
