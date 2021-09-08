@@ -608,7 +608,7 @@ void PhysicsSystem::Update_VersusMode(float& dt)
 				{					
 					physics_type_comp.grounded = false;
 					physics_type_comp.jump_count++;
-					rigidBody.velocity.y += jumpVel*2.1f;
+					rigidBody.velocity.y += jumpVel*2.0f;
 				}
 				else if(jumpVel > 0)
 				{
@@ -699,8 +699,10 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				transform.position.x += 3*rigidBody.velocity.x * dt;
 				transform.position.y += rigidBody.velocity.y * dt;
 				
+				//if world one is active i.e. a player is in world one
 				if(world_one.in_active_use)
 				{
+					//if the collision box of player is in world one
 					if(collisionBox.world_id == 0)
 					{
 						
