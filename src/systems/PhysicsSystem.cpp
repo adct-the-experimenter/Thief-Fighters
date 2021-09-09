@@ -608,11 +608,9 @@ void PhysicsSystem::Update_VersusMode(float& dt)
 				{					
 					physics_type_comp.grounded = false;
 					physics_type_comp.jump_count++;
+					
 					rigidBody.velocity.y += jumpVel*2.0f;
-				}
-				else if(jumpVel > 0)
-				{
-					physics_type_comp.grounded = false;
+					
 				}
 				
 				rigidBody.velocity.y += (gravity.force.y * dt);
@@ -685,7 +683,7 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				{					
 					physics_type_comp.grounded = false;
 					physics_type_comp.jump_count++;
-					rigidBody.velocity.y += jumpVel*2.1f;
+					rigidBody.velocity.y += jumpVel*2.0f;
 				}
 				else if(jumpVel > 0)
 				{
