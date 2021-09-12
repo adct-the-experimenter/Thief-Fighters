@@ -403,12 +403,11 @@ void CharacterSelector::logic()
 			
 			//add rigid body
 			Vector2 initV = {0.0f,0.0f};
+			RigidBody2D rBody;
+			rBody.velocity = initV; rBody.jump_speed = 0.0f;
 			gCoordinator.AddComponent(
 						*player_entities_vec.at(i),
-						RigidBody2D{
-							.velocity = initV,
-							.jump_speed = float(0)
-						}
+						rBody
 					);
 					
 			//add gravity component for later use

@@ -215,7 +215,7 @@ bool WorldSystem::LoadDataBasedOnTilesheetDescription(World* world_ptr,std::stri
 		y = atoi(valString.c_str());
 				
 		//set frame clip
-		Rectangle frame_clip = {x,y,30,30};
+		Rectangle frame_clip = {static_cast<float>(x),static_cast<float>(y),30,30};
 		
 		//set tile id
 		valString = tile_node.attribute("id").value();
