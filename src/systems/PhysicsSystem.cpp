@@ -573,7 +573,7 @@ static void CheckCollisionWithLevelBounds_Versus(float& obj_x, float& obj_y,
 	}
 }
 
-static float jump_factor = 60.0f;
+static float jump_factor = 70.0f;
 
 void PhysicsSystem::Update_VersusMode(float& dt)
 {
@@ -595,9 +595,7 @@ void PhysicsSystem::Update_VersusMode(float& dt)
 				//account for acceleration due to gravity to rigid body velocity
 				
 				float jumpVel = rigidBody.jump_speed*jump_factor;
-				
-				bool jump = false;
-				
+								
 				if(physics_type_comp.jump_count >= 1)
 				{
 					jumpVel = 0;
@@ -617,7 +615,7 @@ void PhysicsSystem::Update_VersusMode(float& dt)
 				
 				//move transform component by velocity of rigid body multiplied by time
 				//std::cout << "In physics system, player rigid body velocity: " << rigidBody.velocity.x << std::endl;
-				transform.position.x += 3*rigidBody.velocity.x * dt;
+				transform.position.x += rigidBody.velocity.x * dt;
 				transform.position.y += rigidBody.velocity.y * dt;
 				
 				

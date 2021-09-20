@@ -173,7 +173,7 @@ void RenderSystem::Update_MetroidVaniaMode_Editor()
 					adjusted_pos.x = transform.position.x - camera_ptr->x + 250;
 					adjusted_pos.y = transform.position.y - camera_ptr->y;
 					
-					//render texuture according to frame, adjusted camera composition, tint
+					//render texture according to frame, adjusted camera composition, tint
 					DrawTextureRec(character_sheet_textures[render_comp.char_texture_index], render_comp.frame_rect, adjusted_pos, render_comp.tint);
 					
 				}

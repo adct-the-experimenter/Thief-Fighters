@@ -6,7 +6,7 @@
 
 extern Coordinator gCoordinator;
 
-float speed_factor = 40.0f;
+float speed_factor = 100.0f;
 
 static const int16_t joystick_border = 32600;
 static const int16_t joystick_border_analog = 10000;
