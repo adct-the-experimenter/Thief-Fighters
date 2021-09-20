@@ -246,6 +246,7 @@ void handle_events()
 			{
 				gNumPlayerSetter.handle_input(gControllerInput,gKeyboardInput);
 			}
+			
 			break;
 		}
 		case GameState::CHAR_SELECTOR:

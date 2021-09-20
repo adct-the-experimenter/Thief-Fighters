@@ -502,8 +502,6 @@ void CharacterSelector::render()
 					fighter_boxes[i].char_slot_rect.x, fighter_boxes[i].char_slot_rect.y, 
 					14, char_text_color);
 			
-			//draw texture of character choice
-			//DrawTexture(char_select_texture, 200, 100, WHITE);
 			
 			Color special_power_text_color;
 			if(fighter_boxes[i].current_slot == 1){special_power_text_color = YELLOW;}
