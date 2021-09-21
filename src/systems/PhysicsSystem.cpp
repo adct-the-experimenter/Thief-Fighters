@@ -174,29 +174,24 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 					obj_y = main_stage.collision_rect_array[i].rect.y - obj_height;
 					
 				}
+				//else if player is not on platform
 				else
 				{
 					
 					//if player is to the left of platform 
 					if(obj_x + obj_width - 1 <= main_stage.collision_rect_array[i].rect.x + 20)
 					{
-						//PushLeft(obj_x,obj_vx,dt);
 						obj_vx = 0;
 						obj_x = main_stage.collision_rect_array[i].rect.x - obj_width;
 					}
 					//else if player is to the right of platform
 					else if(obj_x + 1 >= main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width - 20)
 					{
-						//PushRight(obj_x,obj_vx,dt);
 						obj_vx = 0;
 						obj_x = main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width;
 					}
 					else
 					{
-						//push back player 
-						//PushBack(obj_x, obj_y, 
-						//obj_vx, obj_vy, 
-						//dt);
 						
 						PushUp(obj_y,obj_vy,dt);
 						
@@ -224,7 +219,6 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 				if(obj_x + obj_width - 1 <= main_stage.collision_rect_array[i].rect.x + 20)
 				{
 					//std::cout << "\nplayer below platform to the left. Push left.\n";
-					//PushLeft(obj_x,obj_vx,dt);
 					obj_vx = 0;
 					obj_x = main_stage.collision_rect_array[i].rect.x - obj_width;
 				}
@@ -232,7 +226,6 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 				else if(obj_x + 1 >= main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width - 20)
 				{
 					//std::cout << "\nplayer below platform to the right. Push right.\n";
-					//PushRight(obj_x,obj_vx,dt);
 					obj_vx = 0;
 					obj_x = main_stage.collision_rect_array[i].rect.x + main_stage.collision_rect_array[i].rect.width;
 				}
@@ -241,7 +234,6 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 				if(obj_y + obj_height - 2 <= main_stage.collision_rect_array[i].rect.y + 10)
 				{
 					//std::cout << "\nplayer above platform. Push up.\n";
-					//PushUp(obj_y,obj_vy,dt);
 					obj_vy = 0;
 					obj_y = main_stage.collision_rect_array[i].rect.y - obj_height;
 					grounded = true;
@@ -249,7 +241,8 @@ static void CheckCollisionWithPlatforms(float& obj_x, float& obj_y,
 				else
 				{
 					//std::cout << "\nplayer below platform. Push down.\n";
-					PushDown(obj_y,obj_vy,dt);
+					//do nothing, have player pass through if player avatar feet are below platform
+					//have player just fall and pushed back against side of platform if in air.
 				}
 					
 				
@@ -468,10 +461,12 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 						obj_y = world_ptr->tiles_vector[tile_index].y - obj_height;
 						grounded = true;
 					}
+					//else if player is below platform
 					else
 					{
 						//std::cout << "\nplayer below platform. Push down.\n";
-						PushDown(obj_y,obj_vy,dt);
+						//do nothing, have player pass through if player avatar feet are below platform
+						//have player just fall and pushed back against side of platform if in air.
 					}
 						
 					
@@ -668,9 +663,7 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				//account for acceleration due to gravity to rigid body velocity
 				
 				float jumpVel = rigidBody.jump_speed*jump_factor;
-				
-				bool jump = false;
-				
+								
 				if(physics_type_comp.jump_count >= 1)
 				{
 					jumpVel = 0;
@@ -681,18 +674,16 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				{					
 					physics_type_comp.grounded = false;
 					physics_type_comp.jump_count++;
+					
 					rigidBody.velocity.y += jumpVel*2.0f;
-				}
-				else if(jumpVel > 0)
-				{
-					physics_type_comp.grounded = false;
+					
 				}
 				
 				rigidBody.velocity.y += (gravity.force.y * dt);
 				
 				//move transform component by velocity of rigid body multiplied by time
 				//std::cout << "In physics system, player rigid body velocity: " << rigidBody.velocity.x << std::endl;
-				transform.position.x += 3*rigidBody.velocity.x * dt;
+				transform.position.x += rigidBody.velocity.x * dt;
 				transform.position.y += rigidBody.velocity.y * dt;
 				
 				//if world one is active i.e. a player is in world one
