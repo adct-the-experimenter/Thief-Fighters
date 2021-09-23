@@ -195,6 +195,9 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 		{
 			player.regular_attack_cooldown_timer_val += dt;
 			
+			//if player is not in the air, stop player from moving horizontally
+			if(!rigidBody.velocity.y)rigidBody.velocity.x = 0.0f;
+			
 			//if more than 1 second has passed
 			if(player.regular_attack_cooldown_timer_val >= 1)
 			{
