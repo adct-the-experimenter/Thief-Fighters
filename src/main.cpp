@@ -457,6 +457,9 @@ void logic()
 			{
 				leave_tutorial = false;
 				m_game_state = GameState::FIGHT_GAME;
+				
+				//start playing music
+				PlayMusicStream(main_stage.stage_music);
 			}
 			
 			break;
@@ -731,6 +734,8 @@ void render()
 	EndDrawing();
 }
 
+static bool music_is_playing = false;
+
 void sound()
 {
 	switch(m_game_state)
@@ -756,6 +761,18 @@ void sound()
 		}
 		case GameState::FIGHT_GAME:
 		{
+			
+			//update music stream for stage music playing
+			UpdateMusicStream(main_stage.stage_music);
+			
+			//if at the end of music stream
+			//if (IsKeyPressed(KEY_SPACE))
+			//{
+			//	StopMusicStream(music);
+			//	PlayMusicStream(music);
+			//}
+			
+			
 			//load buffer and			
 			//play sounds in buffer			
 			soundSystem->Update_VersusMode();

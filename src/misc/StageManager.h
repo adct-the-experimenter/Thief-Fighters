@@ -15,6 +15,7 @@ struct StageInfo
 	std::string collisionMapFilePath;
 	std::string textureFilePath;
 	std::string playerStartFilePath;
+	std::string musicFilePath;
 	
 	bool initialized = false;
 	
