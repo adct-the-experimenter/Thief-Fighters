@@ -234,15 +234,7 @@ void WorldEditor::RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& cam
 void WorldEditor::render()
 {
 	
-	//render tiles
-	//for(size_t i = 0; i < m_camera_manager_ptr->lead_cameras.size(); i++)
-	//{
-	//	if(m_camera_manager_ptr->lead_cameras[i].GetCameraActiveStatus())
-	//	{
-	//		RenderLevelMapRelativeToCamera(&world_one,*m_camera_manager_ptr->lead_cameras[i].GetCameraRectPointer());
-	//	}
-		
-	//}
+	
 	RenderLevelMapRelativeToCamera(&world_one,*m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer());
 	
 	
@@ -269,6 +261,8 @@ void WorldEditor::render()
 	
 	DrawRectangleRec(m_save_button_rect, GRAY);
 	DrawText("Save",m_save_button_rect.x,m_save_button_rect.y,12, BLACK);
+	
+	//render new room button
 	
 }
 

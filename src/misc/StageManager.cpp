@@ -95,18 +95,33 @@ static void ProcessPlayerStartInfo(PlayerStart* pstart, uint8_t max_players, con
 	}
 }
 
+static void ProcessStageMusicInfo(Music* music_ptr,const char* filepath)
+{
+	std::ifstream newfile;
+	newfile.open(filepath,std::ios::in); //open a file to perform read operation using file object
+	if (newfile.is_open())
+	{
+		*music_ptr = LoadMusicStream(filepath);
+	}
+	else
+	{
+		std::cout << "Failed to open music file stage music info!\n";
+	}
+}
+
 bool StageManager::LoadLevel(int level)
 {
 	//load map
 	std::string collisionMapFilePath = "";
 	std::string textureFilePath = "";
 	std::string playerStartFilePath = "";
+	std::string musicFilePath = "";
 	
 	
 	collisionMapFilePath = stages_info[level].collisionMapFilePath;
 	textureFilePath = stages_info[level].textureFilePath;
 	playerStartFilePath = stages_info[level].playerStartFilePath;
-	
+	musicFilePath = stages_info[level].musicFilePath;
 	
 	//load level based on file paths
 	if(collisionMapFilePath != "" && textureFilePath != "" && playerStartFilePath != "")
@@ -125,6 +140,11 @@ bool StageManager::LoadLevel(int level)
 		
 		uint8_t max_num_players = 8;
 		ProcessPlayerStartInfo(&main_stage.player_start_array[0],max_num_players,playerStartFilePath.c_str());
+		
+		if(musicFilePath != "")
+		{
+			ProcessStageMusicInfo(&main_stage.stage_music,musicFilePath.c_str());
+		}
 	}
 	else
 	{
@@ -143,6 +163,8 @@ void StageManager::FreeCurrentLoadedLevel()
 	{
 		UnloadTexture(main_stage.scroll_bg_texture);
 	}
+	
+	UnloadMusicStream(main_stage.stage_music);
 }
 
 void StageManager::PlacePlayersInStage(std::int8_t num_players)
@@ -290,7 +312,20 @@ bool StageManager::LoadStageGamePlayInfo()
 			stages_info[iterator].scrolling = false;
 		}
 		
+		//load filepath to stage music
+		std::string music_file_path = stage_node.attribute("music_path").value();
+		std::string musicFilePathFull;
 		
+		if(music_file_path != "")
+		{
+			musicFilePathFull = DATADIR_STR + "/stage_assets/" + music_file_path;
+		}
+		else
+		{
+			musicFilePathFull = "";
+		}
+		
+		stages_info[iterator].musicFilePath = musicFilePathFull;
 				
 		stages_info[iterator].initialized = true;
 		num_stages_initialized++;

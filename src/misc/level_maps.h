@@ -29,10 +29,12 @@ struct Stage
 {
 	//holds entire 2d texture of stage
 	Texture2D texture;
-	//holds collision rectangles in stage, 5 max
+	//holds collision rectangles in stage, 10 max
 	std::array <CollisionRect,10> collision_rect_array;
 	//holds positions for 8 players
 	std::array <PlayerStart,8> player_start_array;
+	//holds music of stage
+	Music stage_music;
 	
 	//background texture scrolling
 	//indicates if stage uses scrolling background
@@ -61,6 +63,8 @@ struct Tile
 	Rectangle* frame_clip_ptr;
 };
 
+
+//world struct. Contains rooms.
 struct World
 {
 	//name of the world

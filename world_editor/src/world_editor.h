@@ -70,18 +70,21 @@ public:
 	void SetPointerToCameraManager(CameraManager* cam_manager_ptr);
 	
 private:
-
 	
-	//file path to tile placement info xml file
-	std::string m_tiles_placement_xml_file_path;
 	
-	//file path to tile sheet used
-	std::string m_tilesheet_xml_file_path;
+	//new room button variables
+	Rectangle m_new_room_button_rect;
 	
 	//save button variables
 	Rectangle m_save_button_rect;
 	
 //Tile selection
+
+	//file path to tile placement info xml file
+	std::string m_tiles_placement_xml_file_path;
+	
+	//file path to tile sheet used
+	std::string m_tilesheet_xml_file_path;
 
 	//box that allows selecting from tiles
 	TileBox m_tile_selector;
@@ -114,6 +117,7 @@ private:
 	CameraManager* m_camera_manager_ptr;
 	
 	void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera);
+	
 	
 };
 
