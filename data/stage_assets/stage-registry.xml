@@ -3,6 +3,6 @@
   <Stages>
 	  <Stage name="City" collision_path="city-sky-scrapper/city_sky_collisions.txt" start_path="city-sky-scrapper/city_sky_start.txt" img_path="city-sky-scrapper/city_sky_image.png" scrolling="no" music_path="city-sky-scrapper/To-The-Streets-v0_91-tfadapt.mp3"/>
 	  <Stage name="Training" collision_path="training_stage/training_map_collisions.txt" start_path="training_stage/training_map_start.txt" img_path="training_stage/training_map_image.png" scrolling="no" music_path=""/>
-	  <Stage name="Outer Space" collision_path="outer-space/outer_space_collisions.txt" start_path="outer-space/outer_space_start.txt" img_path="outer-space/outer_space_image.png" scrolling="yes" scroll_bg_path="outer-space/outer-space-scrolling-bg.png" scroll_speed="0.5" music_path=""/>
+	  <Stage name="Outer Space" collision_path="outer-space/outer_space_collisions.txt" start_path="outer-space/outer_space_start.txt" img_path="outer-space/outer_space_image.png" scrolling="yes" scroll_bg_path="outer-space/outer-space-scrolling-bg.png" scroll_speed="0.5" music_path="outer-space/Hajime(mastered)-tf-adapt.mp3"/>
   </Stages>    
 </Root>

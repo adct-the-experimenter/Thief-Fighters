@@ -63,6 +63,8 @@ struct Tile
 	Rectangle* frame_clip_ptr;
 };
 
+
+//world struct. Contains rooms.
 struct World
 {
 	//name of the world
