@@ -86,6 +86,12 @@ void StageSelector::handle_controller_input(ControllerInput& input)
 		{
 			stage_confirmation = true;
 		}
+		
+		//if b button pressed, move back to previous state
+		if(input.gamepads_vec[i].button_up_released == SDL_CONTROLLER_BUTTON_B)
+		{
+			move_prev_state = true;
+		}
 	}
 	
 }
@@ -152,6 +158,8 @@ void StageSelector::sound()
 
 bool StageSelector::MoveToNextStateBool(){return move_next_state;}
 
+bool StageSelector::MoveToPreviousStateBool(){return move_prev_state;}
+
 std::uint8_t StageSelector::StageSelected(){return m_stage_selected;}
 
 void StageSelector::Reset()
@@ -159,4 +167,5 @@ void StageSelector::Reset()
 	stage_confirmation = false;
 	m_stage_selected = 0;
 	move_next_state = false;
+	move_prev_state = false;
 }

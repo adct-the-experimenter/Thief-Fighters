@@ -60,6 +60,8 @@ public:
 	
 	void sound();
 	
+	bool MoveToPreviousStateBool();
+	
 	bool MoveToNextStateBool();
 	
 	std::uint8_t StageSelected();	
@@ -81,6 +83,9 @@ private:
 	
 	//bool to indicate whether to move to the next state
 	bool move_next_state;
+	
+	//bool to indicate whether to move to the previous state
+	bool move_prev_state;
 	
 	//input specific handler functions
 	void handle_controller_input(ControllerInput& input);

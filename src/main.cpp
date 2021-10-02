@@ -430,8 +430,33 @@ void logic()
 		{
 			//run logic for stage selector
 			gStageSelector.logic();
-			
-			if(gStageSelector.MoveToNextStateBool())
+			if(gStageSelector.MoveToPreviousStateBool())
+			{
+				gStageSelector.Reset();
+				//remove components of players in game
+				for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
+				{
+					gCoordinator.RemoveComponent<InputReact>(entity_it);
+					gCoordinator.RemoveComponent<CollisionBox>(entity_it);
+					gCoordinator.RemoveComponent<Animation>(entity_it);
+					gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
+					gCoordinator.RemoveComponent<Player>(entity_it);
+					gCoordinator.RemoveComponent<Transform2D>(entity_it);
+					gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
+					gCoordinator.RemoveComponent<Gravity2D>(entity_it);
+					gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
+					gCoordinator.RemoveComponent<SoundComponent>(entity_it);
+				}
+				
+				//set game state back to character selector
+				gControllerInput.Init(gNumPlayers);
+				gControllerInputHandler.Init(gNumPlayers);				
+				gCharSelector.Init(&entities,gNumPlayers);
+				cameraSystem->Init(&main_camera,gNumPlayers);
+				renderSystem->Init(&main_camera);
+				m_game_state = GameState::CHAR_SELECTOR;
+			}
+			else if(gStageSelector.MoveToNextStateBool())
 			{
 				
 				//initialize fight game state
@@ -528,7 +553,7 @@ void logic()
 				//free loaded character media
 				gCharAssetManager.FreeCurrentlyLoadedCharacterAssets();
 				
-				//set game state back to title screen
+				//set game state back to character selector
 				gControllerInput.Init(gNumPlayers);
 				gControllerInputHandler.Init(gNumPlayers);				
 				gCharSelector.Init(&entities,gNumPlayers);
