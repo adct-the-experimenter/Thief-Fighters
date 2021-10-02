@@ -364,7 +364,14 @@ void logic()
 			//run logic for character selector
 			gCharSelector.logic();
 			
-			if(gCharSelector.MoveToNextStateBool())
+			//if moving to previous state
+			if(gCharSelector.MoveToPreviousStateBool())
+			{
+				m_game_state = GameState::TITLE_MENU;
+				gCharSelector.Reset();
+			}
+			//else if moving to next state
+			else if(gCharSelector.MoveToNextStateBool())
 			{
 				//load media for requested characters
 				RequestedCharacters& req_char = gCharSelector.GetRequestedCharacters();
@@ -641,7 +648,7 @@ void render()
 		case GameState::CHAR_SELECTOR:
 		{
 			DrawTexture(char_select_texture, 0, 0, WHITE);
-			DrawText("In character selector. A = confirm choice. B = reset choice", 20, 20, 12, BLACK);
+			DrawText("In character selector. A = confirm choice. B = reset choice, Hold B to exit to title screen.", 20, 20, 12, BLACK);
 			gCharSelector.render();
 			break;
 		}
@@ -734,7 +741,6 @@ void render()
 	EndDrawing();
 }
 
-static bool music_is_playing = false;
 
 void sound()
 {

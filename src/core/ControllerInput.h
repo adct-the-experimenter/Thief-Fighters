@@ -60,6 +60,12 @@ public:
 		//which button was recently released
 		SDL_GameControllerButton button_up_released;
 		
+		//which button was previously pressed
+		SDL_GameControllerButton prev_button_down;
+		
+		//which button was previously released
+		SDL_GameControllerButton prev_button_up_released;
+		
 		//0 is null. 1 is pressed, 2 is released.
 		int button_state = 0;
 	};
@@ -76,7 +82,15 @@ public:
 	{
 		for(size_t i = 0; i < gamepads_vec.size(); i++)
 		{
-			gamepads_vec[i].button_down =  SDL_CONTROLLER_BUTTON_INVALID;
+			gamepads_vec[i].prev_button_down = gamepads_vec[i].button_down;
+			gamepads_vec[i].prev_button_up_released = gamepads_vec[i].button_up_released;
+			
+			//if button down is the same button as button released, reset button down.
+			if(gamepads_vec[i].button_down == gamepads_vec[i].button_up_released)
+			{
+				gamepads_vec[i].button_down = SDL_CONTROLLER_BUTTON_INVALID; 
+			}
+			
 			gamepads_vec[i].button_up_released =  SDL_CONTROLLER_BUTTON_INVALID;
 			gamepads_vec[i].left_x_dir_digital =  0;
 			gamepads_vec[i].left_y_dir_digital =  0;

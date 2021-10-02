@@ -51,6 +51,8 @@ static std::array <Color,8> player_selection_colors = { PS_LIGHT_BLUE, //LIGHT B
 											  PS_LIGHT_PURPLE //LIGHT purple
 											  };
 
+static uint8_t exit_mode_frame_count[8] = {0,0,0,0,0,0,0,0};
+
 CharacterSelector::CharacterSelector()
 {
 	
@@ -180,6 +182,8 @@ void CharacterSelector::handle_input(ControllerInput& controller_input, Keyboard
 
 static const int16_t joystick_border = 32600;
 
+ 
+
 void CharacterSelector::handle_controller_input(ControllerInput& input)
 {
 	//number of character boxes and number of players should be the same
@@ -270,7 +274,8 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 		//if b button pressed, 
 		if(input.gamepads_vec[i].button_up_released == SDL_CONTROLLER_BUTTON_B)
 		{
-						
+			exit_mode_frame_count[i] = 0;
+			
 			//if current slot is power choice slot
 			if(fighter_boxes[i].current_slot == 1)
 			{
@@ -286,7 +291,19 @@ void CharacterSelector::handle_controller_input(ControllerInput& input)
 				fighter_boxes[i].current_slot--;
 			}
 		}
-		
+		//if b button held down
+		else if(input.gamepads_vec[i].button_down == SDL_CONTROLLER_BUTTON_B)
+		{
+			
+			exit_mode_frame_count[i]++;
+			
+			//asusming 60 FPS, about 3 seconds
+			if(exit_mode_frame_count[i] >= 130)
+			{
+				move_prev_state = true;
+			}
+			
+		}
 		fighter_boxes[i].char_choice = char_profile_wall.player_selection[i];
 	}
 	
@@ -421,7 +438,6 @@ void CharacterSelector::logic()
 					
 			//add physics type
 			PhysicsType pType = PhysicsType::PLATFORMER;
-			std::uint8_t jump_count = 0;
 			gCoordinator.AddComponent(
 						*player_entities_vec.at(i),
 						PhysicsTypeComponent{
@@ -521,11 +537,6 @@ void CharacterSelector::render()
 	//render character profile wall
 	for(size_t i = 0; i < char_profile_wall.char_profiles_textures.size(); i++)
 	{
-		float y_factor = 0;
-		float x_index_factor = 0;
-		
-		if(i > 3){y_factor = 60; x_index_factor = 4;}
-		
 		
 		DrawTextureEx(char_profile_wall.char_profiles_textures[i],
 					Vector2{char_profile_wall.char_profiles_rects[i].x,char_profile_wall.char_profiles_rects[i].y},
@@ -552,6 +563,8 @@ void CharacterSelector::sound()
 
 bool CharacterSelector::MoveToNextStateBool(){return move_next_state;}
 
+bool CharacterSelector::MoveToPreviousStateBool(){return move_prev_state;}
+
 RequestedCharacters& CharacterSelector::GetRequestedCharacters(){return m_req_char;}
 
 void CharacterSelector::Reset()
@@ -563,5 +576,16 @@ void CharacterSelector::Reset()
 	char_confirmations.resize(0);
 	
 	move_next_state = false;
+	move_prev_state = false;
 	char_chosen_num_times_array.fill(0);
+	
+	
+	exit_mode_frame_count[0] = 0;
+	exit_mode_frame_count[1] = 0;
+	exit_mode_frame_count[2] = 0;
+	exit_mode_frame_count[3] = 0;
+	exit_mode_frame_count[4] = 0;
+	exit_mode_frame_count[5] = 0;
+	exit_mode_frame_count[6] = 0;
+	exit_mode_frame_count[7] = 0;
 }

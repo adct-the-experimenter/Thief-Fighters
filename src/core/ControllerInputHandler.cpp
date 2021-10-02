@@ -341,7 +341,6 @@ void ControllerInputHandler::SetGamepadInfo(ControllerInput& input_info)
 			else if(sdl_event.cbutton.which == 7)
 			{
 				input_info.gamepads_vec[7].button_up_released = SDL_GameControllerButton(sdl_event.cbutton.button);
-				
 			}
 			
 			for(size_t i = 0; i < m_num_players; i++)

@@ -68,6 +68,16 @@ struct CollisionBox
 	std::uint8_t world_id;
 };
 
+enum class EntityActorType : std::uint8_t {OBJECT = 0,PLAYER,ENEMY};
+enum class EntityState : std::uint8_t {NONE=0,ATTACKING_NO_MOVE};
+
+struct GeneralEnityState
+{
+	EntityActorType actor_type;
+	EntityState actor_state;
+};
+
+
 enum class AnimatedActorType : std::int8_t {NONE=0,PLAYER,ENEMY};
 
 enum class FaceDirection : std::uint8_t {NONE=0,NORTH,SOUTH,EAST,WEST};

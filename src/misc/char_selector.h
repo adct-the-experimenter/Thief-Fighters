@@ -33,6 +33,8 @@ public:
 	
 	bool MoveToNextStateBool();
 	
+	bool MoveToPreviousStateBool();
+	
 	RequestedCharacters& GetRequestedCharacters();
 	
 	struct CharacterProfileWall
@@ -81,6 +83,9 @@ private:
 	
 	//bool to indicate whether to move to the next state
 	bool move_next_state;
+	
+	//bool to indicae whether to move to the previous state
+	bool move_prev_state;
 	
 	//input specific handler functions
 	void handle_controller_input(ControllerInput& input);
