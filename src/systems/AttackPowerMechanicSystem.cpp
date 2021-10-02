@@ -70,6 +70,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		auto& animation = gCoordinator.GetComponent<Animation>(entity);
 		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
+		auto& gen_entity_state = gCoordinator.GetComponent<GeneralEnityState>(entity);
 		
 		//if player pressed attack button and isn't in hurting state and alive.
 		if(player.regularAttackButtonPressed && player.alive && !player.taking_damage && player.state != PlayerState::HURTING)
@@ -83,7 +84,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 				
 				player.attack_box.active = true;
 				player.state = PlayerState::ATTACKING;
-				
+				gen_entity_state.actor_state = EntityState::ATTACKING_NO_MOVE;
 			}
 			
 			player.regularAttackButtonPressed = false;
@@ -209,6 +210,7 @@ void AttackPowerMechanicSystem::HandlePowerActivation(float& dt)
 				animation.attackMode = -1;
 				
 				player.state = PlayerState::IDLE;
+				gen_entity_state.actor_state = EntityState::NONE;
 			}
 		}
 		

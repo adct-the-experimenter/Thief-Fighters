@@ -589,6 +589,14 @@ void CharacterSelector::DetermineConfirmationActions()
 						*player_entities_vec.at(i),
 						sound_comp
 					);
+					
+			//add general entity state component
+			GeneralEnityState gen_state_comp = {};
+			gen_state_comp.actor_type = EntityActorType::PLAYER;
+			gen_state_comp.actor_state = EntityState::NONE;
+			
+			gCoordinator.AddComponent(*player_entities_vec.at(i),
+										gen_state_comp);
 		}
 		
 		move_next_state = true;

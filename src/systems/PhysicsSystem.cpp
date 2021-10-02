@@ -579,6 +579,7 @@ void PhysicsSystem::Update_VersusMode(float& dt)
 		auto& transform = gCoordinator.GetComponent<Transform2D>(entity);
 		auto& physics_type_comp = gCoordinator.GetComponent<PhysicsTypeComponent>(entity);
 		auto& collisionBox = gCoordinator.GetComponent<CollisionBox>(entity);
+		auto& gen_entity_state = gCoordinator.GetComponent<GeneralEnityState>(entity);
 		
 		// Forces
 		auto const& gravity = gCoordinator.GetComponent<Gravity2D>(entity);
@@ -591,7 +592,7 @@ void PhysicsSystem::Update_VersusMode(float& dt)
 				
 				float jumpVel = rigidBody.jump_speed*jump_factor;
 								
-				if(physics_type_comp.jump_count >= 1)
+				if(physics_type_comp.jump_count >= 1 || gen_entity_state.actor_state == EntityState::ATTACKING_NO_MOVE)
 				{
 					jumpVel = 0;
 				}
@@ -656,6 +657,8 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 		// Forces
 		auto const& gravity = gCoordinator.GetComponent<Gravity2D>(entity);
 		
+		auto& gen_entity_state = gCoordinator.GetComponent<GeneralEnityState>(entity);
+		
 		switch(physics_type_comp.phy_type)
 		{
 			case PhysicsType::PLATFORMER:
@@ -664,7 +667,7 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				
 				float jumpVel = rigidBody.jump_speed*jump_factor;
 								
-				if(physics_type_comp.jump_count >= 1)
+				if(physics_type_comp.jump_count >= 1 || gen_entity_state.actor_state == EntityState::ATTACKING_NO_MOVE)
 				{
 					jumpVel = 0;
 				}

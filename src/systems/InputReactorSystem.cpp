@@ -20,6 +20,7 @@ void InputReactorSystem::Update(ControllerInput& input)
 		auto& rigidBody = gCoordinator.GetComponent<RigidBody2D>(entity);
 		auto& player = gCoordinator.GetComponent<Player>(entity);
 		
+		
 		switch(inputReactor.actor_type)
 		{
 			case InputReactorType::NONE:{break;}
@@ -121,7 +122,7 @@ void InputReactorSystem::Update(ControllerInput& input)
 						{
 							player.powerButtonPressed = true;
 						}
-						
+						//if regular attack button pressed
 						if(input.gamepads_vec[i].button_up_released == SDL_CONTROLLER_BUTTON_A)
 						{
 							player.regularAttackButtonPressed = true;

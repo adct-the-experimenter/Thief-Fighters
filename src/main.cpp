@@ -98,6 +98,9 @@ void logic(); //determine what happens in world based on input
 void render(); //draw visual representation of what happens in world to screen
 void sound(); //play sounds of audio representation of what happens in world 
 
+//helper function to prepare character state and go to character state from a state after character state
+void GoToPreviousCharacterState(); 
+
 //game state
 enum class GameState : std::uint8_t {TITLE_MENU=0, CHAR_SELECTOR, STAGE_SELECTOR, TUTORIAL, FIGHT_GAME, METROIDVANIA_GAME};
 GameState m_game_state = GameState::TITLE_MENU;
@@ -439,28 +442,8 @@ void logic()
 			if(gStageSelector.MoveToPreviousStateBool())
 			{
 				gStageSelector.Reset();
-				//remove components of players in game
-				for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
-				{
-					gCoordinator.RemoveComponent<InputReact>(entity_it);
-					gCoordinator.RemoveComponent<CollisionBox>(entity_it);
-					gCoordinator.RemoveComponent<Animation>(entity_it);
-					gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
-					gCoordinator.RemoveComponent<Player>(entity_it);
-					gCoordinator.RemoveComponent<Transform2D>(entity_it);
-					gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
-					gCoordinator.RemoveComponent<Gravity2D>(entity_it);
-					gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
-					gCoordinator.RemoveComponent<SoundComponent>(entity_it);
-				}
 				
-				//set game state back to character selector
-				gControllerInput.Init(gNumPlayers);
-				gControllerInputHandler.Init(gNumPlayers);				
-				gCharSelector.Init(&entities,gNumPlayers);
-				cameraSystem->Init(&main_camera,gNumPlayers);
-				renderSystem->Init(&main_camera);
-				m_game_state = GameState::CHAR_SELECTOR;
+				GoToPreviousCharacterState();
 			}
 			else if(gStageSelector.MoveToNextStateBool())
 			{
@@ -541,31 +524,7 @@ void logic()
 			
 			if(restart_game)
 			{
-				//remove components of players in game
-				for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
-				{
-					gCoordinator.RemoveComponent<InputReact>(entity_it);
-					gCoordinator.RemoveComponent<CollisionBox>(entity_it);
-					gCoordinator.RemoveComponent<Animation>(entity_it);
-					gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
-					gCoordinator.RemoveComponent<Player>(entity_it);
-					gCoordinator.RemoveComponent<Transform2D>(entity_it);
-					gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
-					gCoordinator.RemoveComponent<Gravity2D>(entity_it);
-					gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
-					gCoordinator.RemoveComponent<SoundComponent>(entity_it);
-				}
-				
-				//free loaded character media
-				gCharAssetManager.FreeCurrentlyLoadedCharacterAssets();
-				
-				//set game state back to character selector
-				gControllerInput.Init(gNumPlayers);
-				gControllerInputHandler.Init(gNumPlayers);				
-				gCharSelector.Init(&entities,gNumPlayers);
-				cameraSystem->Init(&main_camera,gNumPlayers);
-				renderSystem->Init(&main_camera);
-				m_game_state = GameState::CHAR_SELECTOR;
+				GoToPreviousCharacterState();
 				
 				restart_game = false;
 				show_restart_game_message = false;
@@ -830,6 +789,37 @@ void sound()
 	}
 }
 
+void GoToPreviousCharacterState()
+{
+	//remove components of players in game
+	for(std::uint32_t entity_it = 0; entity_it < gNumPlayers; ++entity_it)
+	{
+		gCoordinator.RemoveComponent<InputReact>(entity_it);
+		gCoordinator.RemoveComponent<CollisionBox>(entity_it);
+		gCoordinator.RemoveComponent<Animation>(entity_it);
+		gCoordinator.RemoveComponent<RenderModelComponent>(entity_it);
+		gCoordinator.RemoveComponent<Player>(entity_it);
+		gCoordinator.RemoveComponent<Transform2D>(entity_it);
+		gCoordinator.RemoveComponent<RigidBody2D>(entity_it);
+		gCoordinator.RemoveComponent<Gravity2D>(entity_it);
+		gCoordinator.RemoveComponent<PhysicsTypeComponent>(entity_it);
+		gCoordinator.RemoveComponent<SoundComponent>(entity_it);
+		gCoordinator.RemoveComponent<GeneralEnityState>(entity_it);
+	}
+	
+	//free loaded character media
+	gCharAssetManager.FreeCurrentlyLoadedCharacterAssets();
+	
+	//set game state back to character selector
+	gControllerInput.Init(gNumPlayers);
+	gControllerInputHandler.Init(gNumPlayers);				
+	gCharSelector.Init(&entities,gNumPlayers);
+	cameraSystem->Init(&main_camera,gNumPlayers);
+	renderSystem->Init(&main_camera);
+	
+	m_game_state = GameState::CHAR_SELECTOR;
+}
+
 bool loadMedia()
 {
 	
@@ -867,6 +857,7 @@ void InitMainECS()
 	gCoordinator.RegisterComponent<CollisionBox>();
 	gCoordinator.RegisterComponent<Player>();
 	gCoordinator.RegisterComponent<SoundComponent>();
+	gCoordinator.RegisterComponent<GeneralEnityState>();
 	
 	//make rendering system that only reacts to entities
 	//with render info component
@@ -885,6 +876,7 @@ void InitMainECS()
 	sig_input_react.set(gCoordinator.GetComponentType<InputReact>());
 	sig_input_react.set(gCoordinator.GetComponentType<RigidBody2D>());
 	sig_input_react.set(gCoordinator.GetComponentType<Player>());
+	sig_input_react.set(gCoordinator.GetComponentType<GeneralEnityState>());
 	gCoordinator.SetSystemSignature<InputReactorSystem>(sig_input_react);
 	
 	//make physics system that only reacts to entitities 
@@ -900,6 +892,7 @@ void InitMainECS()
 	phys_sys_signature.set(gCoordinator.GetComponentType<Transform2D>());
 	phys_sys_signature.set(gCoordinator.GetComponentType<PhysicsTypeComponent>());
 	phys_sys_signature.set(gCoordinator.GetComponentType<CollisionBox>());
+	phys_sys_signature.set(gCoordinator.GetComponentType<GeneralEnityState>());
 	gCoordinator.SetSystemSignature<PhysicsSystem>(phys_sys_signature);
 	
 	//make camera system that only reacts to entities
@@ -938,6 +931,7 @@ void InitMainECS()
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Animation>());
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<CollisionBox>());
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<SoundComponent>());
+	special_power_mechanic_sig.set(gCoordinator.GetComponentType<GeneralEnityState>());
 	gCoordinator.SetSystemSignature<AttackPowerMechanicSystem>(special_power_mechanic_sig);
 	
 	
