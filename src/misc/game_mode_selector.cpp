@@ -7,6 +7,7 @@ GameModeSelector::GameModeSelector()
 {
 	m_current_mode_select = 0;
 	move_next_state = false;
+	move_prev_state = false;
 	m_confirm_selection = false;
 }
 
@@ -74,6 +75,11 @@ void GameModeSelector::handle_controller_input(ControllerInput& input)
 	{
 		m_confirm_selection = true;
 	}
+	//else if b button pressed, go back to previous state
+	if(input.gamepads_vec[i].button_up_released == SDL_CONTROLLER_BUTTON_B)
+	{
+		move_prev_state = true;
+	}
 }
 
 void GameModeSelector::logic()
@@ -112,11 +118,14 @@ void GameModeSelector::sound()
 
 bool GameModeSelector::MoveToNextStateBool(){return move_next_state;}
 
+bool GameModeSelector::MoveToPreviousStateBool(){return move_prev_state;}
+
 std::uint8_t GameModeSelector::GetModeSelected(){return m_current_mode_select;}
 
 void GameModeSelector::Reset()
 {
 	m_current_mode_select = 0;
 	move_next_state = false;
+	move_prev_state = false;
 	m_confirm_selection = false;
 }

@@ -11,6 +11,8 @@ NumPlayerSetter::NumPlayerSetter()
 	
 	move_next_state = false;
 	
+	move_prev_state = false;
+	
 	m_current_slot = 0;
 	
 	m_confirm_selection = false;
@@ -84,7 +86,11 @@ void NumPlayerSetter::handle_controller_input(ControllerInput& input)
 	{
 		m_confirm_selection = true;
 	}
-	
+	//if b button pressed, move to previous state
+	else if(input.gamepads_vec[i].button_up_released == SDL_CONTROLLER_BUTTON_B)
+	{
+		move_prev_state = true;
+	}
 }
 
 void NumPlayerSetter::handle_keyboard_input(KeyboardInput& input)
@@ -142,10 +148,13 @@ void NumPlayerSetter::sound()
 
 bool NumPlayerSetter::MoveToNextStateBool(){return move_next_state;}
 
+bool NumPlayerSetter::MoveToPreviousStateBool(){return move_prev_state;}
+
 std::int8_t NumPlayerSetter::GetNumberOfPlayers(){return m_num_players;}
 
 void NumPlayerSetter::Reset()
 {
 	move_next_state = false;
+	move_prev_state = false;
 	m_confirm_selection = false;
 }

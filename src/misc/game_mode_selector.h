@@ -40,6 +40,8 @@ public:
 	void sound();
 	
 	bool MoveToNextStateBool();
+	
+	bool MoveToPreviousStateBool();
 		
 	std::uint8_t GetModeSelected();
 	
@@ -54,6 +56,8 @@ private:
 	bool m_confirm_selection;
 	
 	bool move_next_state;
+	
+	bool move_prev_state;
 	
 	void handle_controller_input(ControllerInput& controller_input);
 	

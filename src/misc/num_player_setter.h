@@ -40,6 +40,8 @@ public:
 	
 	bool MoveToNextStateBool();
 	
+	bool MoveToPreviousStateBool();
+	
 	void CreatePlayerEntities(std::vector <Entity> *entities_vec_ptr);
 	
 	std::int8_t GetNumberOfPlayers();
@@ -56,6 +58,9 @@ private:
 	
 	//bool to indicate whether to move to the next state
 	bool move_next_state;
+	
+	//bool to indicate whether to move to previous state
+	bool move_prev_state;
 	
 	//input specific handler functions
 	void handle_controller_input(ControllerInput& input);

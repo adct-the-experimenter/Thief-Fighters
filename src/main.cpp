@@ -317,6 +317,12 @@ void logic()
 			else
 			{
 				gNumPlayerSetter.logic();
+				
+				if(gNumPlayerSetter.MoveToPreviousStateBool())
+				{
+					gGameModeSelector.Reset();
+					gNumPlayerSetter.Reset();
+				}
 			}
 			
 			//if need to move to next state
