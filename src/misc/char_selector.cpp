@@ -321,7 +321,116 @@ Vector2 player4_start = {-1.0f,2.0f};
 
 void CharacterSelector::logic()
 {
+	//To Do: Setting number of players logic here
 	
+	//determine if need to move to next state if all characters selected
+	CharacterSelector::DetermineConfirmationActions();
+	
+}
+
+void CharacterSelector::render()
+{
+	//render fighter boxes
+	for(size_t i = 0; i < fighter_boxes.size(); i++)
+	{
+		
+		//if selection is not confirmed
+		if(!fighter_boxes[i].confirm_power_choice)
+		{
+			//background box
+			DrawRectangle(fighter_boxes[i].background_box.x, 
+							fighter_boxes[i].background_box.y, 
+							fighter_boxes[i].background_box.width, 
+							fighter_boxes[i].background_box.height, GRAY);
+			
+			DrawText(fighter_boxes[i].player_num_string.c_str(),
+					fighter_boxes[i].player_num_rect.x,
+					fighter_boxes[i].player_num_rect.y,
+					14,player_colors[i]);
+			
+			Color char_text_color;
+			if(fighter_boxes[i].current_slot == 0){char_text_color = YELLOW;}
+			else{char_text_color = BLACK;}
+			
+			//character fighter
+			DrawText(character_names[fighter_boxes[i].char_choice].c_str(), 
+					fighter_boxes[i].char_slot_rect.x, fighter_boxes[i].char_slot_rect.y, 
+					14, char_text_color);
+			
+			
+			Color special_power_text_color;
+			if(fighter_boxes[i].current_slot == 1){special_power_text_color = YELLOW;}
+			else{special_power_text_color = BLACK;}
+			
+			//draw text for special power
+			DrawText(special_power_choices[fighter_boxes[i].special_power_choice].c_str(), 
+					fighter_boxes[i].special_power_slot_rect.x, fighter_boxes[i].special_power_slot_rect.y
+					, 14, special_power_text_color);
+						
+		}
+		
+	}
+	
+	
+	
+	//render character profile wall
+	for(size_t i = 0; i < char_profile_wall.char_profiles_textures.size(); i++)
+	{
+		
+		DrawTextureEx(char_profile_wall.char_profiles_textures[i],
+					Vector2{char_profile_wall.char_profiles_rects[i].x,char_profile_wall.char_profiles_rects[i].y},
+					0,2,WHITE);
+		
+	}
+	
+	for(size_t i = 0; i < player_entities_vec.size(); i++)
+	{
+		DrawRectangle(char_profile_wall.char_profiles_rects[char_profile_wall.player_selection[i]].x, 
+					  char_profile_wall.char_profiles_rects[char_profile_wall.player_selection[i]].y, 
+					  char_profile_wall.char_profiles_rects[char_profile_wall.player_selection[i]].width*2, 
+					  char_profile_wall.char_profiles_rects[char_profile_wall.player_selection[i]].height*2, 
+					  player_selection_colors[i]);
+	}
+		
+	
+}
+
+void CharacterSelector::sound()
+{
+	//play some character select music
+}
+
+bool CharacterSelector::MoveToNextStateBool(){return move_next_state;}
+
+bool CharacterSelector::MoveToPreviousStateBool(){return move_prev_state;}
+
+RequestedCharacters& CharacterSelector::GetRequestedCharacters(){return m_req_char;}
+
+void CharacterSelector::Reset()
+{
+	fighter_boxes.clear();
+	fighter_boxes.resize(0);
+	
+	char_confirmations.clear();
+	char_confirmations.resize(0);
+	
+	move_next_state = false;
+	move_prev_state = false;
+	char_chosen_num_times_array.fill(0);
+	
+	
+	exit_mode_frame_count[0] = 0;
+	exit_mode_frame_count[1] = 0;
+	exit_mode_frame_count[2] = 0;
+	exit_mode_frame_count[3] = 0;
+	exit_mode_frame_count[4] = 0;
+	exit_mode_frame_count[5] = 0;
+	exit_mode_frame_count[6] = 0;
+	exit_mode_frame_count[7] = 0;
+}
+
+void CharacterSelector::DetermineConfirmationActions()
+{
 	//check if all players confirmed character creations
 	bool all_confirmed = true;
 	for(size_t i = 0; i < char_confirmations.size(); i++)
@@ -335,7 +444,6 @@ void CharacterSelector::logic()
 	{
 		for(size_t i = 0; i < fighter_boxes.size(); i++)
 		{  	
-			
 		
 			//create new render components for player entity, and set player info based on choices.
 			//if not already created
@@ -485,107 +593,4 @@ void CharacterSelector::logic()
 		
 		move_next_state = true;
 	}
-	
-	
-}
-
-void CharacterSelector::render()
-{
-	//render fighter boxes
-	for(size_t i = 0; i < fighter_boxes.size(); i++)
-	{
-		
-		//if selection is not confirmed
-		if(!fighter_boxes[i].confirm_power_choice)
-		{
-			//background box
-			DrawRectangle(fighter_boxes[i].background_box.x, 
-							fighter_boxes[i].background_box.y, 
-							fighter_boxes[i].background_box.width, 
-							fighter_boxes[i].background_box.height, GRAY);
-			
-			DrawText(fighter_boxes[i].player_num_string.c_str(),
-					fighter_boxes[i].player_num_rect.x,
-					fighter_boxes[i].player_num_rect.y,
-					14,player_colors[i]);
-			
-			Color char_text_color;
-			if(fighter_boxes[i].current_slot == 0){char_text_color = YELLOW;}
-			else{char_text_color = BLACK;}
-			
-			//character fighter
-			DrawText(character_names[fighter_boxes[i].char_choice].c_str(), 
-					fighter_boxes[i].char_slot_rect.x, fighter_boxes[i].char_slot_rect.y, 
-					14, char_text_color);
-			
-			
-			Color special_power_text_color;
-			if(fighter_boxes[i].current_slot == 1){special_power_text_color = YELLOW;}
-			else{special_power_text_color = BLACK;}
-			
-			//draw text for special power
-			DrawText(special_power_choices[fighter_boxes[i].special_power_choice].c_str(), 
-					fighter_boxes[i].special_power_slot_rect.x, fighter_boxes[i].special_power_slot_rect.y
-					, 14, special_power_text_color);
-						
-		}
-		
-	}
-	
-	
-	
-	//render character profile wall
-	for(size_t i = 0; i < char_profile_wall.char_profiles_textures.size(); i++)
-	{
-		
-		DrawTextureEx(char_profile_wall.char_profiles_textures[i],
-					Vector2{char_profile_wall.char_profiles_rects[i].x,char_profile_wall.char_profiles_rects[i].y},
-					0,2,WHITE);
-		
-	}
-	
-	for(size_t i = 0; i < player_entities_vec.size(); i++)
-	{
-		DrawRectangle(char_profile_wall.char_profiles_rects[char_profile_wall.player_selection[i]].x, 
-					  char_profile_wall.char_profiles_rects[char_profile_wall.player_selection[i]].y, 
-					  char_profile_wall.char_profiles_rects[char_profile_wall.player_selection[i]].width*2, 
-					  char_profile_wall.char_profiles_rects[char_profile_wall.player_selection[i]].height*2, 
-					  player_selection_colors[i]);
-	}
-		
-	
-}
-
-void CharacterSelector::sound()
-{
-	//play some character select music
-}
-
-bool CharacterSelector::MoveToNextStateBool(){return move_next_state;}
-
-bool CharacterSelector::MoveToPreviousStateBool(){return move_prev_state;}
-
-RequestedCharacters& CharacterSelector::GetRequestedCharacters(){return m_req_char;}
-
-void CharacterSelector::Reset()
-{
-	fighter_boxes.clear();
-	fighter_boxes.resize(0);
-	
-	char_confirmations.clear();
-	char_confirmations.resize(0);
-	
-	move_next_state = false;
-	move_prev_state = false;
-	char_chosen_num_times_array.fill(0);
-	
-	
-	exit_mode_frame_count[0] = 0;
-	exit_mode_frame_count[1] = 0;
-	exit_mode_frame_count[2] = 0;
-	exit_mode_frame_count[3] = 0;
-	exit_mode_frame_count[4] = 0;
-	exit_mode_frame_count[5] = 0;
-	exit_mode_frame_count[6] = 0;
-	exit_mode_frame_count[7] = 0;
 }

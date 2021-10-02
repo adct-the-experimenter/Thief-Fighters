@@ -99,6 +99,9 @@ private:
 	//wall of character profiles
 	CharacterProfileWall char_profile_wall;
 	
+	//function to check if all characters confirmed
+	void DetermineConfirmationActions();
+	
 };
 
 #endif

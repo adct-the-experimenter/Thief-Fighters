@@ -529,7 +529,12 @@ void logic()
 				gCharAssetManager.FreeCurrentlyLoadedCharacterAssets();
 				
 				//set game state back to title screen
-				m_game_state = GameState::TITLE_MENU;
+				gControllerInput.Init(gNumPlayers);
+				gControllerInputHandler.Init(gNumPlayers);				
+				gCharSelector.Init(&entities,gNumPlayers);
+				cameraSystem->Init(&main_camera,gNumPlayers);
+				renderSystem->Init(&main_camera);
+				m_game_state = GameState::CHAR_SELECTOR;
 				
 				restart_game = false;
 				show_restart_game_message = false;
