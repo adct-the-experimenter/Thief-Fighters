@@ -136,6 +136,11 @@ bool StageManager::LoadLevel(int level)
 			main_stage.scrollSpeed = stages_info[level].scrollSpeed;
 		}
 		
+		CollisionRect null_rect; 
+		null_rect.rect = {0.0f,0.0f,0.0f,0.0f};
+		null_rect.initialized = false;
+		
+		main_stage.collision_rect_array.fill(null_rect); //reset collision map
 		ProcessCollisionMap(&main_stage.collision_rect_array[0],max_num_rect,collisionMapFilePath.c_str());
 		
 		uint8_t max_num_players = 8;
