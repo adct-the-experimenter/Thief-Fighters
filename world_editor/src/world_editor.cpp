@@ -65,13 +65,13 @@ static bool MouseInBox(float mouseX, float mouseY, Rectangle box)
 	return true;
 }
 
-static size_t num_tiles_horizontal = 60;
-
 void WorldEditor::logic()
 {
 	// if mouse click
 	if(mouse_click_bool)
 	{
+		size_t& num_tiles_horizontal = room_one.num_tiles_horizontal;
+		
 		//if mouse click on the tile selection relative to camera
 		//change tile selection relative to camera
 		for(size_t i = 0; i < m_tile_selector.select_tiles.size(); i++)
@@ -179,6 +179,7 @@ void WorldEditor::logic()
 void WorldEditor::RenderLevelMapRelativeToCamera(Room* room_ptr,Rectangle& camera)
 {
 	
+	size_t& num_tiles_horizontal = room_ptr->num_tiles_horizontal;
 	
 	//render 9 rows of tiles
 	
@@ -427,11 +428,24 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 		
 		valString = levelNode.attribute("num_tiles_horiz").value();
 		room_one.num_tiles_horizontal = atoi(valString.c_str());
+		
+		size_t square_area = room_one.num_tiles_horizontal * room_one.num_tiles_horizontal;
+	
+		room_one.tiles_vector.resize(square_area);
 						
 		//for every tile in xml file
 		
 		pugi::xml_node tileRoot = root.child("Tiles");
 		size_t iterator = 0;
+		
+		std::uint32_t x_offset = 0;
+		std::uint32_t y_offset = 0;
+		
+		//number of horizontal tiles
+		//10 sections * 640 pixels/section / 30 pixels/tile ~= 220
+		size_t& num_tiles_horiz = room_one.num_tiles_horizontal;
+		size_t tile_height = 30;
+		size_t tile_width = 30;
 		
 		//go through each tile in tiles node
 		for (pugi::xml_node tile_node = tileRoot.first_child(); tile_node; tile_node = tile_node.next_sibling())
@@ -462,33 +476,21 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 			//assign to vector
 			room_one.tiles_vector[iterator] = tile;
 			
-			iterator++;
-		}
-		
-		
-		std::uint32_t x_offset = 0;
-		std::uint32_t y_offset = 0;
-		
-		//number of horizontal tiles
-		//10 sections * 640 pixels/section / 30 pixels/tile ~= 220
-		size_t num_tiles_horiz = room_one.num_tiles_horizontal;
-		size_t tile_height = 30;
-		size_t tile_width = 30;
-		
-		//initialize tile position
-		for(size_t i = 0; i < room_one.tiles_vector.size(); i++)
-		{
-			if(i % num_tiles_horiz == 0 && i != 0)
+			//assign tile position
+			if(iterator % num_tiles_horiz == 0 && iterator != 0)
 			{
 				x_offset = 0;
 				y_offset += tile_height;
 			}
 			
-			room_one.tiles_vector[i].x = x_offset;
-			room_one.tiles_vector[i].y = y_offset;
+			room_one.tiles_vector[iterator].x = x_offset;
+			room_one.tiles_vector[iterator].y = y_offset;
 			
 			x_offset += tile_width;
+			
+			iterator++;
 		}
+		
 		
 	}
 	
@@ -496,14 +498,11 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
     
 }
 
-static size_t num_tiles_horiz = 60;
 
 bool WorldEditor::LoadLevel()
 {
 	
-	size_t square_area = num_tiles_horiz * num_tiles_horiz;
 	
-	room_one.tiles_vector.resize(square_area);
 	
 	room_one.in_active_use = true;
 	
@@ -535,12 +534,12 @@ bool WorldEditor::MakeLevel()
 	
 	room_one.in_active_use = true;
 	
-	room_one.level_bound_left_x = 0;
-	room_one.level_bound_right_x = 60*30;
-	room_one.level_bound_up_y = 0;
-	room_one.level_bound_down_y = 60*30;
+	room_one.num_tiles_horizontal = 30;
 	
-	room_one.num_tiles_horizontal = 60;
+	room_one.level_bound_left_x = 0;
+	room_one.level_bound_right_x = room_one.num_tiles_horizontal*30;
+	room_one.level_bound_up_y = 0;
+	room_one.level_bound_down_y = room_one.num_tiles_horizontal*30;
 	
 	size_t square_area = room_one.num_tiles_horizontal * room_one.num_tiles_horizontal;
 	
@@ -560,7 +559,7 @@ bool WorldEditor::MakeLevel()
 	//initialize tile position and tile type
 	for(size_t i = 0; i < room_one.tiles_vector.size(); i++)
 	{
-		if(i % num_tiles_horiz == 0 && i != 0)
+		if(i % room_one.num_tiles_horizontal == 0 && i != 0)
 		{
 			x_offset = 0;
 			y_offset += tile_height;
