@@ -260,11 +260,42 @@ bool WorldSystem::LoadDataFromXMLFile(Room* world_ptr,std::string mapFilePath, s
 		
 		//read data from level map xml file
 		std::string valString;
+		
+		 //load level dimensions info
+		pugi::xml_node levelNode = root.child("Level");
+		
+		valString = levelNode.attribute("bound_left").value();
+		world_ptr->level_bound_left_x = atoi(valString.c_str());
+		
+		valString = levelNode.attribute("bound_right").value();
+		world_ptr->level_bound_right_x = atoi(valString.c_str());
+		
+		valString = levelNode.attribute("bound_up").value();
+		world_ptr->level_bound_up_y = atoi(valString.c_str());
+		
+		valString = levelNode.attribute("bound_down").value();
+		world_ptr->level_bound_down_y = atoi(valString.c_str());
+		
+		valString = levelNode.attribute("num_tiles_horiz").value();
+		world_ptr->num_tiles_horizontal = atoi(valString.c_str());
+		
+		size_t square_area = room_one.num_tiles_horizontal * room_one.num_tiles_horizontal;
+	
+		world_ptr->tiles_vector.resize(square_area);
 				
 		//for every tile in xml file
 		
 		pugi::xml_node tileRoot = root.child("Tiles");
 		size_t iterator = 0;
+		
+		std::uint32_t x_offset = 0;
+		std::uint32_t y_offset = 0;
+		
+		//number of horizontal tiles
+		//10 sections * 640 pixels/section / 30 pixels/tile ~= 220
+		size_t& num_tiles_horiz = world_ptr->num_tiles_horizontal;
+		size_t tile_height = 30;
+		size_t tile_width = 30;
 		
 		//go through each tile in tiles node
 		for (pugi::xml_node tile_node = tileRoot.first_child(); tile_node; tile_node = tile_node.next_sibling())
@@ -295,32 +326,19 @@ bool WorldSystem::LoadDataFromXMLFile(Room* world_ptr,std::string mapFilePath, s
 			//assign to vector
 			world_ptr->tiles_vector[iterator] = tile;
 			
-			iterator++;
-		}
-		
-		
-		std::uint32_t x_offset = 0;
-		std::uint32_t y_offset = 0;
-		
-		//number of horizontal tiles
-		//10 sections * 640 pixels/section / 30 pixels/tile ~= 220
-		size_t num_tiles_horiz = 220;
-		size_t tile_height = 30;
-		size_t tile_width = 30;
-		
-		//initialize tile position
-		for(size_t i = 0; i < world_ptr->tiles_vector.size(); i++)
-		{
-			if(i % num_tiles_horiz == 0 && i != 0)
+			//assign tile position
+			if(iterator % num_tiles_horiz == 0 && iterator != 0)
 			{
 				x_offset = 0;
 				y_offset += tile_height;
 			}
 			
-			world_ptr->tiles_vector[i].x = x_offset;
-			world_ptr->tiles_vector[i].y = y_offset;
+			world_ptr->tiles_vector[iterator].x = x_offset;
+			world_ptr->tiles_vector[iterator].y = y_offset;
 			
 			x_offset += tile_width;
+			
+			iterator++;
 		}
 		
 	}
@@ -331,10 +349,7 @@ bool WorldSystem::LoadDataFromXMLFile(Room* world_ptr,std::string mapFilePath, s
 
 bool WorldSystem::LoadWorldLevel(Room* world_ptr, std::uint8_t level_num)
 {
-	size_t num_tiles_horiz = 220;
-	size_t square_area = num_tiles_horiz * num_tiles_horiz;
-	
-	world_ptr->tiles_vector.resize(square_area); 
+	 
 	world_ptr->in_active_use = true;
 	
 	
@@ -398,7 +413,7 @@ static void RenderLevelMapRelativeToCameraAndScreen(Room* world_ptr,Rectangle& c
 {
 	
 	//number of tiles in a row
-	size_t num_tiles_horizontal = 220;
+	size_t& num_tiles_horizontal = world_ptr->num_tiles_horizontal;
 	
 	//render 12 rows of tiles
 	
