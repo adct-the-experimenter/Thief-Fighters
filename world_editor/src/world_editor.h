@@ -60,10 +60,7 @@ public:
 	
 	//function to make blank default level
 	bool MakeLevel();
-	
-	//function to save level
-	void SaveLevel();
-	
+		
 	//function to free level edited
 	void FreeLevel();
 	

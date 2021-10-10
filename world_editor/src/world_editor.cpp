@@ -65,6 +65,8 @@ static bool MouseInBox(float mouseX, float mouseY, Rectangle box)
 	return true;
 }
 
+static size_t num_tiles_horizontal = 60;
+
 void WorldEditor::logic()
 {
 	// if mouse click
@@ -95,7 +97,7 @@ void WorldEditor::logic()
 		
 		Rectangle* camera_ptr = m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer();
 		
-		size_t num_tiles_horizontal = 220;
+		
 		
 		//render 9 rows of tiles
 	
@@ -177,8 +179,6 @@ void WorldEditor::logic()
 void WorldEditor::RenderLevelMapRelativeToCamera(Room* room_ptr,Rectangle& camera)
 {
 	
-	//number of tiles in a row
-	size_t num_tiles_horizontal = 220;
 	
 	//render 9 rows of tiles
 	
@@ -409,7 +409,25 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 		
 		//read data from level map xml file
 		std::string valString;
-				
+		
+		 //load level dimensions info
+		pugi::xml_node levelNode = root.child("Level");
+		
+		valString = levelNode.attribute("bound_left").value();
+		room_one.level_bound_left_x = atoi(valString.c_str());
+		
+		valString = levelNode.attribute("bound_right").value();
+		room_one.level_bound_right_x = atoi(valString.c_str());
+		
+		valString = levelNode.attribute("bound_up").value();
+		room_one.level_bound_up_y = atoi(valString.c_str());
+		
+		valString = levelNode.attribute("bound_down").value();
+		room_one.level_bound_down_y = atoi(valString.c_str());
+		
+		valString = levelNode.attribute("num_tiles_horiz").value();
+		room_one.num_tiles_horizontal = atoi(valString.c_str());
+						
 		//for every tile in xml file
 		
 		pugi::xml_node tileRoot = root.child("Tiles");
@@ -453,7 +471,7 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 		
 		//number of horizontal tiles
 		//10 sections * 640 pixels/section / 30 pixels/tile ~= 220
-		size_t num_tiles_horiz = 220;
+		size_t num_tiles_horiz = room_one.num_tiles_horizontal;
 		size_t tile_height = 30;
 		size_t tile_width = 30;
 		
@@ -478,10 +496,11 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
     
 }
 
+static size_t num_tiles_horiz = 60;
+
 bool WorldEditor::LoadLevel()
 {
 	
-	size_t num_tiles_horiz = 220;
 	size_t square_area = num_tiles_horiz * num_tiles_horiz;
 	
 	room_one.tiles_vector.resize(square_area);
@@ -516,8 +535,14 @@ bool WorldEditor::MakeLevel()
 	
 	room_one.in_active_use = true;
 	
-	size_t num_tiles_horiz = 220;
-	size_t square_area = num_tiles_horiz * num_tiles_horiz;
+	room_one.level_bound_left_x = 0;
+	room_one.level_bound_right_x = 60*30;
+	room_one.level_bound_up_y = 0;
+	room_one.level_bound_down_y = 60*30;
+	
+	room_one.num_tiles_horizontal = 60;
+	
+	size_t square_area = room_one.num_tiles_horizontal * room_one.num_tiles_horizontal;
 	
 	room_one.tiles_vector.resize(square_area);
 	
@@ -530,7 +555,7 @@ bool WorldEditor::MakeLevel()
 	size_t x_offset = 0;
 	size_t y_offset = 0;
 	
-	size_t flat_platform_tile = room_one.tiles_vector.size() - num_tiles_horiz - 1;
+	size_t flat_platform_tile = room_one.tiles_vector.size() - room_one.num_tiles_horizontal - 1;
 	
 	//initialize tile position and tile type
 	for(size_t i = 0; i < room_one.tiles_vector.size(); i++)
@@ -576,6 +601,14 @@ void WorldEditor::SaveDataToXMLFile(std::string filepath)
     // A valid XML doc must contain a single root node of any name
     auto root = doc.append_child("RootMap");
     
+    //save level dimensions info
+    pugi::xml_node levelNode = root.append_child("Level");
+    levelNode.append_attribute("bound_left").set_value(std::to_string(room_one.level_bound_left_x).c_str());
+    levelNode.append_attribute("bound_right").set_value(std::to_string(room_one.level_bound_right_x).c_str());
+    levelNode.append_attribute("bound_up").set_value(std::to_string(room_one.level_bound_up_y).c_str());
+    levelNode.append_attribute("bound_down").set_value(std::to_string(room_one.level_bound_down_y).c_str());
+    levelNode.append_attribute("num_tiles_horiz").set_value(std::to_string(room_one.num_tiles_horizontal).c_str());
+    
     
     //create tiles node
     pugi::xml_node tilesNode = root.append_child("Tiles");
@@ -615,12 +648,6 @@ void WorldEditor::SaveDataToXMLFile(std::string filepath)
 	
 }
 
-void WorldEditor::SaveLevel()
-{
-	//save world info to xml file
-	
-	//save tile level positions and tile types
-}
 
 void WorldEditor::FreeLevel()
 {

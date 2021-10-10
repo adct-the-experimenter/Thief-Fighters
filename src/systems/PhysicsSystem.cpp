@@ -310,7 +310,7 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 {
 	
 	//calculate tile that object is on
-	size_t num_tile_horizontal = 220;
+	size_t& num_tile_horizontal = room_ptr->num_tiles_horizontal;
 	
 	
 	size_t horiz_index = trunc(obj_x / 30 );
@@ -478,17 +478,21 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 	
 }
 
-static float level_bound_left_x = 0;
-static float level_bound_right_x = 6600;
-static float level_bound_up_y = 0;
-static float level_bound_down_y = 6240 + 500;
+
 
 static void CheckCollisionWithLevelBounds_MetroidVania(float& obj_x, float& obj_y, 
 										float& obj_vx, float& obj_vy, 
 										float& dt, 
 										std::uint32_t& obj_width,
-										std::uint32_t& obj_height)
+										std::uint32_t& obj_height,
+										Room* room_ptr)
 {
+
+	float& level_bound_left_x = room_ptr->level_bound_left_x;
+	float& level_bound_right_x = room_ptr->level_bound_right_x;
+	float& level_bound_up_y = room_ptr->level_bound_up_y;
+	float& level_bound_down_y = room_ptr->level_bound_down_y;
+
 	//if go to the right of the level bound
 	if(obj_x + obj_width >= level_bound_right_x)
 	{
@@ -715,7 +719,8 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				CheckCollisionWithLevelBounds_MetroidVania(transform.position.x, transform.position.y,
 											  rigidBody.velocity.x, rigidBody.velocity.y,
 											  dt,
-											  collisionBox.width, collisionBox.height);
+											  collisionBox.width, collisionBox.height,
+											  &room_one);
 				
 				
 				break;

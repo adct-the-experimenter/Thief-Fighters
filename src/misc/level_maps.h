@@ -77,6 +77,16 @@ struct Room
 	std::uint8_t tileWidth;
 	std::uint8_t tileHeight;
 	
+	//tile level dimensions, assuming square
+	size_t num_tiles_horizontal;
+	
+	//level bounds
+	
+	float level_bound_left_x;
+	float level_bound_right_x;
+	float level_bound_up_y;
+	float level_bound_down_y;
+	
 	//holds all tiles that make up the world
 	//world is just a square for easier time calculating indices around player
 	//30x30 tile size
