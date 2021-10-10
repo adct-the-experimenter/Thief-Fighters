@@ -777,7 +777,8 @@ void InitMainECS()
 	gCoordinator.RegisterComponent<Animation>();
 	gCoordinator.RegisterComponent<CollisionBox>();
 	gCoordinator.RegisterComponent<Player>();
-	
+	gCoordinator.RegisterComponent<SoundComponent>();
+	gCoordinator.RegisterComponent<GeneralEnityState>();
 	
 	//make rendering system that only reacts to entities
 	//with render info component
@@ -796,6 +797,7 @@ void InitMainECS()
 	sig_input_react.set(gCoordinator.GetComponentType<InputReact>());
 	sig_input_react.set(gCoordinator.GetComponentType<RigidBody2D>());
 	sig_input_react.set(gCoordinator.GetComponentType<Player>());
+	sig_input_react.set(gCoordinator.GetComponentType<GeneralEnityState>());
 	gCoordinator.SetSystemSignature<InputReactorSystem>(sig_input_react);
 	
 	//make physics system that only reacts to entitities 
@@ -811,6 +813,7 @@ void InitMainECS()
 	phys_sys_signature.set(gCoordinator.GetComponentType<Transform2D>());
 	phys_sys_signature.set(gCoordinator.GetComponentType<PhysicsTypeComponent>());
 	phys_sys_signature.set(gCoordinator.GetComponentType<CollisionBox>());
+	phys_sys_signature.set(gCoordinator.GetComponentType<GeneralEnityState>());
 	gCoordinator.SetSystemSignature<PhysicsSystem>(phys_sys_signature);
 	
 	//make camera system that only reacts to entities
@@ -848,6 +851,8 @@ void InitMainECS()
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<RigidBody2D>());
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<Animation>());
 	special_power_mechanic_sig.set(gCoordinator.GetComponentType<CollisionBox>());
+	special_power_mechanic_sig.set(gCoordinator.GetComponentType<SoundComponent>());
+	special_power_mechanic_sig.set(gCoordinator.GetComponentType<GeneralEnityState>());
 	gCoordinator.SetSystemSignature<AttackPowerMechanicSystem>(special_power_mechanic_sig);
 	
 	
