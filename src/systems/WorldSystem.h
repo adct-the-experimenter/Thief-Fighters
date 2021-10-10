@@ -44,16 +44,16 @@ private:
 	CameraManager* m_camera_manager_ptr;
 	
 	//function to load tile sheet information
-	bool LoadDataBasedOnTilesheetDescription(World* world_ptr,std::string filepath);
+	bool LoadDataBasedOnTilesheetDescription(Room* world_ptr,std::string filepath);
 	
 	//function to load level information
-	bool LoadDataFromXMLFile(World* world_ptr,std::string mapFilePath, std::string tilesheetDescriptionFilePath);
+	bool LoadDataFromXMLFile(Room* world_ptr,std::string mapFilePath, std::string tilesheetDescriptionFilePath);
 	
 	//function to load level
-	bool LoadWorldLevel(World* world_ptr, std::uint8_t level_num);
+	bool LoadWorldLevel(Room* world_ptr, std::uint8_t level_num);
 	
 	//function to free level
-	void FreeWorldLevel(World* world_ptr);
+	void FreeWorldLevel(Room* world_ptr);
 	
 	std::uint8_t m_num_players;
 };

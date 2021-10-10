@@ -14,10 +14,10 @@
 
 extern Coordinator gCoordinator;
 
-World world_one;
-World world_two;
-World world_three;
-World world_four;
+Room room_one;
+Room room_two;
+Room room_three;
+Room room_four;
 
 bool WorldSystem::Init()
 {	
@@ -31,7 +31,7 @@ bool WorldSystem::Init()
 	//load main world by default
 	//change later when saving and loading from file is implemented
 	
-	if(!WorldSystem::LoadWorldLevel(&world_one,0))
+	if(!WorldSystem::LoadWorldLevel(&room_one,0))
 	{
 		std::cout << "\nFailed to load world level in world system initialization.\n";
 		return false;
@@ -73,24 +73,24 @@ bool WorldSystem::Init()
 void WorldSystem::FreeResources()
 {
 
-	if(world_one.in_active_use)
+	if(room_one.in_active_use)
 	{
-		FreeWorldLevel(&world_one);
+		FreeWorldLevel(&room_one);
 	}
 	
-	if(world_two.in_active_use)
+	if(room_two.in_active_use)
 	{
-		FreeWorldLevel(&world_one);
+		FreeWorldLevel(&room_one);
 	}
 	
-	if(world_three.in_active_use)
+	if(room_three.in_active_use)
 	{
-		FreeWorldLevel(&world_one);
+		FreeWorldLevel(&room_one);
 	}
 	
-	if(world_four.in_active_use)
+	if(room_four.in_active_use)
 	{
-		FreeWorldLevel(&world_one);
+		FreeWorldLevel(&room_one);
 	}
 }
 
@@ -155,7 +155,7 @@ bool WorldSystem::LoadWorldFilepaths()
 	return true;
 }
 
-bool WorldSystem::LoadDataBasedOnTilesheetDescription(World* world_ptr,std::string filepath)
+bool WorldSystem::LoadDataBasedOnTilesheetDescription(Room* world_ptr,std::string filepath)
 {
 	//read xml file 
 		
@@ -230,7 +230,7 @@ bool WorldSystem::LoadDataBasedOnTilesheetDescription(World* world_ptr,std::stri
 	return true;	
 }
 
-bool WorldSystem::LoadDataFromXMLFile(World* world_ptr,std::string mapFilePath, std::string tilesheetDescriptionFilePath)
+bool WorldSystem::LoadDataFromXMLFile(Room* world_ptr,std::string mapFilePath, std::string tilesheetDescriptionFilePath)
 {
 	//read tilesheet description xml file for tile parameters
 	if(!WorldSystem::LoadDataBasedOnTilesheetDescription(world_ptr,tilesheetDescriptionFilePath))
@@ -329,7 +329,7 @@ bool WorldSystem::LoadDataFromXMLFile(World* world_ptr,std::string mapFilePath, 
     
 }
 
-bool WorldSystem::LoadWorldLevel(World* world_ptr, std::uint8_t level_num)
+bool WorldSystem::LoadWorldLevel(Room* world_ptr, std::uint8_t level_num)
 {
 	size_t num_tiles_horiz = 220;
 	size_t square_area = num_tiles_horiz * num_tiles_horiz;
@@ -358,7 +358,7 @@ bool WorldSystem::LoadWorldLevel(World* world_ptr, std::uint8_t level_num)
 	return true;
 }
 
-void WorldSystem::FreeWorldLevel(World* world_ptr)
+void WorldSystem::FreeWorldLevel(Room* world_ptr)
 {		
 	world_ptr->tiles_vector.clear();
 	world_ptr->frame_clip_map.clear(); 
@@ -394,7 +394,7 @@ void WorldSystem::logic(float& dt)
 			
 }
 
-static void RenderLevelMapRelativeToCameraAndScreen(World* world_ptr,Rectangle& camera,Rectangle& screen)
+static void RenderLevelMapRelativeToCameraAndScreen(Room* world_ptr,Rectangle& camera,Rectangle& screen)
 {
 	
 	//number of tiles in a row
@@ -426,7 +426,7 @@ static void RenderLevelMapRelativeToCameraAndScreen(World* world_ptr,Rectangle& 
 	for(size_t i = 0; i < rows_to_render; i++)
 	{
 		end_tiles[i] = start_tiles[i] + camera_offset_width;
-		if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
+		if(end_tiles[i] >= room_one.tiles_vector.size()){end_tiles[i] = room_one.tiles_vector.size() - 1;}
 	}
 	
 	
@@ -462,7 +462,7 @@ void WorldSystem::render()
 	
 	//only render tiles near player
 	
-	if(world_one.in_active_use)
+	if(room_one.in_active_use)
 	{
 		for(size_t i = 0; i < m_camera_manager_ptr->screens.size(); i++)
 		{
@@ -475,7 +475,7 @@ void WorldSystem::render()
 					//#endif
 					
 					//if camera is active and has the same id as the world
-					if( world_one.world_id == m_camera_manager_ptr->screens[i].camera_ptr->GetWorldID()  )
+					if( room_one.world_id == m_camera_manager_ptr->screens[i].camera_ptr->GetWorldID()  )
 					{
 						#ifdef DEBUG_CAMERA_SYSTEM
 						std::cout << "\n\nRendering Tiles in world system\n\n";
@@ -490,7 +490,7 @@ void WorldSystem::render()
 						<< std::endl;
 						#endif
 						
-						RenderLevelMapRelativeToCameraAndScreen(&world_one,
+						RenderLevelMapRelativeToCameraAndScreen(&room_one,
 																m_camera_manager_ptr->screens[i].screen_camera,
 																m_camera_manager_ptr->screens[i].screen_rect);
 					}

@@ -4,7 +4,7 @@
 
 #include <cmath>
 
-World world_one;
+Room room_one;
 
 WorldEditor::WorldEditor()
 {
@@ -110,7 +110,7 @@ void WorldEditor::logic()
 		for(size_t i = 0; i < 12; i++)
 		{
 			start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
-			if(start_tiles[i] >= world_one.tiles_vector.size()){start_tiles[i] = world_one.tiles_vector.size() - 2;}
+			if(start_tiles[i] >= room_one.tiles_vector.size()){start_tiles[i] = room_one.tiles_vector.size() - 2;}
 		}
 		
 		//get camera width offset
@@ -120,7 +120,7 @@ void WorldEditor::logic()
 		for(size_t i = 0; i < 12; i++)
 		{
 			end_tiles[i] = start_tiles[i] + camera_offset_width;
-			if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
+			if(end_tiles[i] >= room_one.tiles_vector.size()){end_tiles[i] = room_one.tiles_vector.size() - 1;}
 		}
 		
 		
@@ -130,8 +130,8 @@ void WorldEditor::logic()
 			{
 				//std::cout << "tile_index: " << tile_index << std::endl;
 				
-				Rectangle box = {world_one.tiles_vector[tile_index].x,
-							world_one.tiles_vector[tile_index].y,
+				Rectangle box = {room_one.tiles_vector[tile_index].x,
+							room_one.tiles_vector[tile_index].y,
 							30,30};
 							
 				box.x += m_tiles_startx;
@@ -151,9 +151,9 @@ void WorldEditor::logic()
 					std::cout << "\nbox : " << box.x << " , " << box.y << std::endl;
 					if(m_tile_selector.current_tile)
 					{
-						world_one.tiles_vector[tile_index].frame_clip_ptr = &m_tile_selector.current_tile->frame_clip;
-						world_one.tiles_vector[tile_index].type = m_tile_selector.current_tile->type;
-						world_one.tiles_vector[tile_index].tile_id = m_tile_selector.current_tile->tile_number;
+						room_one.tiles_vector[tile_index].frame_clip_ptr = &m_tile_selector.current_tile->frame_clip;
+						room_one.tiles_vector[tile_index].type = m_tile_selector.current_tile->type;
+						room_one.tiles_vector[tile_index].tile_id = m_tile_selector.current_tile->tile_number;
 					}
 					
 				}
@@ -174,7 +174,7 @@ void WorldEditor::logic()
 	
 }
 
-void WorldEditor::RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera)
+void WorldEditor::RenderLevelMapRelativeToCamera(Room* room_ptr,Rectangle& camera)
 {
 	
 	//number of tiles in a row
@@ -193,7 +193,7 @@ void WorldEditor::RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& cam
 	for(size_t i = 0; i < 12; i++)
 	{
 		start_tiles[i] = horiz_index + vert_index + i*num_tiles_horizontal;
-		if(start_tiles[i] > world_ptr->tiles_vector.size()){start_tiles[i] = world_ptr->tiles_vector.size() - 1;}
+		if(start_tiles[i] > room_ptr->tiles_vector.size()){start_tiles[i] = room_ptr->tiles_vector.size() - 1;}
 	}
 	
 	//get camera width offset
@@ -204,7 +204,7 @@ void WorldEditor::RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& cam
 	for(size_t i = 0; i < 12; i++)
 	{
 		end_tiles[i] = start_tiles[i] + camera_offset_width;
-		if(end_tiles[i] >= world_one.tiles_vector.size()){end_tiles[i] = world_one.tiles_vector.size() - 1;}
+		if(end_tiles[i] >= room_one.tiles_vector.size()){end_tiles[i] = room_one.tiles_vector.size() - 1;}
 	}
 	
 	
@@ -213,14 +213,14 @@ void WorldEditor::RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& cam
 		for(size_t tile_index = start_tiles[i]; tile_index < end_tiles[i]; tile_index++)
 		{
 			
-			Vector2 pos = {world_ptr->tiles_vector.at(tile_index).x - camera.x ,world_ptr->tiles_vector.at(tile_index).y - camera.y };
+			Vector2 pos = {room_ptr->tiles_vector.at(tile_index).x - camera.x ,room_ptr->tiles_vector.at(tile_index).y - camera.y };
 			pos.x += m_tiles_startx;
 			
 			//std::cout << "pos : " << pos.x << " , " << pos.y << std::endl;
-			if(world_ptr->tiles_vector.at(tile_index).frame_clip_ptr)
+			if(room_ptr->tiles_vector.at(tile_index).frame_clip_ptr)
 			{
-				DrawTextureRec(world_ptr->tilesheet_texture, 
-						   *world_ptr->tiles_vector.at(tile_index).frame_clip_ptr, 
+				DrawTextureRec(room_ptr->tilesheet_texture, 
+						   *room_ptr->tiles_vector.at(tile_index).frame_clip_ptr, 
 						   pos, 
 						   WHITE);
 			}
@@ -235,7 +235,7 @@ void WorldEditor::render()
 {
 	
 	
-	RenderLevelMapRelativeToCamera(&world_one,*m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer());
+	RenderLevelMapRelativeToCamera(&room_one,*m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer());
 	
 	
 	//render tile box 
@@ -245,7 +245,7 @@ void WorldEditor::render()
 						m_tile_selector.select_tiles[i].select_box.y};
 		
 		//render texture
-		DrawTextureRec(world_one.tilesheet_texture, 
+		DrawTextureRec(room_one.tilesheet_texture, 
 						   m_tile_selector.select_tiles[i].frame_clip, 
 						   pos, 
 						   WHITE);
@@ -300,7 +300,7 @@ bool WorldEditor::LoadDataBasedOnTilesheetDescription(std::string filepath)
     
     
     //load tile sheet
-    world_one.tilesheet_texture = LoadTexture(tilesheet_path.c_str());
+    room_one.tilesheet_texture = LoadTexture(tilesheet_path.c_str());
         
     //set up tile selector based on data
     pugi::xml_node tileRoot = root.child("Tiles");
@@ -442,7 +442,7 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 			tile.frame_clip_ptr = &frame_clip_map[tile.tile_id];
 			
 			//assign to vector
-			world_one.tiles_vector[iterator] = tile;
+			room_one.tiles_vector[iterator] = tile;
 			
 			iterator++;
 		}
@@ -458,7 +458,7 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 		size_t tile_width = 30;
 		
 		//initialize tile position
-		for(size_t i = 0; i < world_one.tiles_vector.size(); i++)
+		for(size_t i = 0; i < room_one.tiles_vector.size(); i++)
 		{
 			if(i % num_tiles_horiz == 0 && i != 0)
 			{
@@ -466,8 +466,8 @@ bool WorldEditor::LoadDataFromXMLFile(std::string mapFilePath, std::string tiles
 				y_offset += tile_height;
 			}
 			
-			world_one.tiles_vector[i].x = x_offset;
-			world_one.tiles_vector[i].y = y_offset;
+			room_one.tiles_vector[i].x = x_offset;
+			room_one.tiles_vector[i].y = y_offset;
 			
 			x_offset += tile_width;
 		}
@@ -484,9 +484,9 @@ bool WorldEditor::LoadLevel()
 	size_t num_tiles_horiz = 220;
 	size_t square_area = num_tiles_horiz * num_tiles_horiz;
 	
-	world_one.tiles_vector.resize(square_area);
+	room_one.tiles_vector.resize(square_area);
 	
-	world_one.in_active_use = true;
+	room_one.in_active_use = true;
 	
 	//load the xml file containing info on tile level positions and tile types
 	
@@ -514,12 +514,12 @@ bool WorldEditor::MakeLevel()
 		return false;
 	}
 	
-	world_one.in_active_use = true;
+	room_one.in_active_use = true;
 	
 	size_t num_tiles_horiz = 220;
 	size_t square_area = num_tiles_horiz * num_tiles_horiz;
 	
-	world_one.tiles_vector.resize(square_area);
+	room_one.tiles_vector.resize(square_area);
 	
 	//number of horizontal tiles
 	//10 sections * 640 pixels/section / 30 pixels/tile ~= 220
@@ -530,10 +530,10 @@ bool WorldEditor::MakeLevel()
 	size_t x_offset = 0;
 	size_t y_offset = 0;
 	
-	size_t flat_platform_tile = world_one.tiles_vector.size() - num_tiles_horiz - 1;
+	size_t flat_platform_tile = room_one.tiles_vector.size() - num_tiles_horiz - 1;
 	
 	//initialize tile position and tile type
-	for(size_t i = 0; i < world_one.tiles_vector.size(); i++)
+	for(size_t i = 0; i < room_one.tiles_vector.size(); i++)
 	{
 		if(i % num_tiles_horiz == 0 && i != 0)
 		{
@@ -541,18 +541,18 @@ bool WorldEditor::MakeLevel()
 			y_offset += tile_height;
 		}
 		
-		world_one.tiles_vector[i].x = x_offset;
-		world_one.tiles_vector[i].y = y_offset;
+		room_one.tiles_vector[i].x = x_offset;
+		room_one.tiles_vector[i].y = y_offset;
 		
-		world_one.tiles_vector[i].tile_id = 0;
-		world_one.tiles_vector[i].type = TileType::BACKGROUND;
+		room_one.tiles_vector[i].tile_id = 0;
+		room_one.tiles_vector[i].type = TileType::BACKGROUND;
 		if(i > flat_platform_tile)
 		{
-			world_one.tiles_vector[i].tile_id = 1;
-			world_one.tiles_vector[i].type = TileType::PUSH_BACK;
+			room_one.tiles_vector[i].tile_id = 1;
+			room_one.tiles_vector[i].type = TileType::PUSH_BACK;
 		}
 		
-		world_one.tiles_vector[i].frame_clip_ptr = &frame_clip_map[world_one.tiles_vector[i].tile_id];
+		room_one.tiles_vector[i].frame_clip_ptr = &frame_clip_map[room_one.tiles_vector[i].tile_id];
 		
 		x_offset += tile_width;
 	}
@@ -582,19 +582,19 @@ void WorldEditor::SaveDataToXMLFile(std::string filepath)
     
     //save tile type
 		
-	for(size_t i = 0; i < world_one.tiles_vector.size(); i++)
+	for(size_t i = 0; i < room_one.tiles_vector.size(); i++)
 	{
 		 // Add child based on tile type
 		pugi::xml_node nodeChild = tilesNode.append_child("Tile");
 		
-		switch(world_one.tiles_vector[i].type)
+		switch(room_one.tiles_vector[i].type)
 		{
 			case TileType::PUSH_BACK:{ nodeChild.append_attribute("type").set_value("PUSHBACK"); break;}
 			case TileType::BACKGROUND:{ nodeChild.append_attribute("type").set_value("BACKGROUND"); break;}
 			default:{nodeChild.append_attribute("type").set_value("NONE"); std::cout << "Tile type not handled! Placing None.\n"; break;}
 		}
 		
-		nodeChild.append_attribute("id").set_value( std::to_string(world_one.tiles_vector[i].tile_id).c_str() );
+		nodeChild.append_attribute("id").set_value( std::to_string(room_one.tiles_vector[i].tile_id).c_str() );
 		
 	}
 
@@ -624,7 +624,7 @@ void WorldEditor::SaveLevel()
 
 void WorldEditor::FreeLevel()
 {
-	UnloadTexture(world_one.tilesheet_texture);
+	UnloadTexture(room_one.tilesheet_texture);
 }
 
 void WorldEditor::SetPointerToCameraManager(CameraManager* cam_manager_ptr){m_camera_manager_ptr = cam_manager_ptr;}

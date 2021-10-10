@@ -306,7 +306,7 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 										std::uint32_t& obj_width,
 										std::uint32_t& obj_height,
 										bool& grounded,
-										World* world_ptr)
+										Room* room_ptr)
 {
 	
 	//calculate tile that object is on
@@ -368,18 +368,18 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 		size_t& tile_index = tiles_around_object[i];
 		
 		
-		if(world_ptr->tiles_vector[tile_index].type == TileType::PUSH_BACK)
+		if(room_ptr->tiles_vector[tile_index].type == TileType::PUSH_BACK)
 		{
 			//if player(obj) collides with a platforms
-			if(CollisionWithTileDetected(world_ptr->tiles_vector[tile_index].x,world_ptr->tiles_vector[tile_index].y,
+			if(CollisionWithTileDetected(room_ptr->tiles_vector[tile_index].x,room_ptr->tiles_vector[tile_index].y,
 							   obj_x, obj_y, obj_width, obj_height) 
 				)
 			{
 				//if player is not grounded and on top of a platform
-				if(!grounded && (obj_y + obj_height - 1 <= world_ptr->tiles_vector[tile_index].y))
+				if(!grounded && (obj_y + obj_height - 1 <= room_ptr->tiles_vector[tile_index].y))
 				{
 					obj_vy = 0;
-					obj_y = world_ptr->tiles_vector[tile_index].y - obj_height;
+					obj_y = room_ptr->tiles_vector[tile_index].y - obj_height;
 					grounded = true;
 				}
 					
@@ -387,28 +387,28 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 				if(grounded)
 				{
 					//if player is on top of platform
-					if(obj_y + obj_height - 1 <= world_ptr->tiles_vector[tile_index].y)
+					if(obj_y + obj_height - 1 <= room_ptr->tiles_vector[tile_index].y)
 					{
 						obj_vy = 0;
-						obj_y = world_ptr->tiles_vector[tile_index].y - obj_height;
+						obj_y = room_ptr->tiles_vector[tile_index].y - obj_height;
 						
 					}
 					else
 					{
 						
 						//if player is to the left of platform 
-						if(obj_x + obj_width - 1 <= world_ptr->tiles_vector[tile_index].x + 20)
+						if(obj_x + obj_width - 1 <= room_ptr->tiles_vector[tile_index].x + 20)
 						{
 							//PushLeft(obj_x,obj_vx,dt);
 							obj_vx = 0;
-							obj_x = world_ptr->tiles_vector[tile_index].x - obj_width;
+							obj_x = room_ptr->tiles_vector[tile_index].x - obj_width;
 						}
 						//else if player is to the right of platform
-						else if(obj_x + 1 >= world_ptr->tiles_vector[tile_index].x + 30 - 20)
+						else if(obj_x + 1 >= room_ptr->tiles_vector[tile_index].x + 30 - 20)
 						{
 							//PushRight(obj_x,obj_vx,dt);
 							obj_vx = 0;
-							obj_x = world_ptr->tiles_vector[tile_index].x + 30;
+							obj_x = room_ptr->tiles_vector[tile_index].x + 30;
 						}
 						else
 						{
@@ -436,29 +436,29 @@ static void CheckCollisionWithTiles(float& obj_x, float& obj_y,
 					*/
 					
 					//if player is to the left of platform 
-					if(obj_x + obj_width - 1 <= world_ptr->tiles_vector[tile_index].x + 20)
+					if(obj_x + obj_width - 1 <= room_ptr->tiles_vector[tile_index].x + 20)
 					{
 						//std::cout << "\nplayer below platform to the left. Push left.\n";
 						//PushLeft(obj_x,obj_vx,dt);
 						obj_vx = 0;
-						obj_x = world_ptr->tiles_vector[tile_index].x - obj_width;
+						obj_x = room_ptr->tiles_vector[tile_index].x - obj_width;
 					}
 					//else if player is to the right of platform
-					else if(obj_x + 1 >= world_ptr->tiles_vector[tile_index].x + 30 - 20)
+					else if(obj_x + 1 >= room_ptr->tiles_vector[tile_index].x + 30 - 20)
 					{
 						//std::cout << "\nplayer below platform to the right. Push right.\n";
 						//PushRight(obj_x,obj_vx,dt);
 						obj_vx = 0;
-						obj_x = world_ptr->tiles_vector[tile_index].x + 30;
+						obj_x = room_ptr->tiles_vector[tile_index].x + 30;
 					}
 					
 					//if player is on top of platform
-					if(obj_y + obj_height - 2 <= world_ptr->tiles_vector[tile_index].y + 10)
+					if(obj_y + obj_height - 2 <= room_ptr->tiles_vector[tile_index].y + 10)
 					{
 						//std::cout << "\nplayer above platform. Push up.\n";
 						//PushUp(obj_y,obj_vy,dt);
 						obj_vy = 0;
-						obj_y = world_ptr->tiles_vector[tile_index].y - obj_height;
+						obj_y = room_ptr->tiles_vector[tile_index].y - obj_height;
 						grounded = true;
 					}
 					//else if player is below platform
@@ -690,7 +690,7 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 				transform.position.y += rigidBody.velocity.y * dt;
 				
 				//if world one is active i.e. a player is in world one
-				if(world_one.in_active_use)
+				if(room_one.in_active_use)
 				{
 					//if the collision box of player is in world one
 					if(collisionBox.world_id == 0)
@@ -701,7 +701,7 @@ void PhysicsSystem::Update_MetroidVaniaMode(float& dt)
 											dt,
 											collisionBox.width, collisionBox.height,
 											physics_type_comp.grounded,
-											&world_one);
+											&room_one);
 					}
 					
 				}

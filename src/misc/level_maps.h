@@ -65,7 +65,7 @@ struct Tile
 
 
 //world struct. Contains rooms.
-struct World
+struct Room
 {
 	//name of the world
 	std::string name;
@@ -102,16 +102,17 @@ struct World
 	std::uint8_t world_id;
 };
 
-//The 4 worlds that players can inhabit simultaneously
-//not actually world names
-
-//by default world one is edited by world editor
 
 
-extern World world_one;
-extern World world_two;
-extern World world_three;
-extern World world_four;
+//The 4 rooms that players can inhabit simultaneously
+
+//by default room one is edited by world editor
+
+
+extern Room room_one;
+extern Room room_two;
+extern Room room_three;
+extern Room room_four;
 
 
 

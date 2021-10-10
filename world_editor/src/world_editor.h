@@ -116,7 +116,7 @@ private:
 //camera
 	CameraManager* m_camera_manager_ptr;
 	
-	void RenderLevelMapRelativeToCamera(World* world_ptr,Rectangle& camera);
+	void RenderLevelMapRelativeToCamera(Room* world_ptr,Rectangle& camera);
 	
 	
 };
