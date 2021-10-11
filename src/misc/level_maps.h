@@ -63,8 +63,27 @@ struct Tile
 	Rectangle* frame_clip_ptr;
 };
 
+struct MapUnit
+{
+	//position of map unit in pixel coordinates
+	uint16_t x;
+	uint16_t y;
+	
+	//texture to draw for map unit, has visual info on door and shape of the room.
+	//each tile is a pixel, 30x30 square tiles is 30x30 square pixels
+	//Color room_unit_map_pixels[30][30];
+	
+};
 
-//world struct. Contains rooms.
+struct WorldMap
+{
+	//vector of map units
+	std::vector <MapUnit> world_map_units_vec;
+	
+	RenderTexture2D world_map_texture;
+};
+
+//room struct. 
 struct Room
 {
 	//name of the world
@@ -110,6 +129,13 @@ struct Room
 	
 	//id variable to indicate which world it is
 	std::uint8_t world_id;
+	
+	//enemies inside room
+	
+	//items inside room
+	
+	//map unit index of room
+	size_t map_unit_index;
 };
 
 

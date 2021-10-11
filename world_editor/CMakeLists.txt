@@ -91,6 +91,7 @@ endif()
 set( SOURCES 
 src/main.cpp
 src/world_editor.cpp
+src/map_editor.cpp
 ../src/misc/StageManager.cpp
 ../src/misc/globalvariables.cpp
 ../src/misc/MediaLoader.cpp
