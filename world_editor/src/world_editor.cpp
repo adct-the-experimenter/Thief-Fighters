@@ -98,7 +98,6 @@ void WorldEditor::logic()
 		Rectangle* camera_ptr = m_camera_manager_ptr->lead_cameras[0].GetCameraRectPointer();
 		
 		
-		
 		//render 9 rows of tiles
 	
 		size_t start_tiles[12];
@@ -334,11 +333,6 @@ bool WorldEditor::LoadDataBasedOnTilesheetDescription(std::string filepath)
 		valString = tile_node.attribute("y").value();
 		y = atoi(valString.c_str());
 		
-		//valString = tile_node.attribute("width").value();
-		//width = atoi(valString.c_str());
-		
-		//valString = tile_node.attribute("height").value();
-		//height = atoi(valString.c_str());
 		
 		sTile.frame_clip = {x,y,30,30};
 		

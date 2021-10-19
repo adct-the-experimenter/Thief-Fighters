@@ -17,7 +17,10 @@ public:
 	void SetPointerToWorldMap(WorldMap* world_map_ptr);
 	
 	//function to save world map texture to image file
-	void SaveWorldMapToImageFile();
+	void SaveWorldMapToImageFile(std::string& filepath);
+	
+	//function to load world map texture from image file
+	void LoadWorldMapFromImageFile(std::string& filepath);
 	
 private:
 
