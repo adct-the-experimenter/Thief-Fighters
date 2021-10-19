@@ -22,6 +22,8 @@ void AttackPowerMechanicSystem::Init(std::uint8_t num_players)
 		player_attack_damage_factor_ptrs[i] = nullptr;
 		player_hurt_invincible_ptrs[i] = nullptr;
 		player_sound_comp_types[i] = nullptr;
+		
+		player_knockback[i] = {0.0f,0.0f};
 	}
 		
 	for (auto const& entity : mEntities)
@@ -823,16 +825,27 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 		*player_taking_damage_state_ptrs[attack_event.player_num_victim - 1] = true;
 		
 		//knock back
-		float knockback = 3*(*player_attack_damage_factor_ptrs[attack_event.player_num_attacker - 1]);
-		float sign = 1;
+		float tiles_knock = 2.0f;
+		float knockback = tiles_knock*(*player_attack_damage_factor_ptrs[attack_event.player_num_attacker - 1]);
+		float sign_x = 1;
+		float sign_y = 1;
 		
+		//if victim is to the left of attacker
 		if(player_position_ptrs[attack_event.player_num_victim - 1]->x < 
 			player_position_ptrs[attack_event.player_num_attacker - 1]->x)
 		{
-			sign = -1;
+			sign_x = -1;
 		}
 		
-		player_position_ptrs[attack_event.player_num_victim - 1]->x += sign*knockback;
+		//if victim is above the player
+		if(player_position_ptrs[attack_event.player_num_victim - 1]->y < 
+			player_position_ptrs[attack_event.player_num_attacker - 1]->y)
+		{
+			sign_y = -1;
+		}
+		
+		player_knockback[attack_event.player_num_victim - 1].x = sign_x*knockback;
+		player_knockback[attack_event.player_num_victim - 1].y = sign_y*knockback;
 		
 		//make sound
 		//player_sound_comp_types[attack_event.player_num_victim - 1]->sound_type = SoundType::GENERAL_SOUND;
@@ -843,6 +856,8 @@ void AttackPowerMechanicSystem::HandlePossibleCollisionBetweenPlayers(int& playe
 	}
 
 }
+
+static float const knockback_factor = 30.0f; //pixels per frame
 
 void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 {
@@ -865,10 +880,6 @@ void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 			animation.frame_count = 0;
 			animation.hurt = true;
 			
-			//stop player from moving
-			rigidBody.velocity.x = 0.0f;
-			rigidBody.velocity.y = 0.0f;
-			
 			player.hurt_anim_time_count = 0;
 			player.hurt_anim_time_count += dt;
 			
@@ -877,15 +888,22 @@ void AttackPowerMechanicSystem::ReactToCollisions(float& dt)
 		}
 		else
 		{
-			player.hurt_anim_time_count += dt;
-			
-			//if 2 seconds have passed, stop hurt animation
-			if(player.hurt_anim_time_count >= 2)
+			if(player.state == PlayerState::HURTING)
 			{
-				animation.hurt = false;
-				player.hurt_anim_time_count = 0;
-				player.state = PlayerState::IDLE;
-				player.hurt_invincible = false;
+				//knock back
+				rigidBody.velocity.x = knockback_factor*player_knockback[player.player_num - 1].x;
+				rigidBody.velocity.y = knockback_factor*player_knockback[player.player_num - 1].y;
+				
+				player.hurt_anim_time_count += dt;
+			
+				//if 2 seconds have passed, stop hurt animation
+				if(player.hurt_anim_time_count >= 1.0f)
+				{
+					animation.hurt = false;
+					player.hurt_anim_time_count = 0;
+					player.state = PlayerState::IDLE;
+					player.hurt_invincible = false;
+				}
 			}
 			
 		}
