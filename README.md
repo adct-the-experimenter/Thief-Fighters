@@ -1,6 +1,6 @@
 # Thief Fighters
 
-## https://gitlab.com/pab44/Thief-Fighters
+## Moved to new locationhttps://gitlab.com/pab44/Thief-Fighters
 
 Defeat your opponent and steal his power. Switch between different stolen powers. 
 1-8 player multiplayer platform fighting game. 
